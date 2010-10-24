@@ -22,7 +22,6 @@ public class NaiveSolver implements Solver
 	/* (non-Javadoc)
 	 * @see Solver#getSolution(Graph)
 	 */
-	@Override
 	public int[] getSolution(Graph graph)
 	{
 		int[] tour = new int[graph.countNodes()];
