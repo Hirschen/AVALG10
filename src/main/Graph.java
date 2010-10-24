@@ -26,14 +26,22 @@ public class Graph
 		return nodes;
 	}
 
-	public double distance(int nodeA, int nodeB)
+	/**
+	 * The distance between two points is computed as the Euclidean distance
+	 * between the two points, rounded to the nearest integer.
+	 * 
+	 * @param nodeA
+	 * @param nodeB
+	 * @return the euclidean distance between two nodes.
+	 */
+	public long distance(int nodeA, int nodeB)
 	{
 		double xDiff = Math.abs(distance[nodeA][0] - distance[nodeB][0]);
 		double yDiff = Math.abs(distance[nodeA][1] - distance[nodeB][1]);
 
 		++distanceCounts; // For stats
 
-		return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+		return Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
 	}
 
 }
