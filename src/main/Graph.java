@@ -13,14 +13,20 @@ public class Graph
 	private int nodes;
 
 	/**
+	 * Constructs a graph object given a set of coordinates.
 	 * 
+	 * @param coordinates
+	 *            is an array of coordinates in the format matrix[size] = {x, y}
 	 */
-	public Graph(double[][] distances)
+	public Graph(double[][] coordinates)
 	{
-		distance = distances;
-		nodes = distances.length;
+		distance = coordinates;
+		nodes = coordinates.length;
 	}
 
+	/**
+	 * @return the number of nodes in the graph.
+	 */
 	public int countNodes()
 	{
 		return nodes;
@@ -30,14 +36,18 @@ public class Graph
 	 * The distance between two points is computed as the Euclidean distance
 	 * between the two points, rounded to the nearest integer.
 	 * 
+	 * The order of the nodes does not matter to the outcome.
+	 * 
 	 * @param nodeA
+	 *            the first node.
 	 * @param nodeB
+	 *            the second node.
 	 * @return the euclidean distance between two nodes.
 	 */
 	public long distance(int nodeA, int nodeB)
 	{
-		double xDiff = Math.abs(distance[nodeA][0] - distance[nodeB][0]);
-		double yDiff = Math.abs(distance[nodeA][1] - distance[nodeB][1]);
+		double xDiff = distance[nodeA][0] - distance[nodeB][0];
+		double yDiff = distance[nodeA][1] - distance[nodeB][1];
 
 		++distanceCounts; // For stats
 
