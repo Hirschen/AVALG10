@@ -1,0 +1,15 @@
+NAME : kattis solution
+TYPE : TOUR
+DIMENSION : 10
+TOUR_SECTION
+1
+5
+9
+6
+4
+2
+8
+10
+7
+3
+-1

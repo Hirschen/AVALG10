@@ -51,7 +51,21 @@ public class Graph
 
 		++distanceCounts; // For stats
 
-		return Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+		return (int) (Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+	}
+
+	/**
+	 * @param tour
+	 * @return
+	 */
+	public int calculateLength(int[] tour)
+	{
+		int length = 0;
+		for (int i = 1; i < tour.length; i++)
+		{
+			length += distance(tour[i - 1], tour[i]);
+		}
+		return length;
 	}
 
 }
