@@ -1,5 +1,6 @@
 package main;
 
+import java.io.BufferedInputStream;
 import java.util.Scanner;
 
 import solvers.NaiveSolver;
@@ -29,7 +30,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		// Read input
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = new Scanner(new BufferedInputStream(System.in));
 		int size = sc.nextInt();
 
 		double[][] g = new double[size][2];
