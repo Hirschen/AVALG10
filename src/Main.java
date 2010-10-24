@@ -13,7 +13,7 @@ public class Main
 	 */
 	public Main()
 	{
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -21,8 +21,11 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
+		// TODO: Take input
 
+		// TODO: Run program
+
+		// TODO: Get output
 	}
 
 }
