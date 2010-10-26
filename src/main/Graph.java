@@ -1,7 +1,7 @@
 package main;
 
 /**
- * // TODO: Graph is a ...
+ * // TODO: Graph is a ... LOOOOOL
  * 
  * @author Martin Nycander
  * @since 
