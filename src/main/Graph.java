@@ -1,16 +1,17 @@
 package main;
 
 /**
- * // TODO: Graph is a ... 
+ * // TODO: Graph is a ...
  * 
  * @author Martin Nycander
- * @since 
+ * @since
  */
 public class Graph
 {
 	private int distanceCounts = 0;
-	private double[][] distance;
-	private int nodes;
+	private double[][] nodes;
+	private Short[][] edges;
+	private int nodeCount;
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -20,8 +21,9 @@ public class Graph
 	 */
 	public Graph(double[][] coordinates)
 	{
-		distance = coordinates;
-		nodes = coordinates.length;
+		nodes = coordinates;
+		nodeCount = coordinates.length;
+		edges = new Short[nodeCount][nodeCount];
 	}
 
 	/**
@@ -29,7 +31,12 @@ public class Graph
 	 */
 	public int countNodes()
 	{
-		return nodes;
+		return nodeCount;
+	}
+
+	public int countEdges()
+	{
+		return (nodeCount * (nodeCount - 1)) / 2;
 	}
 
 	/**
@@ -46,12 +53,27 @@ public class Graph
 	 */
 	public long distance(int nodeA, int nodeB)
 	{
-		double xDiff = distance[nodeA][0] - distance[nodeB][0];
-		double yDiff = distance[nodeA][1] - distance[nodeB][1];
+		// If this distance has been calculated before, return the cached value.
+		if (edges[nodeA][nodeB] != null)
+			return edges[nodeA][nodeB]; // TODO: Calculate this list in the
+										// beginning.
+
+		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
+		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
 		++distanceCounts; // For stats
 
-		return Math.round((Math.sqrt(xDiff * xDiff + yDiff * yDiff)) );
+		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+
+		// Sanity check for mem. optimization
+		assert (distance < Short.MAX_VALUE);
+		short d = (short) distance;
+
+		// Store calculated values
+		edges[nodeA][nodeB] = d;
+		edges[nodeB][nodeA] = d;
+
+		return distance;
 	}
 
 	/**
@@ -67,5 +89,4 @@ public class Graph
 		}
 		return length;
 	}
-
 }

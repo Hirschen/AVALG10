@@ -4,11 +4,6 @@ public class Tour
 {
 	private short[] tour;
 
-	public Tour()
-	{
-		this(16);
-	}
-
 	public Tour(int nodes)
 	{
 		tour = new short[nodes];
@@ -16,8 +11,10 @@ public class Tour
 
 	public Tour(int[] tour)
 	{
-		this.tour = new short[tour.length];
-		for (int i = 0; i < tour.length; i++)
+		int size = tour.length;
+		this.tour = new short[size];
+
+		for (int i = 0; i < size; i++)
 		{
 			assert (tour[i] < Short.MAX_VALUE);
 			this.tour[i] = (short) tour[i];
@@ -52,39 +49,8 @@ public class Tour
 
 	public void setNode(int i, int v)
 	{
-		if (i >= tour.length)
-		{
-			resizeToFit(i);
-		}
 		assert (v < Short.MAX_VALUE);
 		tour[i] = (short) v;
-	}
-
-	/**
-	 * @param i
-	 */
-	private void resizeToFit(int i)
-	{
-		int newSize = tour.length * 2;
-		while (newSize <= i)
-		{
-			newSize *= 2;
-		}
-
-		resizeTo(newSize);
-	}
-
-	/**
-	 * @param newSize
-	 */
-	private void resizeTo(int newSize)
-	{
-		short[] newTour = new short[newSize];
-		for (int i = 0; i < tour.length; i++)
-		{
-			newTour[i] = tour[i];
-		}
-		tour = newTour;
 	}
 
 	/*

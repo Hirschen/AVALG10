@@ -11,7 +11,7 @@ public class LinKernighan implements Improver {
 	
 	
 	public Tour improve(Graph g){
-		return new Tour(); //TODO
+		return new Tour(g.countNodes()); // TODO
 	}
 	
 	/*

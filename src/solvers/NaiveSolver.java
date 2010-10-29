@@ -25,7 +25,7 @@ public class NaiveSolver implements StartApproxer
 	 */
 	public Tour getTour(Graph graph)
 	{
-		Tour tour = new Tour();
+		Tour tour = new Tour(graph.countNodes());
 		boolean[] used = new boolean[graph.countNodes()];
 		used[0] = true;
 		for (int i = 1; i < graph.countNodes(); i++)
