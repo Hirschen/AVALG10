@@ -18,7 +18,7 @@ import solvers.StartApproxer;
  */
 public class Main
 {
-	private static final boolean verbose = true;
+	private static final boolean verbose = false;
 	private Kattio io;
 	private InputStream input;
 	/**

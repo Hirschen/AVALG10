@@ -64,7 +64,7 @@ public class Tour
 		for (int i = 0; i < tour.length; i++)
 		{
 			sb.append(tour[i]);
-			sb.append(' ');
+			sb.append('\n');
 		}
 		return sb.toString();
 	}
