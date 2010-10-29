@@ -28,7 +28,9 @@ public class LinKernighan implements Improver {
 	private void feasability(){
 		
 	}
-	
+	/*
+	 * General k-opt
+	 */
 	private void executeMove(){
 		
 	}

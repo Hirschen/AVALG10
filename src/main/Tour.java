@@ -34,9 +34,15 @@ public class Tour {
 		// TODO Auto-generated method stub
 		
 	}
+	/*
+	 * Get preceding node
+	 */
 	public void getPred(){
 		
 	}
+	/*
+	 * Get suceeding node
+	 */
 	public void getSuc(){
 		
 	}
