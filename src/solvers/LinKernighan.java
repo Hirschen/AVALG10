@@ -11,6 +11,18 @@ public class LinKernighan implements Improver {
 	
 	
 	public Tour improve(Graph g){
+		int gain = 1;
+		while(gain >= 0){ //gör medan man tjänar på något
+			
+			//Sök igenom kanter för att se om det finns någon kombo man tjänar på
+			getSeqMoves();
+			// or getNonSeqMoves();
+			
+			feasability();
+			//Gör flipp:en
+			
+			executeMove();
+		}
 		return new Tour(g.countNodes()); // TODO
 	}
 	
@@ -21,17 +33,33 @@ public class LinKernighan implements Improver {
 		
 	}
 	
+	
+	
 	private void getNonSeqMoves(){
 		
 	}
 	
+	
+	
 	private void feasability(){
 		
 	}
+	
+	
+	
 	/*
 	 * General k-opt
 	 */
 	private void executeMove(){
+		
+	}
+	
+	
+	
+	/*
+	 * Flips (a,b,c,d) into (b,c,a,d)
+	 */
+	private void flip(){
 		
 	}
 }
