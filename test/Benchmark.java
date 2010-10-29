@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import main.Graph;
 import solvers.NaiveSolver;
-import solvers.Solver;
+import solvers.StartApproxer;
 
 /**
  * // TODO: Benchmark is a ...
@@ -16,7 +16,7 @@ public class Benchmark
 {
 	private boolean DEBUG;
 
-	public Benchmark(Solver solver, File testDir, File resultFile)
+	public Benchmark(StartApproxer solver, File testDir, File resultFile)
 	{
 		File[] problemFiles = testDir.listFiles(new FilenameFilter()
 		{
@@ -36,7 +36,7 @@ public class Benchmark
 				Problem p = new Problem(probFile, new File(probFile.getAbsolutePath().replace(".tsp", ".opt.tour")));
 
 				Graph graph = new Graph(p.coordinates);
-				Solver naiveSolver = new NaiveSolver();
+				StartApproxer naiveSolver = new NaiveSolver();
 
 				int[] naiveTour = naiveSolver.getSolution(graph);
 				int[] optimalTour = p.optimalRoute;
@@ -88,7 +88,7 @@ public class Benchmark
 			return;
 		}
 
-		Solver s = null;
+		StartApproxer s = null;
 		if (args[0].equals("naive"))
 			s = new NaiveSolver();
 

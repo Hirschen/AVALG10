@@ -4,7 +4,7 @@ import java.io.BufferedInputStream;
 import java.util.Scanner;
 
 import solvers.NaiveSolver;
-import solvers.Solver;
+import solvers.StartApproxer;
 
 /**
  * // TODO: Main is a ...
@@ -41,7 +41,7 @@ public class Main
 		}
 
 		Graph graph = new Graph(g);
-		Solver solver = new NaiveSolver();
+		StartApproxer solver = new NaiveSolver();
 
 		// Run algorithm
 		int[] tour = solver.getSolution(graph);

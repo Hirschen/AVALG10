@@ -8,7 +8,7 @@ import main.Graph;
  * @author Martin Nycander
  * @since 
  */
-public interface Solver
+public interface StartApproxer
 {
 	int[] getSolution(Graph g);
 }

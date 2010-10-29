@@ -8,7 +8,7 @@ import main.Graph;
  * @author Martin Nycander
  * @since 
  */
-public class NaiveSolver implements Solver
+public class NaiveSolver implements StartApproxer
 {
 
 	/**
