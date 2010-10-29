@@ -13,4 +13,23 @@ public class LinKernighan implements Improver {
 	public Tour improve(Graph g){
 		return new Tour(); //TODO
 	}
+	
+	/*
+	 * 
+	 */
+	private void getSeqMoves(){
+		
+	}
+	
+	private void getNonSeqMoves(){
+		
+	}
+	
+	private void feasability(){
+		
+	}
+	
+	private void executeMove(){
+		
+	}
 }

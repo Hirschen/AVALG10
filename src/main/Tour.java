@@ -34,4 +34,10 @@ public class Tour {
 		// TODO Auto-generated method stub
 		
 	}
+	public void getPred(){
+		
+	}
+	public void getSuc(){
+		
+	}
 }
