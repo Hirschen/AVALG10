@@ -34,6 +34,22 @@ public class Tour
 		return tour[i];
 	}
 
+	/*
+	 * Get preceding node
+	 */
+	public int getPredecessorNode(int tourPosition)
+	{
+		return getNode(tourPosition - 1);
+	}
+
+	/*
+	 * Get suceeding node
+	 */
+	public int getSuccessorNode(int tourPosition)
+	{
+		return getNode(tourPosition + 1);
+	}
+
 	public void setNode(int i, int v)
 	{
 		if (i >= tour.length)
@@ -85,17 +101,5 @@ public class Tour
 			sb.append(' ');
 		}
 		return sb.toString();
-	}
-	/*
-	 * Get preceding node
-	 */
-	public void getPred(){
-		
-	}
-	/*
-	 * Get suceeding node
-	 */
-	public void getSuc(){
-		
 	}
 }
