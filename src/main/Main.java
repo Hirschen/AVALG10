@@ -44,12 +44,12 @@ public class Main
 		StartApproxer solver = new NaiveSolver();
 
 		// Run algorithm
-		int[] tour = solver.getSolution(graph);
+		Tour tour = solver.getTour(graph);
 
 		// Output tour
 		for (int i = 0; i < size; i++)
 		{
-			System.out.println(tour[i]);
+			System.out.println(tour.toString());
 		}
 	}
 }

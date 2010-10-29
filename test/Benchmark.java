@@ -3,6 +3,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 import main.Graph;
+import main.Tour;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
 
@@ -38,9 +39,9 @@ public class Benchmark
 				Graph graph = new Graph(p.coordinates);
 				StartApproxer naiveSolver = new NaiveSolver();
 
-				int[] naiveTour = naiveSolver.getSolution(graph);
-				int[] optimalTour = p.optimalRoute;
-				int[] valTour = solver.getSolution(graph);
+				Tour naiveTour = naiveSolver.getTour(graph);
+				Tour optimalTour = new Tour(p.optimalRoute);
+				Tour valTour = solver.getTour(graph);
 
 				double naiveCost = graph.calculateLength(naiveTour);
 				double optimalCost = graph.calculateLength(optimalTour);

@@ -55,15 +55,15 @@ public class Graph
 	}
 
 	/**
-	 * @param tour
+	 * @param naiveTour
 	 * @return
 	 */
-	public int calculateLength(int[] tour)
+	public int calculateLength(Tour naiveTour)
 	{
 		int length = 0;
-		for (int i = 1; i < tour.length; i++)
+		for (int i = 1; i < naiveTour.getLength(); i++)
 		{
-			length += distance(tour[i - 1], tour[i]);
+			length += distance(naiveTour.getNode(i - 1), naiveTour.getNode(i));
 		}
 		return length;
 	}

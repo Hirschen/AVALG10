@@ -1,5 +1,6 @@
 package solvers;
 import main.Graph;
+import main.Tour;
 
 
 /**
@@ -10,5 +11,5 @@ import main.Graph;
  */
 public interface StartApproxer
 {
-	int[] getSolution(Graph g);
+	Tour getTour(Graph g);
 }
