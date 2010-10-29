@@ -51,7 +51,7 @@ public class Graph
 
 		++distanceCounts; // For stats
 
-		return (int) (Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+		return Math.round((Math.sqrt(xDiff * xDiff + yDiff * yDiff)) );
 	}
 
 	/**
