@@ -59,6 +59,11 @@ public class Tour
 		assert (v < Short.MAX_VALUE);
 		tour[i] = (short) v;
 	}
+	
+	//TODO - LK?
+	public void swapNodes(int n1, int n2){
+		
+	}
 
 	/**
 	 * @param i
