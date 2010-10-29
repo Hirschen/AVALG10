@@ -18,7 +18,6 @@ import solvers.StartApproxer;
  */
 public class Main
 {
-	private static final boolean verbose = false;
 	private Kattio io;
 	private InputStream input;
 	/**
@@ -28,7 +27,7 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{
 		Main m = new Main(System.in);
-		if (verbose)
+		if (args.length > 0)
 		{
 			m.runVerbose(true);
 		}
