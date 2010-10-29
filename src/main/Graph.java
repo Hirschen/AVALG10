@@ -10,8 +10,9 @@ public class Graph
 {
 	private int distanceCounts = 0;
 	private double[][] nodes;
-	private Short[][] edges;
+	private short[][] edges;
 	private int nodeCount;
+	private int edgeCount;
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -23,7 +24,21 @@ public class Graph
 	{
 		nodes = coordinates;
 		nodeCount = coordinates.length;
-		edges = new Short[nodeCount][nodeCount];
+		edges = new short[nodeCount][nodeCount];
+		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
+
+		// Precalculate edges
+		for (int a = 0; a < nodeCount; a++)
+		{
+			for (int b = a + 1; b < nodeCount; b++)
+			{
+				short distance = (short) calculateDistance(a, b);
+
+				// Store calculated values
+				edges[a][b] = distance;
+				edges[b][a] = distance;
+			}
+		}
 	}
 
 	/**
@@ -36,7 +51,7 @@ public class Graph
 
 	public int countEdges()
 	{
-		return (nodeCount * (nodeCount - 1)) / 2;
+		return edgeCount;
 	}
 
 	/**
@@ -51,13 +66,8 @@ public class Graph
 	 *            the second node.
 	 * @return the euclidean distance between two nodes.
 	 */
-	public long distance(int nodeA, int nodeB)
+	private long calculateDistance(int nodeA, int nodeB)
 	{
-		// If this distance has been calculated before, return the cached value.
-		if (edges[nodeA][nodeB] != null)
-			return edges[nodeA][nodeB]; // TODO: Calculate this list in the
-										// beginning.
-
 		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
 		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
@@ -65,15 +75,12 @@ public class Graph
 
 		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
 
-		// Sanity check for mem. optimization
-		assert (distance < Short.MAX_VALUE);
-		short d = (short) distance;
-
-		// Store calculated values
-		edges[nodeA][nodeB] = d;
-		edges[nodeB][nodeA] = d;
-
 		return distance;
+	}
+
+	public long distance(int nodeA, int nodeB)
+	{
+		return edges[nodeA][nodeB];
 	}
 
 	/**

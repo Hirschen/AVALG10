@@ -16,7 +16,7 @@ public class Tour
 
 		for (int i = 0; i < size; i++)
 		{
-			assert (tour[i] < Short.MAX_VALUE);
+			// assert (tour[i] < Short.MAX_VALUE);
 			this.tour[i] = (short) tour[i];
 		}
 	}
@@ -49,7 +49,7 @@ public class Tour
 
 	public void setNode(int i, int v)
 	{
-		assert (v < Short.MAX_VALUE);
+		// assert (v < Short.MAX_VALUE);
 		tour[i] = (short) v;
 	}
 

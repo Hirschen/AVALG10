@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -15,6 +14,7 @@ import java.util.Properties;
 public class Problem
 {
 	private String name;
+	@SuppressWarnings("unused")
 	private String comment;
 
 	public final int[] optimalRoute;
@@ -60,7 +60,6 @@ public class Problem
 			coords[i][0] = Double.parseDouble(s[1].trim());
 			coords[i][1] = Double.parseDouble(s[2].trim());
 		}
-
 		return coords;
 	}
 
@@ -94,14 +93,29 @@ public class Problem
 	@Override
 	public String toString()
 	{
-		StringBuffer res = new StringBuffer();
+		/*StringBuffer res = new StringBuffer();
 		res.append(name + " (" + comment + ")\n");
 		res.append("Optimal route: " + Arrays.toString(optimalRoute) + "\n");
 		for (int i = 0; i < coordinates.length; i++)
 		{
 			res.append("[" + coordinates[i][0] + ", " + coordinates[i][1] + "]\n");
 		}
-		return res.toString();
+		return res.toString();*/
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(coordinates.length);
+		sb.append('\n');
+		for (int i = 0; i < coordinates.length; i++)
+		{
+			sb.append(coordinates[i][0]);
+			sb.append(' ');
+			sb.append(coordinates[i][1]);
+			sb.append('\n');
+		}
+		sb.append('\n');
+
+		return sb.toString();
 	}
 
 	public static void main(String[] args) throws IOException

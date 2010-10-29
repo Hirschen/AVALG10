@@ -1,8 +1,12 @@
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 
 import main.Graph;
+import main.Main;
 import main.Tour;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
@@ -15,9 +19,9 @@ import solvers.StartApproxer;
  */
 public class Benchmark
 {
-	private boolean DEBUG;
+	private static final boolean DEBUG = true;
 
-	public Benchmark(StartApproxer solver, File testDir, File resultFile)
+	public Benchmark(File testDir, File resultFile)
 	{
 		File[] problemFiles = testDir.listFiles(new FilenameFilter()
 		{
@@ -34,14 +38,37 @@ public class Benchmark
 		{
 			try
 			{
-				Problem p = new Problem(probFile, new File(probFile.getAbsolutePath().replace(".tsp", ".opt.tour")));
+				final Problem p = new Problem(probFile, new File(probFile.getAbsolutePath().replace(".tsp", ".opt.tour")));
+
+				final PipedInputStream pis = new PipedInputStream();
+				final PipedOutputStream pos = new PipedOutputStream(pis);
+				Thread thread = new Thread(new Runnable()
+				{
+
+					@Override
+					public void run()
+					{
+						PrintWriter pw = new PrintWriter(pos, true);
+						pw.println(p);
+						pw.flush();
+						pw.close();
+					}
+
+				});
+				thread.start();
+				Main m = new Main(pis);
+				Tour t = null;
+				if (DEBUG)
+					t = m.runVerbose(false);
+				else
+					t = m.runFast();
 
 				Graph graph = new Graph(p.coordinates);
 				StartApproxer naiveSolver = new NaiveSolver();
 
 				Tour naiveTour = naiveSolver.getTour(graph);
 				Tour optimalTour = new Tour(p.optimalRoute);
-				Tour valTour = solver.getTour(graph);
+				Tour valTour = t;
 
 				double naiveCost = graph.calculateLength(naiveTour);
 				double optimalCost = graph.calculateLength(optimalTour);
@@ -64,7 +91,11 @@ public class Benchmark
 				double score = Math.pow(0.02, x);
 				assert (score >= 0.0 && score <= 1.0);
 				if (DEBUG)
+				{
+					System.out.println();
 					System.out.println(p.getName() + ": " + score);
+					System.out.println();
+				}
 				sum += score;
 				problemSet++;
 			}
@@ -74,7 +105,7 @@ public class Benchmark
 			}
 			catch (IOException e)
 			{
-				System.err.println("File " + probFile + ": Failed I/O.");
+				System.err.println("File " + probFile + ": Failed I/O (" + e.getMessage() + ")");
 			}
 		}
 		System.out.println("Result: " + sum + " / " + problemSet);
@@ -83,16 +114,6 @@ public class Benchmark
 
 	public static void main(String[] args)
 	{
-		if (args.length != 1)
-		{
-			System.err.println("Usage: java Benchmark [solver]\nSolvers: naive");
-			return;
-		}
-
-		StartApproxer s = null;
-		if (args[0].equals("naive"))
-			s = new NaiveSolver();
-
-		new Benchmark(s, new File("testdata/"), new File(System.currentTimeMillis() + ".csv"));
+		new Benchmark(new File("testdata/"), new File(System.currentTimeMillis() + ".csv"));
 	}
 }

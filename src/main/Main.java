@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
@@ -19,17 +20,17 @@ public class Main
 {
 	private static final boolean verbose = true;
 	private Kattio io;
-
+	private InputStream input;
 	/**
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		Main m = new Main();
+		Main m = new Main(System.in);
 		if (verbose)
 		{
-			m.runVerbose();
+			m.runVerbose(true);
 		}
 		else
 		{
@@ -40,15 +41,16 @@ public class Main
 	/**
 	 * 
 	 */
-	public Main()
+	public Main(InputStream in)
 	{
-		io = new Kattio(System.in, System.out);
+		input = in;
+		io = new Kattio(in, System.out);
 	}
 
 	/**
 	 * 
 	 */
-	private void runFast()
+	public Tour runFast()
 	{
 		// Read input
 		double[][] g = readInput();
@@ -58,16 +60,19 @@ public class Main
 
 		// Output tour
 		io.println(tour);
-		io.close();
+		io.flush();
+
+		return tour;
 	}
 
 	/**
 	 * @throws IOException
 	 * 
 	 */
-	private void runVerbose() throws IOException
+	public Tour runVerbose(boolean delayedInput) throws IOException
 	{
-		haxInput();
+		if (delayedInput)
+			haxInput();
 
 		double time = time();
 
@@ -88,9 +93,9 @@ public class Main
 
 		// Output tour
 		io.println(tour);
+		io.flush();
 		System.out.println("Wrote output for " + timeDiff(time(), time) + " ms.");
-		io.close();
-
+		return tour;
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class Main
 		PipedInputStream pin = new PipedInputStream(pout);
 
 		PrintWriter out = new PrintWriter(pout, true);
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = new Scanner(input);
 		String line = sc.nextLine();
 		while (!line.equals(""))
 		{
