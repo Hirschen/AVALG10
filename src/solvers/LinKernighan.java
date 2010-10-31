@@ -62,11 +62,11 @@ public class LinKernighan implements Improver {
 								Best_t[i] = t[i];
 							}
 						}
-						if (t4 != t1 && Patching_C >= 2 &&
+						/*if (t4 != t1 && Patching_C >= 2 &&
 								(Gain = G2 - C(t4, t1)) > 0 && // rule 5
 								(Gain = getNonSeqMoves(k, Gain)) > 0){
 							return Gain;
-						}
+						}*/
 					}
 				}
 			}
