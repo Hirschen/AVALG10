@@ -1,5 +1,6 @@
 package main;
 
+
 /**
  * // TODO: Graph is a ...
  * 
@@ -10,7 +11,7 @@ public class Graph
 {
 	private int distanceCounts = 0;
 	private double[][] nodes;
-	private short[][] edges;
+	private Edge[][] edges;
 	private int nodeCount;
 	private int edgeCount;
 
@@ -24,19 +25,21 @@ public class Graph
 	{
 		nodes = coordinates;
 		nodeCount = coordinates.length;
-		edges = new short[nodeCount][nodeCount];
+		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
+		Edge tmp;
 
 		// Precalculate edges
-		for (int a = 0; a < nodeCount; a++)
+		for (short a = 0; a < nodeCount; a++)
 		{
-			for (int b = a + 1; b < nodeCount; b++)
+			for (short b =  (short) (a + 1) ; b < nodeCount; b++)
 			{
 				short distance = (short) calculateDistance(a, b);
 
 				// Store calculated values
-				edges[a][b] = distance;
-				edges[b][a] = distance;
+				tmp = new Edge(a,b,distance);
+				edges[a][b] = tmp;
+				edges[b][a] = tmp;
 			}
 		}
 	}
@@ -80,7 +83,7 @@ public class Graph
 
 	public long distance(int nodeA, int nodeB)
 	{
-		return edges[nodeA][nodeB];
+		return edges[nodeA][nodeB].length;
 	}
 
 	/**
@@ -95,5 +98,54 @@ public class Graph
 			length += distance(naiveTour.getNode(i - 1), naiveTour.getNode(i));
 		}
 		return length;
+	}
+	
+	/**
+	 * @param g
+	 * @return
+	 */
+	public Edge[] createEdgeList(Graph g)
+	{
+		Edge[] edges = new Edge[g.countEdges()];
+		int ep = 0;
+		for (short a = 0; a < g.countNodes(); a++)
+		{
+			for (short b = (short) (a + 1); b < g.countNodes(); b++)
+			{
+				edges[ep++] = new Edge(a, b, (short) g.distance(a, b));
+			}
+		}
+		return edges;
+	}
+	
+	/*
+	 * 
+	 * 
+	 */
+	public class Edge implements Comparable<Edge>
+	{
+		public final short nodeA;
+		public final short nodeB;
+		public final short length;
+
+		public Edge(short a, short b, short l)
+		{
+			nodeA = a;
+			nodeB = b;
+			length = l;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
+		public int compareTo(Edge e)
+		{
+			return this.length - e.length;
+		}
+
+		public String toString()
+		{
+			return nodeA + "-[" + length + "]-" + nodeB;
+		}
 	}
 }

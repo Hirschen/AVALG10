@@ -5,5 +5,5 @@ import main.Tour;
 
 public interface Improver {
 
-	Tour improve(Graph g);
+	Tour improve(Graph g, Tour t);
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import main.Graph;
 import main.Tour;
+import main.Graph.Edge;
 
 /**
  * <a href="http://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal's
@@ -36,7 +37,7 @@ public class KruskalApproximation implements StartApproxer
 	 */
 	public Tour getTour(Graph g)
 	{
-		Edge[] edges = createEdgeList(g);
+		Edge[] edges = g.createEdgeList(g);
 		Arrays.sort(edges);
 
 		if (verbose)
@@ -124,13 +125,13 @@ public class KruskalApproximation implements StartApproxer
 				if (edge.nodeA == e.nodeA)
 				{
 					insertAt = tour.indexOf(e);
-					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
+					insertedNode = graph.new Edge(edge.nodeB, edge.nodeA, edge.length);
 					break;
 				}
 				if (edge.nodeB == e.nodeB)
 				{
 					insertAt = tour.indexOf(e) + 1;
-					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
+					insertedNode = graph.new Edge(edge.nodeB, edge.nodeA, edge.length);
 					break;
 				}
 			}
@@ -143,7 +144,7 @@ public class KruskalApproximation implements StartApproxer
 			{
 				Edge neighbour = tour.get(insertAt);
 				if (insertedNode.nodeB != neighbour.nodeA)
-					tour.add(insertAt, new Edge(insertedNode.nodeB, neighbour.nodeA, edge.length));
+					tour.add(insertAt, graph.new Edge(insertedNode.nodeB, neighbour.nodeA, edge.length));
 			}
 			tour.add(insertAt, insertedNode);
 		}
@@ -164,50 +165,6 @@ public class KruskalApproximation implements StartApproxer
 		return t;
 	}
 
-	/**
-	 * @param g
-	 * @return
-	 */
-	private Edge[] createEdgeList(Graph g)
-	{
-		Edge[] edges = new Edge[g.countEdges()];
-		int ep = 0;
-		for (short a = 0; a < g.countNodes(); a++)
-		{
-			for (short b = (short) (a + 1); b < g.countNodes(); b++)
-			{
-				edges[ep++] = new Edge(a, b, (short) g.distance(a, b));
-			}
-		}
-		return edges;
-	}
-
-	private class Edge implements Comparable<Edge>
-	{
-		public final short nodeA;
-		public final short nodeB;
-		public final short length;
-
-		public Edge(short a, short b, short l)
-		{
-			nodeA = a;
-			nodeB = b;
-			length = l;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Comparable#compareTo(java.lang.Object)
-		 */
-		public int compareTo(Edge e)
-		{
-			return this.length - e.length;
-		}
-
-		public String toString()
-		{
-			return nodeA + "-[" + length + "]-" + nodeB;
-		}
-	}
 
 	public static void main(String[] args)
 	{
