@@ -6,13 +6,17 @@ import main.Tour;
 public class LinKernighan implements Improver {
 	
 	private short[] incl;
+	private Tour best_t;
+	private Tour T;
+	private Graph G;
+	private int BestG2K;
 
 	public LinKernighan(Tour t, Graph g) {
 		
 	}
 
 	public Tour improve(Graph g, Tour t) {
-		int G0 = g.distance(1, 2), Gain, tmp; //TODO FIRST EDGE!
+		long G0 = g.distance(1, 2), Gain, tmp; //TODO FIRST EDGE!
 		do{
 			tmp = getSeqMoves(t.getNode(0), t.getNode(1), G0, Gain);
 			//TODO Update tour!
@@ -22,9 +26,9 @@ public class LinKernighan implements Improver {
 	/*
 	 * 
 	 */
-	private int getSeqMoves(int t1, int t2, int G0, int Gain) {
+	private int getSeqMoves(int t1, int t2, long G0, long Gain) {
 		t[1] = t1; t[2] = t2;
-		int BestG2K = Integer.MIN_VALUE;
+		BestG2K = Integer.MIN_VALUE;
 		Best_t[2 * K] = NULL;
 		Gain = getSeqMovesRec(2, G0);
 		if (Gain <= 0 && Best_t[2 * K] != NULL) {
@@ -36,7 +40,7 @@ public class LinKernighan implements Improver {
 		return Best_t[2 * K];
 	}
 
-	private int getSeqMovesRec(int k, int G0){
+	private int getSeqMovesRec(int k, long G0){
 		int G1,G2,G3,Gain;
 		double n1,n2,n3,n4;
 		int i;
@@ -72,20 +76,30 @@ public class LinKernighan implements Improver {
 			}
 		}
 	}
-	private boolean Added(Node *ta, Node *tb, int k) {
+	/*
+	 * ta, tb nodes
+	 */
+	private boolean Added(int ta, int tb, int k) {
 		int i = 2 * k;
-		while ((i -= 2) > 0)
-		if ((ta == t[i] && tb == t[i + 1]) ||
-		(ta == t[i + 1] && tb == t[i]))
-		return 1;
+		while ((i -= 2) > 0){
+			if ((ta == t[i] && tb == t[i + 1]) ||
+				(ta == t[i + 1] && tb == t[i])){
+				return 1;
+			}
+		}
 		return 0;
 	}
-	private boolean Deleted(Node * ta, Node * tb, int k) {
+	/*
+	 * ta, tb nodes
+	 */
+	private boolean Deleted(int ta, int tb, int k) {
 		int i = 2 * k + 2;
-		while ((i -= 2) > 0)
-		if ((ta == t[i - 1] && tb == t[i]) ||
-		(ta == t[i] && tb == t[i - 1]))
-		return 1;
+		while ((i -= 2) > 0){
+			if ((ta == t[i - 1] && tb == t[i]) ||
+					(ta == t[i] && tb == t[i - 1])){
+				return 1;
+			}
+		}
 		return 0;
 	}
 	
