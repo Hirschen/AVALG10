@@ -147,21 +147,34 @@ public class Tour implements Iterable<Edge>
 	}
 	
 	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2){
-		//if(e1 > e2){
-			edges.set(e2, f1);
-			edges.set(e1, f2);
-			
-			edges.set(e1-1, g.getEdge(edges.get(e1-1).nodeA, f1.nodeA));
-			edges.set(e2+1, g.getEdge(f2.nodeB, edges.get(e2+1).nodeB));
-		//}
-		/*else{
-			edges.set(e2, f1);
-			edges.set(e1, f2);
-			
-			edges.set(e2-1, g.getEdge(edges.get(e2-1).nodeA, f1.nodeA));
-			edges.set(e1+1, g.getEdge(f2.nodeB, edges.get(e1+1).nodeB));
-		}*/
-	
+		
+		edges.set(e1, f1);
+		edges.set(e2, f2);
+		reverse(e1,e2, g);
+		
+	}
+	private void reverse(int e1, int e2, Graph g){
+		if(e1 < e2){
+			for (int i = e1+1;i+1 != e2;i++)
+			{
+				if(i == edges.size()-1){
+					i=0;
+				}
+				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
+				edges.set(i, g.getEdge(edges.get(i+1).nodeB,edges.get(i+1).nodeA));
+				edges.set(i+1, tmp);
+			}
+		}else{
+			for (int i = e1-1;i-1 != e2;i--)
+			{
+				if(i == 0){
+					i=edges.size()-1;
+				}
+				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
+				edges.set(i, g.getEdge(edges.get(i-1).nodeB,edges.get(i-1).nodeA));
+				edges.set(i-1, tmp);
+			}
+		}
 	}
 
 	/*

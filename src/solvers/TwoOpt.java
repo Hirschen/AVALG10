@@ -46,7 +46,7 @@ public class TwoOpt implements Improver {
 	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
 		t.switchEdges(G, e1, e2, G.getEdge(a1, a2), G.getEdge(b1, b2));
-		System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
+		//System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
 		return;
 	}
 
@@ -60,7 +60,7 @@ public class TwoOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 } };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 } };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
@@ -69,7 +69,7 @@ public class TwoOpt implements Improver {
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 100; i++){
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
 			System.out.println(g.calculateLength(t));
