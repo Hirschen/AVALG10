@@ -29,7 +29,7 @@ public class LinKernighan implements Improver {
 	private int getSeqMoves(int t1, int t2, long G0, long Gain) {
 		t[1] = t1; t[2] = t2;
 		BestG2K = Integer.MIN_VALUE;
-		Best_t[2 * K] = NULL;
+		Best_t[2 * K] = null;
 		Gain = getSeqMovesRec(2, G0);
 		if (Gain <= 0 && Best_t[2 * K] != NULL) {
 			for (i = 1; i <= 2 * K; i++){
