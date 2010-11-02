@@ -29,8 +29,6 @@ public class Graph
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 
-		assert (nodeCount < Short.MAX_VALUE);
-
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
@@ -97,9 +95,9 @@ public class Graph
 	public int calculateLength(Tour tour)
 	{
 		int length = 0;
-		for (int i = 0; i < tour.countEdges(); i++)
+		for (Edge e : tour)
 		{
-			length += tour.getEdge(i).length;
+			length += e.length;
 		}
 		return length;
 	}
