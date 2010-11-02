@@ -78,22 +78,23 @@ public class Benchmark
 				if (naiveCost == optimalCost)
 				{
 					if (valCost == optimalCost)
-						x = 0;
-					else
-						// valCost > optimalCost
+						x = 0.0;
+					else if (valCost > optimalCost)
 						x = Double.MAX_VALUE;
+					else
+						throw new RuntimeException();
 				}
 				else
 				{
+					// x = (Val - Opt) / (Naive - Opt).
 					x = (valCost - optimalCost) / (naiveCost - optimalCost);	
 				}
 
 				double score = Math.pow(0.02, x);
-				assert (score >= 0.0 && score <= 1.0);
 				if (DEBUG)
 				{
 					System.out.println();
-					System.out.println(p.getName() + ": " + score);
+					System.out.println(p.getName() + ": " + ((double) Math.round(1000000.0 * score)) / 1000000.0 + " ( = 0.02^" + x + ")");
 					System.out.println();
 				}
 				sum += score;
