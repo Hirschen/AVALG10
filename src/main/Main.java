@@ -7,10 +7,9 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import solvers.Improver;
+import solvers.KruskalApproximation;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
-import solvers.TwoOpt;
 
 /**
  * // TODO: Main is a ...
@@ -162,7 +161,9 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new KruskalApproximation();
+		solver.getTour(graph);
+		solver = new NaiveSolver();
 		return solver.getTour(graph);
 	}
 	
@@ -170,11 +171,11 @@ public class Main
 
 	private Tour improveTour(Graph g, Tour t)
 	{
-		Improver imp = new TwoOpt();
-		for (int i = 0; i < 100; i++)
+		/*Improver imp = new TwoOpt();
+		for (int i = 0; i < 10; i++)
 		{
 			imp.improve(g, t);
-		}
+		}*/
 		return t;
 	}
 }

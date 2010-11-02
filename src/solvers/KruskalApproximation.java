@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import main.Edge;
 import main.Graph;
@@ -45,11 +44,11 @@ public class KruskalApproximation implements StartApproxer
 			return tour;
 		}
 
-		Set<Edge> mst = findMinimumSpanningTree(g);
+		HashSet<Edge> mst = findMinimumSpanningTree(g);
 
 		double time = Main.time();
 
-		Tour t = buildTour(new ArrayList<Edge>(mst), g);
+		Tour t = buildTour(mst, g);
 
 		if (verbose)
 		{
@@ -62,7 +61,7 @@ public class KruskalApproximation implements StartApproxer
 	 * @param g
 	 */
 	@SuppressWarnings("unchecked")
-	private Set<Edge> findMinimumSpanningTree(Graph g)
+	private HashSet<Edge> findMinimumSpanningTree(Graph g)
 	{
 		Edge[] edges = g.getSortedEdgeList();
 
@@ -135,10 +134,10 @@ public class KruskalApproximation implements StartApproxer
 		throw new RuntimeException("Could not find a minimum spanning tree. This should be impossible in a complete graph.");
 	}
 
-	private Tour buildTour(List<Edge> mst, Graph graph)
+	private Tour buildTour(HashSet<Edge> mst, Graph graph)
 	{
 		// Find the node with the most edges
-		int centerNode = -1;
+		int centerNode = 0;
 		int highestDegree = -1;
 
 		for (int node = 0; node < graph.countNodes(); node++)
@@ -159,7 +158,8 @@ public class KruskalApproximation implements StartApproxer
 			}
 		}
 
-		System.out.println("Center node: " + centerNode + " (degree " + highestDegree + ")");
+		// System.out.println("Center node: " + centerNode + " (degree " +
+		// highestDegree + ")");
 
 		// Draw a tour
 		Tour tour = new Tour((graph.countNodes() - 1) * 2);
@@ -179,6 +179,7 @@ public class KruskalApproximation implements StartApproxer
 	 * @param mst
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private Tour buildResult(List<Edge> mst, Graph graph)
 	{
 		Tour tour = new Tour();
