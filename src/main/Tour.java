@@ -155,7 +155,7 @@ public class Tour implements Iterable<Edge>
 	private void reverse(int e1, int e2, Graph g){
 		if(e1 < e2){
 		
-			List<Edge> tmp = edges.subList(e1+1, e2-1);
+			List<Edge> tmp = edges.subList(e1+1, e2);
 			int i = tmp.size()-1;
 			Edge[] holder = new Edge[i+1];		
 			for(Edge e: tmp){	

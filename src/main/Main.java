@@ -171,7 +171,7 @@ public class Main
 	private Tour improveTour(Graph g, Tour t)
 	{
 		Improver imp = new TwoOpt();
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 200; i++)
 		{
 			imp.improve(g, t);
 		}

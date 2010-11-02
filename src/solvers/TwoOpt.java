@@ -40,7 +40,7 @@ public class TwoOpt implements Improver {
 	}
 	private boolean checkFeasbility(int e1, int e2, Tour t){
 		int tmp = Math.abs(e1-e2);
-		if(tmp <= 1 || tmp >= t.countEdges()-2){
+		if(tmp <= 1 || tmp >= t.countEdges()-3){
 			return false;
 		}
 		if((e1 == 0 && e2 == t.countEdges()-2) || (e1 == 1 && e2 == t.countEdges()-1)
@@ -84,13 +84,12 @@ public class TwoOpt implements Improver {
 		Tour t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
-		for(int i = 0; i < 100; i++){
-			Thread.sleep(1500);
+		for(int i = 0; i < 1000; i++){
+			Thread.sleep(1);
 			System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
 			System.out.println(g.calculateLength(t));
-			GraphVisualizer tmp = new GraphVisualizer(g);
-			tmp.setTour(t);
+			vis.updateUI();
 		}
 		System.out.println(t);
 		/**/
