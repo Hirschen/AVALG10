@@ -141,13 +141,12 @@ public class Tour implements Iterable<Edge>
 		for (Edge e : edges)
 		{
 			sb.append(e.nodeA);
-			sb.append('\n');
+			sb.append(' ');
 		}
 
 		if (edges.size() > 1)
 		{
 			sb.append(edges.get(edges.size() - 1).nodeB);
-			sb.append('\n');
 		}
 
 		return sb.toString();

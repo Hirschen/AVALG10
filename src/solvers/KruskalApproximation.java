@@ -170,7 +170,7 @@ public class KruskalApproximation implements StartApproxer
 
 	public static void main(String[] args)
 	{
-		/* Simple graph * /
+		/* Simple graph */
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
 
@@ -179,7 +179,7 @@ public class KruskalApproximation implements StartApproxer
 		Tour t = sa.getTour(g);
 		System.out.println(t);
 		/**/
-		/* Graph with branching */
+		/* Graph with branching * /
 		double[][] coords = new double[][] { { 2, 2 }, { 2, 4 }, { 3, 3 }, { 6, 3 } };
 		Graph g = new Graph(coords);
 		StartApproxer sa = new KruskalApproximation();

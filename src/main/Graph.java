@@ -95,9 +95,9 @@ public class Graph
 	public int calculateLength(Tour tour)
 	{
 		int length = 0;
-		for (int i = 0; i < tour.countEdges(); i++)
+		for (Edge e : tour)
 		{
-			length += tour.getEdge(i).length;
+			length += e.length;
 		}
 		return length;
 	}
