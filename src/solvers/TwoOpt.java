@@ -31,7 +31,7 @@ public class TwoOpt implements Improver {
 			if(t.getPredecessorNode(a1) != b2 && t.getSuccessorNode(b2) != a2
 					&& t.getPredecessorNode(a1) != a2 && t.getPredecessorNode(b2) != b2){
 				if((tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0){
-					flip(t,a1,b1,a2,b2, e1,i);
+					flip2opt(t,a1,b1,a2,b2, e1,i);
 					return;
 				}
 			}
@@ -43,7 +43,7 @@ public class TwoOpt implements Improver {
 	 * Flips edge a1,b1 and a2,b2 into a1,a2 and b1,b2
 	 */
 
-	private void flip(Tour t, short a1, short b1, short a2, short b2, int e1,
+	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
 		t.setEdge(e1, G.getEdge(a1, a2), G);
 		t.setEdge(e2, G.getEdge(b1, b2), G);
