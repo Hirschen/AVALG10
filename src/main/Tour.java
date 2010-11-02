@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class Tour
 {
-	// private short[] tour;
 	private ArrayList<Edge> edges;
 
 	public Tour()
@@ -15,7 +14,6 @@ public class Tour
 
 	public Tour(int nodes)
 	{
-		// tour = new short[nodes];
 		edges = new ArrayList<Edge>(nodes);
 	}
 
@@ -30,13 +28,10 @@ public class Tour
 	public Tour(int[] tour, Graph graph)
 	{
 		int size = tour.length;
-		// this.tour = new short[size];
 		edges = new ArrayList<Edge>();
 
 		for (int i = 1; i < size; i++)
 		{
-			// assert (tour[i] < Short.MAX_VALUE);
-			// this.tour[i] = (short) tour[i];
 			edges.add(graph.getEdge(tour[i - 1], tour[i]));
 		}
 	}
