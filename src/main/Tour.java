@@ -68,7 +68,7 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getNode(int i)
 	{
-		if (i == countEdges())
+		if (i > 0 && i == getLength() - 1)
 			return edges.get(i - 1).nodeB;
 
 		return edges.get(i).nodeA;
