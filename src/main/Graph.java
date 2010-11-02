@@ -165,4 +165,22 @@ public class Graph
 		}
 	}
 
+	/**
+	 * @param a
+	 * @return
+	 */
+	public double getX(int a)
+	{
+		return nodes[a][0];
+	}
+
+	/**
+	 * @param a
+	 * @return
+	 */
+	public double getY(int a)
+	{
+		return nodes[a][1];
+	}
+
 }
