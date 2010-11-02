@@ -8,6 +8,11 @@ public class Tour
 	// private short[] tour;
 	private ArrayList<Edge> edges;
 
+	public Tour()
+	{
+		edges = new ArrayList<Edge>();
+	}
+
 	public Tour(int nodes)
 	{
 		// tour = new short[nodes];
@@ -45,6 +50,14 @@ public class Tour
 	}
 
 	/**
+	 * @return
+	 */
+	public int countEdges()
+	{
+		return edges.size();
+	}
+
+	/**
 	 * Gets a node id from a certain spot in the tour.
 	 * 
 	 * @param i
@@ -53,10 +66,15 @@ public class Tour
 	 */
 	public int getNode(int i)
 	{
-		if (i == getLength())
+		if (i == countEdges())
 			return edges.get(i - 1).nodeB;
 
 		return edges.get(i).nodeA;
+	}
+
+	public Edge getEdge(int position)
+	{
+		return edges.get(position);
 	}
 
 	/*
@@ -101,6 +119,15 @@ public class Tour
 		edges.add(e);
 	}
 
+	/**
+	 * @param insertAt
+	 * @param edge
+	 */
+	public void addEdge(int insertAt, Edge edge)
+	{
+		edges.add(insertAt, edge);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -117,5 +144,14 @@ public class Tour
 		sb.append(edges.get(edges.size() - 1).nodeB);
 
 		return sb.toString();
+	}
+
+	/**
+	 * @param e
+	 * @return
+	 */
+	public int indexOf(Edge e)
+	{
+		return edges.indexOf(e);
 	}
 }

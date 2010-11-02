@@ -64,7 +64,7 @@ public class GraphVisualizer extends JPanel
 		g.setColor(Color.black);
 		g.setBackground(new Color(255, 255, 255));
 
-		int scale = 10;
+		int scale = 20;
 
 		// Draw edges
 		for(int a = 0; a < graph.countNodes(); a++)
@@ -79,6 +79,9 @@ public class GraphVisualizer extends JPanel
 		{
 			int size = 4;
 			g.drawOval((int) graph.getX(a) * scale - size / 2, (int) graph.getY(a) * scale - size / 2, size, size);
+
+			g.setColor(Color.blue);
+			g.drawString("" + a, (int) graph.getX(a) * scale - size / 2, (int) graph.getY(a) * scale - size / 2);
 		}
 
 		// Draw tour?

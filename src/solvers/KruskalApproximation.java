@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Tour;
-import main.Graph.Edge;
 
 /**
  * <a href="http://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal's
@@ -23,7 +23,7 @@ import main.Graph.Edge;
  */
 public class KruskalApproximation implements StartApproxer
 {
-	private static final boolean verbose = true;
+	private static final boolean verbose = false;
 
 	/**
 	 * 
@@ -94,9 +94,12 @@ public class KruskalApproximation implements StartApproxer
 	 */
 	private Tour buildResult(List<Edge> mst, Graph graph)
 	{
-		LinkedList<Edge> tour = new LinkedList<Edge>();
+		Tour tour = new Tour();
+		tour.addEdge(mst.get(0));
 
-		tour.add(mst.get(0));
+		List<Edge> todo = new ArrayList<Edge>(mst);
+
+		// Go over all the edges in the minimum spanning tree
 		for (int i = 1; i < mst.size(); i++)
 		{
 			Edge edge = mst.get(i);
@@ -106,31 +109,37 @@ public class KruskalApproximation implements StartApproxer
 
 			Edge insertedNode = null;
 			int insertAt = -1;
-			// Find any of the nodes
-			for (Edge e : tour)
+			// Find any connecting edge
+			Iterator<Edge> it = todo.iterator();
+			while (it.hasNext())
 			{
+				Edge e = it.next();
 				if (edge.nodeA == e.nodeB)
 				{
 					insertAt = tour.indexOf(e) + 1;
 					insertedNode = edge;
+					it.remove();
 					break;
 				}
 				if (edge.nodeB == e.nodeA)
 				{
 					insertAt = tour.indexOf(e);
 					insertedNode = edge;
+					it.remove();
 					break;
 				}
 				if (edge.nodeA == e.nodeA)
 				{
 					insertAt = tour.indexOf(e);
-					insertedNode = graph.new Edge(edge.nodeB, edge.nodeA, edge.length);
+					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
+					it.remove();
 					break;
 				}
 				if (edge.nodeB == e.nodeB)
 				{
 					insertAt = tour.indexOf(e) + 1;
-					insertedNode = graph.new Edge(edge.nodeB, edge.nodeA, edge.length);
+					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
+					it.remove();
 					break;
 				}
 			}
@@ -139,13 +148,15 @@ public class KruskalApproximation implements StartApproxer
 				insertAt = 0;
 			}
 
-			if (insertAt < tour.size())
+			if (insertAt < tour.countEdges())
 			{
-				Edge neighbour = tour.get(insertAt);
+				Edge neighbour = tour.getEdge(insertAt);
 				if (insertedNode.nodeB != neighbour.nodeA)
-					tour.add(insertAt, graph.new Edge(insertedNode.nodeB, neighbour.nodeA, edge.length));
+				{
+					tour.addEdge(insertAt, new Edge(insertedNode.nodeB, neighbour.nodeA, edge.length));
+				}
 			}
-			tour.add(insertAt, insertedNode);
+			tour.addEdge(insertAt, insertedNode);
 		}
 		// tour.add(new Edge(tour.getFirst().nodeB, tour.getLast().nodeA,
 		// (short) graph.distance(tour.getFirst().nodeB,
@@ -153,15 +164,7 @@ public class KruskalApproximation implements StartApproxer
 		if (verbose)
 			System.out.println("Tour: " + tour);
 
-		Tour t = new Tour(tour.size() + 2);
-		for (int i = 0; i < tour.size(); i++)
-		{
-			t.setNode(i, tour.get(i).nodeA);
-		}
-		t.setNode(tour.size(), tour.getLast().nodeB);
-		t.setNode(tour.size() + 1, tour.getFirst().nodeA);
-
-		return t;
+		return tour;
 	}
 
 
