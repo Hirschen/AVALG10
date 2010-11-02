@@ -80,7 +80,11 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getPredecessorNode(int tourPosition)
 	{
-		return getNode(tourPosition - 1);
+		if(tourPosition <= 0){
+			return getNode(edges.size()-1);
+		}else{
+			return getNode(tourPosition - 1);
+		}
 	}
 
 	/*
@@ -88,7 +92,11 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getSuccessorNode(int tourPosition)
 	{
-		return getNode(tourPosition + 1);
+		if(tourPosition >= edges.size()){
+			return getNode(0);
+		}else{
+			return getNode(tourPosition + 1);
+		}
 	}
 	
 	public Edge getLongestEdge()
@@ -125,9 +133,17 @@ public class Tour implements Iterable<Edge>
 	 */
 	public void setEdge(int setAt, Edge edge, Graph g)
 	{
+		int a = setAt, b = setAt;
+		if(setAt == 0){
+			a = edges.size();
+		}
+		if(setAt == edges.size()-1){
+			b=-1;
+		}
+		
 		edges.set(setAt, edge);
-		edges.set(setAt-1, g.getEdge(edges.get(setAt-1).nodeB, edge.nodeA));
-		edges.set(setAt+1, g.getEdge(edges.get(setAt+1).nodeA, edge.nodeB));
+		edges.set(a-1, g.getEdge(edges.get(a-1).nodeB, edge.nodeA));
+		edges.set(b+1, g.getEdge(edges.get(b+1).nodeA, edge.nodeB));
 	}
 
 	/*

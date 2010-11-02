@@ -7,8 +7,10 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import solvers.Improver;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
+import solvers.TwoOpt;
 
 /**
  * // TODO: Main is a ...
@@ -56,6 +58,7 @@ public class Main
 
 		Graph graph = new Graph(g);
 		Tour tour = approximateTour(graph);
+		tour = improveTour(graph, tour);
 
 		// Output tour
 		io.println(tour);
@@ -89,6 +92,11 @@ public class Main
 		Tour tour = approximateTour(graph);
 
 		System.out.println("Created approximation for " + timeDiff(time(), time) + " ms.");
+		time = time();
+		
+		tour = improveTour(graph, tour);
+		
+		System.out.println("Created improved for " + timeDiff(time(), time) + " ms.");
 		time = time();
 
 		// Output tour
@@ -155,5 +163,12 @@ public class Main
 	{
 		StartApproxer solver = new NaiveSolver();
 		return solver.getTour(graph);
+	}
+	private Tour improveTour(Graph g, Tour t){
+		Improver imp = new TwoOpt();
+		for(int i = 0; i < 300; i++){
+			t = imp.improve(g, t);
+		}
+		return t;
 	}
 }

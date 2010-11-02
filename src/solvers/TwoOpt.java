@@ -10,7 +10,11 @@ public class TwoOpt implements Improver {
 	public TwoOpt(){
 		
 	}
-
+	/*
+	 * returns null if nothing happened
+	 * (non-Javadoc)
+	 * @see solvers.Improver#improve(main.Graph, main.Tour)
+	 */
 	@Override
 	public Tour improve(Graph g, Tour t) {
 		G=g;
@@ -21,7 +25,7 @@ public class TwoOpt implements Improver {
 		short b1 = E1.nodeB;
 		short a2, b2;
 		
-		for(int i=0; i < t.getLength(); i++){
+		for(int i=0; i < t.countEdges(); i++){
 			tmpE = t.getEdge(i);
 			a2=tmpE.nodeA;
 			b2=tmpE.nodeB;
@@ -47,9 +51,7 @@ public class TwoOpt implements Improver {
 	}
 
 	private int fetchFirstEdge(Tour t){
-		//TODO MAGIC!
-		
-		return 0;
+		return (int) (Math.random()*(t.countEdges()-1));
 	}
 	
 	private Edge findCandidate(){
