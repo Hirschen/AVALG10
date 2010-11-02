@@ -1,7 +1,6 @@
 package solvers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,11 +40,11 @@ public class KruskalApproximation implements StartApproxer
 	{
 		Edge[] edges = g.getSortedEdgeList();
 
-		double time = 0;
+		double time;
 		if (verbose)
 		{
 			System.out.println("Graph: " + g);
-			System.out.println("Edges: " + Arrays.toString(edges));
+			// System.out.println("Edges: " + Arrays.toString(edges));
 			time = Main.time();
 		}
 
@@ -71,23 +70,36 @@ public class KruskalApproximation implements StartApproxer
 				continue;
 			}
 
-			// then add it to the forest, combining two trees into a single tree
-			Set<Edge> tree = new HashSet<Edge>();
-			if (treeA != null)
+			// combine the two trees into a single tree
+			Set<Edge> tree = null;
+			if (treeA != null && treeB == null)
 			{
-				tree.addAll(treeA);
+				tree = treeA;
 			}
-			if (treeB != null)
+			else if (treeA == null && treeB != null)
 			{
-				tree.addAll(treeB);
+				tree = treeB;
 			}
+			else if (treeA != null && treeB != null)
+			{
+				treeA.addAll(treeB);
+				for (Edge te : treeB)
+				{
+					forest.put(te.nodeA, treeA);
+					forest.put(te.nodeB, treeA);
+				}
+				tree = treeA;
+			}
+			else
+			// treeA == null && treeB == null
+			{
+				tree = new HashSet<Edge>();
+			}
+			
+			// then add it to the tree and update the forest
 			tree.add(e);
-
-			for (Edge te : tree)
-			{
-				forest.put(te.nodeA, tree);
-				forest.put(te.nodeB, tree);
-			}
+			forest.put(e.nodeA, tree);
+			forest.put(e.nodeB, tree);
 
 			if (tree.size() == g.countNodes() - 1)
 			{
@@ -95,9 +107,15 @@ public class KruskalApproximation implements StartApproxer
 				{
 
 					System.out.println("MST: " + tree);
-					System.out.println("Found after " + Main.timeDiff(Main.time(), time) + " ms.");
+					System.out.println("Found MST in: " + Main.timeDiff(Main.time(), time) + " ms.");
+					time = Main.time();
 				}
-				return buildResult(new ArrayList<Edge>(tree), g);
+				Tour t = buildResult(new ArrayList<Edge>(tree), g);
+				if (verbose)
+				{
+					System.out.println("Built result in: " + Main.timeDiff(Main.time(), time) + " ms.");
+				}
+				return t;
 			}
 		}
 
@@ -174,17 +192,23 @@ public class KruskalApproximation implements StartApproxer
 			}
 			tour.addEdge(insertAt, insertedNode);
 		}
-		// tour.add(new Edge(tour.getFirst().nodeB, tour.getLast().nodeA,
-		// (short) graph.distance(tour.getFirst().nodeB,
-		// tour.getLast().nodeA)));
+		tour.addEdge(graph.getEdge(tour.getLast().nodeB, tour.getFirst().nodeA));
+
 		if (verbose)
 			System.out.println("Tour: " + tour);
 
 		return tour;
 	}
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
+		/* Kattis * /
+		Problem p = new Problem(new File("testdata/pr2392.tsp"), new File("testdata/pr2392.opt.tour"));
+		Graph g = new Graph(p.coordinates);
+		StartApproxer sa = new KruskalApproximation();
+		Tour t = sa.getTour(g);
+		System.out.println(t);
+		/**/
 		/* Simple graph */
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
@@ -199,6 +223,6 @@ public class KruskalApproximation implements StartApproxer
 		StartApproxer sa = new KruskalApproximation();
 		System.out.println(sa.getTour(g));
 		/**/
-		new GraphVisualizer(g);
+		new GraphVisualizer(g, 10).setTour(t);
 	}
 }

@@ -52,6 +52,7 @@ public class NaiveSolver implements StartApproxer
 			used[best] = true;
 			previous = best;
 		}
+		tour.addEdge(graph.getEdge(previous, 0));
 		return tour;
 	}
 

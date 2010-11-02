@@ -21,7 +21,7 @@ public final class Edge implements Comparable<Edge>
 	 */
 	public int compareTo(Edge e)
 	{
-		return this.length - e.length;
+		return length - e.length;
 	}
 
 	/*
