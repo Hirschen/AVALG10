@@ -28,19 +28,23 @@ public class Graph
 		nodeCount = coordinates.length;
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
-		Edge tmp;
+
+		assert (nodeCount < Short.MAX_VALUE);
+
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
 			// TODO: Creating nullpointers? :(
-			for (short b = (short) (a + 1); b < nodeCount; b++)
+			for (short b = a; b < nodeCount; b++)
 			{
-				short distance = (short) calculateDistance(a, b);
+				long distance = calculateDistance(a, b);
 
+				// assert (distance < Integer.MAX_VALUE);
+				int dist = (int) distance;
+				
 				// Store calculated values
-				tmp = new Edge(a,b,distance);
-				edges[a][b] = tmp;
-				edges[b][a] = tmp;
+				edges[a][b] = new Edge(a, b, dist);
+				edges[b][a] = new Edge(b, a, dist);
 			}
 		}
 	}
@@ -78,7 +82,6 @@ public class Graph
 		++distanceCounts; // For stats
 
 		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
-
 		return distance;
 	}
 

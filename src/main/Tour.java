@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 public class Tour implements Iterable<Edge>
 {
-	private Graph g;
 	private ArrayList<Edge> edges;
 
 	public Tour()
@@ -16,7 +15,6 @@ public class Tour implements Iterable<Edge>
 
 	public Tour(int nodes)
 	{
-		// tour = new short[nodes];
 		edges = new ArrayList<Edge>(nodes);
 	}
 
@@ -31,13 +29,10 @@ public class Tour implements Iterable<Edge>
 	public Tour(int[] tour, Graph graph)
 	{
 		int size = tour.length;
-		// this.tour = new short[size];
 		edges = new ArrayList<Edge>();
 
 		for (int i = 1; i < size; i++)
 		{
-			// assert (tour[i] < Short.MAX_VALUE);
-			// this.tour[i] = (short) tour[i];
 			edges.add(graph.getEdge(tour[i - 1], tour[i]));
 		}
 	}
@@ -68,7 +63,7 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getNode(int i)
 	{
-		if (i > 0 && i == getLength() - 1)
+		if (i > 0 && i == edges.size())
 			return edges.get(i - 1).nodeB;
 
 		return edges.get(i).nodeA;
@@ -115,7 +110,7 @@ public class Tour implements Iterable<Edge>
 
 	public void addEdge(Edge e)
 	{
-		if (edges.size() > 1 && edges.get(edges.size() - 1).nodeB != e.nodeA)
+		if (edges.size() > 0 && edges.get(edges.size() - 1).nodeB != e.nodeA)
 		{
 			throw new RuntimeException("You can not connect " + e + " with this tour. The last edge is " + edges.get(edges.size() - 1) + ". This can not be conneced with " + e + ".");
 		}
@@ -146,9 +141,14 @@ public class Tour implements Iterable<Edge>
 		for (Edge e : edges)
 		{
 			sb.append(e.nodeA);
-			sb.append(' ');
+			sb.append('\n');
 		}
-		sb.append(edges.get(edges.size() - 1).nodeB);
+
+		if (!edges.isEmpty())
+		{
+			sb.append(edges.get(edges.size() - 1).nodeB);
+			sb.append('\n');
+		}
 
 		return sb.toString();
 	}

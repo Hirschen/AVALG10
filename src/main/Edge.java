@@ -7,9 +7,9 @@ public final class Edge implements Comparable<Edge>
 {
 	public final short nodeA;
 	public final short nodeB;
-	public final short length;
+	public final int length;
 
-	public Edge(short a, short b, short l)
+	public Edge(short a, short b, int l)
 	{
 		nodeA = a;
 		nodeB = b;
