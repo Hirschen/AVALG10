@@ -144,7 +144,7 @@ public class Tour implements Iterable<Edge>
 			sb.append('\n');
 		}
 
-		if (!edges.isEmpty())
+		if (edges.size() > 1)
 		{
 			sb.append(edges.get(edges.size() - 1).nodeB);
 			sb.append('\n');
