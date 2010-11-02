@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import solvers.Improver;
 import solvers.KruskalApproximation;
+import solvers.NaiveSolver;
 import solvers.StartApproxer;
 import solvers.TwoOpt;
 
@@ -161,7 +162,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new KruskalApproximation();
+		StartApproxer solver = new NaiveSolver();
 		return solver.getTour(graph);
 	}
 	private Tour improveTour(Graph g, Tour t){
