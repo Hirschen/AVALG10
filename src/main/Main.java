@@ -7,11 +7,8 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import solvers.Improver;
 import solvers.KruskalApproximation;
-import solvers.NaiveSolver;
 import solvers.StartApproxer;
-import solvers.TwoOpt;
 
 /**
  * // TODO: Main is a ...
@@ -23,6 +20,7 @@ public class Main
 {
 	private Kattio io;
 	private InputStream input;
+
 	/**
 	 * @param args
 	 * @throws IOException
@@ -94,9 +92,9 @@ public class Main
 
 		System.out.println("Created approximation for " + timeDiff(time(), time) + " ms.");
 		time = time();
-		
+
 		tour = improveTour(graph, tour);
-		
+
 		System.out.println("Created improved for " + timeDiff(time(), time) + " ms.");
 		time = time();
 
@@ -162,14 +160,17 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new KruskalApproximation();
 		return solver.getTour(graph);
 	}
-	private Tour improveTour(Graph g, Tour t){
-		Improver imp = new TwoOpt();
-		for(int i = 0; i < 3000; i++){
+
+	private Tour improveTour(Graph g, Tour t)
+	{
+		/*Improver imp = new TwoOpt();
+		for (int i = 0; i < 100; i++)
+		{
 			imp.improve(g, t);
-		}
+		}*/
 		return t;
 	}
 }
