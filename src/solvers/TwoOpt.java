@@ -28,8 +28,8 @@ public class TwoOpt implements Improver {
 			tmpE = t.getEdge(i);
 			a2=tmpE.nodeA;
 			b2=tmpE.nodeB;
-			if(t.getPredecessorNode(a1) != b2 && t.getSuccessorNode(b2) != a2
-					&& t.getPredecessorNode(a1) != a2 && t.getPredecessorNode(b2) != b2){
+			if(E1 != tmpE && tmpE.nodeB != E1.nodeA && tmpE.nodeA != E1.nodeB
+					&& tmpE.nodeB != E1.nodeB && tmpE.nodeA != E1.nodeA){
 				if((tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0){
 					flip2opt(t,a1,b1,a2,b2, e1,i);
 					return;
@@ -45,9 +45,8 @@ public class TwoOpt implements Improver {
 
 	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
-		t.setEdge(e1, G.getEdge(a1, a2), G);
-		t.setEdge(e2, G.getEdge(b1, b2), G);
-		System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
+		t.switchEdges(G, e1, e2, G.getEdge(a1, a2), G.getEdge(b1, b2));
+		//System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
 		return;
 	}
 
@@ -61,7 +60,7 @@ public class TwoOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 } };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 } };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
@@ -70,8 +69,10 @@ public class TwoOpt implements Improver {
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 100; i++){
-			Thread.sleep(1000);
+			Thread.sleep(1500);
+			System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
+			System.out.println(g.calculateLength(t));
 			GraphVisualizer tmp = new GraphVisualizer(g);
 			tmp.setTour(t);
 		}
