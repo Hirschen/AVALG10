@@ -1,36 +1,62 @@
 package main;
 
+import java.util.ArrayList;
+
 
 public class Tour
 {
-	private short[] tour;
-
+	// private short[] tour;
+	private ArrayList<Edge> edges;
 
 	public Tour(int nodes)
 	{
-		tour = new short[nodes];
+		// tour = new short[nodes];
+		edges = new ArrayList<Edge>(nodes);
 	}
 
-	public Tour(int[] tour)
+	/**
+	 * Constructs a tour object from a given tour and a graph.
+	 * 
+	 * @param tour
+	 *            the already constructed tour.
+	 * @param graph
+	 *            the graph which contains edge weights.
+	 */
+	public Tour(int[] tour, Graph graph)
 	{
 		int size = tour.length;
-		this.tour = new short[size];
+		// this.tour = new short[size];
+		edges = new ArrayList<Edge>();
 
-		for (int i = 0; i < size; i++)
+		for (int i = 1; i < size; i++)
 		{
 			// assert (tour[i] < Short.MAX_VALUE);
-			this.tour[i] = (short) tour[i];
+			// this.tour[i] = (short) tour[i];
+			edges.add(graph.getEdge(tour[i - 1], tour[i]));
 		}
 	}
 
+	/**
+	 * @return the number of nodes in the tour.
+	 */
 	public int getLength()
 	{
-		return tour.length;
+		return edges.size() + 1;
 	}
 
+	/**
+	 * Gets a node id from a certain spot in the tour.
+	 * 
+	 * @param i
+	 *            the place on the tour to fetch the node from.
+	 * @return a node id.
+	 */
 	public int getNode(int i)
 	{
-		return tour[i];
+		if (i == getLength())
+			return edges.get(i - 1).nodeB;
+
+		return edges.get(i).nodeA;
 	}
 
 	/*
@@ -48,15 +74,6 @@ public class Tour
 	{
 		return getNode(tourPosition + 1);
 	}
-
-	public void setNode(int i, int v)
-	{
-		// assert (v < Short.MAX_VALUE);
-		tour[i] = (short) v;
-	}
-
-	/*
-	 TODO: Lagra edges här istället och sedan generera en short[] ?
 	
 	public Edge getLongestEdge()
 	{
@@ -72,21 +89,18 @@ public class Tour
 
 	public void removeEdge(Edge e)
 	{
-		removeEdge(e.nodeA, e.nodeB);
-	}
-
-	public void removeEdge(int nodeA, int nodeB)
-	{
-		edges[nodeA][nodeB] = null;
-		edges[nodeB][nodeA] = null;
+		edges.remove(e);
 	}
 
 	public void addEdge(Edge e)
 	{
-		edges[e.nodeA][e.nodeB] = e;
-		edges[e.nodeB][e.nodeA] = e;
+		if (edges.size() > 1 && edges.get(edges.size() - 1).nodeB != e.nodeA)
+		{
+			throw new RuntimeException("You can not connect " + e + " with this tour. The last edge is " + edges.get(edges.size() - 1) + ". This can not be conneced with " + e + ".");
+		}
+		edges.add(e);
 	}
-	*/
+
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -95,11 +109,13 @@ public class Tour
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < tour.length; i++)
+		for (Edge e : edges)
 		{
-			sb.append(tour[i]);
+			sb.append(e.nodeA);
 			sb.append(' ');
 		}
+		sb.append(edges.get(edges.size() - 1).nodeB);
+
 		return sb.toString();
 	}
 }

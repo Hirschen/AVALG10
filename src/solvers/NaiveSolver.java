@@ -1,4 +1,5 @@
 package solvers;
+import main.Edge;
 import main.Graph;
 import main.Tour;
 
@@ -28,6 +29,7 @@ public class NaiveSolver implements StartApproxer
 		Tour tour = new Tour(graph.countNodes());
 		boolean[] used = new boolean[graph.countNodes()];
 		used[0] = true;
+		int previous = 0;
 		for (int i = 1; i < graph.countNodes(); i++)
 		{
 			int best = -1;
@@ -36,13 +38,15 @@ public class NaiveSolver implements StartApproxer
 				if (used[j])
 					continue;
 
-				if (best == -1 || graph.distance(tour.getNode(i-1), j) < graph.distance(tour.getNode(i-1), best))
+				if (best == -1 || graph.distance(previous, j) < graph.distance(previous, best))
 				{
 					best = j;
 				}
 			}
-			tour.setNode(i, best);
+
+			tour.addEdge(new Edge((short) previous, (short) best, (short) (graph.distance(previous, best))));
 			used[best] = true;
+			previous = best;
 		}
 		return tour;
 	}
