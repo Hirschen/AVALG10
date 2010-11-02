@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import solvers.Improver;
-import solvers.NaiveSolver;
+import solvers.KruskalApproximation;
 import solvers.StartApproxer;
 import solvers.TwoOpt;
 
@@ -110,12 +110,12 @@ public class Main
 	/**
 	 * @return in ms
 	 */
-	private double time()
+	public static double time()
 	{
 		return ((int) Math.round(System.nanoTime() / 1000.0)) / 1000.0;
 	}
 
-	private double timeDiff(double t1, double t2)
+	public static double timeDiff(double t1, double t2)
 	{
 		return Math.round(t1 * 1000.0 - t2 * 1000.0) / 1000.0;
 	}
@@ -161,7 +161,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new KruskalApproximation();
 		return solver.getTour(graph);
 	}
 	private Tour improveTour(Graph g, Tour t){

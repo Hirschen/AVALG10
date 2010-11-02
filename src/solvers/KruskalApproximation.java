@@ -11,6 +11,7 @@ import java.util.Set;
 import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
+import main.Main;
 import main.Tour;
 
 /**
@@ -23,7 +24,7 @@ import main.Tour;
  */
 public class KruskalApproximation implements StartApproxer
 {
-	private static final boolean verbose = false;
+	private static final boolean verbose = true;
 
 	/**
 	 * 
@@ -39,10 +40,21 @@ public class KruskalApproximation implements StartApproxer
 	public Tour getTour(Graph g)
 	{
 		Edge[] edges = g.getSortedEdgeList();
+
+		double time = 0;
 		if (verbose)
 		{
 			System.out.println("Graph: " + g);
 			System.out.println("Edges: " + Arrays.toString(edges));
+			time = Main.time();
+		}
+
+		// Special case for one node.
+		if (g.countNodes() == 1)
+		{
+			Tour tour = new Tour(1);
+			tour.addEdge(g.getEdge(0, 0));
+			return tour;
 		}
 
 		HashMap<Short, Set<Edge>> forest = new HashMap<Short, Set<Edge>>();
@@ -80,7 +92,11 @@ public class KruskalApproximation implements StartApproxer
 			if (tree.size() == g.countNodes() - 1)
 			{
 				if (verbose)
+				{
+
 					System.out.println("MST: " + tree);
+					System.out.println("Found after " + Main.timeDiff(Main.time(), time) + " ms.");
+				}
 				return buildResult(new ArrayList<Edge>(tree), g);
 			}
 		}
@@ -167,13 +183,11 @@ public class KruskalApproximation implements StartApproxer
 		return tour;
 	}
 
-
 	public static void main(String[] args)
 	{
 		/* Simple graph */
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
-
 
 		StartApproxer sa = new KruskalApproximation();
 		Tour t = sa.getTour(g);
