@@ -142,8 +142,8 @@ public class Tour implements Iterable<Edge>
 		}
 		
 		edges.set(setAt, edge);
-		edges.set(a-1, g.getEdge(edges.get(a-1).nodeB, edge.nodeA));
-		edges.set(b+1, g.getEdge(edges.get(b+1).nodeA, edge.nodeB));
+		edges.set(a-1, g.getEdge(edges.get(a-1).nodeA, edge.nodeA));
+		edges.set(b+1, g.getEdge(edge.nodeB, edges.get(b+1).nodeB ));
 	}
 
 	/*

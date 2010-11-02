@@ -2,6 +2,7 @@ package solvers;
 
 import main.Edge;
 import main.Graph;
+import main.GraphVisualizer;
 import main.Tour;
 
 public class TwoOpt implements Improver {
@@ -11,7 +12,6 @@ public class TwoOpt implements Improver {
 		
 	}
 	/*
-	 * returns null if nothing happened
 	 * (non-Javadoc)
 	 * @see solvers.Improver#improve(main.Graph, main.Tour)
 	 */
@@ -47,6 +47,7 @@ public class TwoOpt implements Improver {
 			int e2) {
 		t.setEdge(e1, G.getEdge(a1, a2), G);
 		t.setEdge(e2, G.getEdge(b1, b2), G);
+		System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
 		return;
 	}
 
@@ -56,5 +57,31 @@ public class TwoOpt implements Improver {
 	
 	private Edge findCandidate(){
 		return null;
+	}
+	public static void main(String[] args) throws InterruptedException
+	{
+		/* Simple graph */
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 } };
+		Graph g = new Graph(coords);
+		GraphVisualizer vis = new GraphVisualizer(g);
+
+		StartApproxer sa = new NaiveSolver();
+		Tour t = sa.getTour(g);
+		vis.setTour(t);
+		Improver imp = new TwoOpt();
+		for(int i = 0; i < 100; i++){
+			Thread.sleep(1000);
+			imp.improve(g, t);
+			GraphVisualizer tmp = new GraphVisualizer(g);
+			tmp.setTour(t);
+		}
+		System.out.println(t);
+		/**/
+		/* Graph with branching * /
+		double[][] coords = new double[][] { { 2, 2 }, { 2, 4 }, { 3, 3 }, { 6, 3 } };
+		Graph g = new Graph(coords);
+		StartApproxer sa = new KruskalApproximation();
+		System.out.println(sa.getTour(g));
+		/**/
 	}
 }
