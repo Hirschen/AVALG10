@@ -121,6 +121,8 @@ public class Tour implements Iterable<Edge>
 		}
 		edges.add(e);
 	}
+	
+	
 
 	/**
 	 * @param setAt
@@ -162,8 +164,14 @@ public class Tour implements Iterable<Edge>
 	}
 
 	@Override
-	public Iterator<Edge> iterator() {
+	public Iterator<Edge> iterator() 
+	{
 		// TODO Auto-generated method stub
 		return edges.iterator();
+	}
+
+	public void addEdge(int insertAt, Edge edge) {
+		edges.add(insertAt,edge);
+		
 	}
 }
