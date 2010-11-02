@@ -61,7 +61,7 @@ public class Tour
 	 */
 	public int getNode(int i)
 	{
-		if (i > 0 && i == getLength() - 1)
+		if (i > 0 && i == edges.size())
 			return edges.get(i - 1).nodeB;
 
 		return edges.get(i).nodeA;
@@ -107,7 +107,7 @@ public class Tour
 
 	public void addEdge(Edge e)
 	{
-		if (edges.size() > 1 && edges.get(edges.size() - 1).nodeB != e.nodeA)
+		if (edges.size() > 0 && edges.get(edges.size() - 1).nodeB != e.nodeA)
 		{
 			throw new RuntimeException("You can not connect " + e + " with this tour. The last edge is " + edges.get(edges.size() - 1) + ". This can not be conneced with " + e + ".");
 		}
@@ -134,9 +134,14 @@ public class Tour
 		for (Edge e : edges)
 		{
 			sb.append(e.nodeA);
-			sb.append(' ');
+			sb.append('\n');
 		}
-		sb.append(edges.get(edges.size() - 1).nodeB);
+
+		if (!edges.isEmpty())
+		{
+			sb.append(edges.get(edges.size() - 1).nodeB);
+			sb.append('\n');
+		}
 
 		return sb.toString();
 	}

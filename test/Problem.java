@@ -120,7 +120,7 @@ public class Problem
 
 	public static void main(String[] args) throws IOException
 	{
-		Problem p = new Problem(new File("testdata/kattis.tsp"), new File("testdata/kattis.opt.tour"));
+		Problem p = new Problem(new File("testdata/pr2392.tsp"), new File("testdata/pr2392.opt.tour"));
 		System.out.println(p);
 	}
 

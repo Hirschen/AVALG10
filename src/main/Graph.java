@@ -33,12 +33,16 @@ public class Graph
 		for (short a = 0; a < nodeCount; a++)
 		{
 			// TODO: Creating nullpointers? :(
-			for (short b = 0; b < nodeCount; b++)
+			for (short b = a; b < nodeCount; b++)
 			{
-				short distance = (short) calculateDistance(a, b);
+				long distance = calculateDistance(a, b);
 
+				assert (distance < Integer.MAX_VALUE);
+				int dist = (int) distance;
+				
 				// Store calculated values
-				edges[a][b] = new Edge(a, b, distance);
+				edges[a][b] = new Edge(a, b, dist);
+				edges[b][a] = new Edge(b, a, dist);
 			}
 		}
 	}
@@ -76,7 +80,6 @@ public class Graph
 		++distanceCounts; // For stats
 
 		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
-
 		return distance;
 	}
 
