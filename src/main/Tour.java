@@ -131,7 +131,7 @@ public class Tour implements Iterable<Edge>
 	 * @param setAt
 	 * @param edge
 	 */
-	public void setEdge(int setAt, Edge edge, Graph g)
+	public void setEdge(int setAt, Edge edge, Graph g, int switchy, Edge sw)
 	{
 		int a = setAt, b = setAt;
 		if(setAt == 0){
@@ -142,8 +142,26 @@ public class Tour implements Iterable<Edge>
 		}
 		
 		edges.set(setAt, edge);
-		edges.set(a-1, g.getEdge(edges.get(a-1).nodeA, edge.nodeA));
-		edges.set(b+1, g.getEdge(edge.nodeB, edges.get(b+1).nodeB ));
+		//edges.set(a-1, g.getEdge(edges.get(a-1).nodeA, edge.nodeA));
+		edges.set(switchy, sw);
+	}
+	
+	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2){
+		//if(e1 > e2){
+			edges.set(e2, f1);
+			edges.set(e1, f2);
+			
+			edges.set(e1-1, g.getEdge(edges.get(e1-1).nodeA, f1.nodeA));
+			edges.set(e2+1, g.getEdge(f2.nodeB, edges.get(e2+1).nodeB));
+		//}
+		/*else{
+			edges.set(e2, f1);
+			edges.set(e1, f2);
+			
+			edges.set(e2-1, g.getEdge(edges.get(e2-1).nodeA, f1.nodeA));
+			edges.set(e1+1, g.getEdge(f2.nodeB, edges.get(e1+1).nodeB));
+		}*/
+	
 	}
 
 	/*
