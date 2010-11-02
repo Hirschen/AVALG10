@@ -15,7 +15,7 @@ public class TwoOpt implements Improver {
 	 * (non-Javadoc)
 	 * @see solvers.Improver#improve(main.Graph, main.Tour)
 	 */
-	public Tour improve(Graph g, Tour t) {
+	public void improve(Graph g, Tour t) {
 		G=g;
 		Edge E1,tmpE; //EDGE
 		int e1 = fetchFirstEdge(t);
@@ -30,23 +30,24 @@ public class TwoOpt implements Improver {
 			b2=tmpE.nodeB;
 			if(t.getPredecessorNode(a1) != b2 && t.getSuccessorNode(b2) != a2
 					&& t.getPredecessorNode(a1) != a2 && t.getPredecessorNode(b2) != b2){
-				if((g.distance(a1, a2)+g.distance(b1, b2)-tmpE.length+E1.length) > 0){
-					return flip(t,a1,b1,a2,b2, e1,i);
+				if((tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0){
+					flip(t,a1,b1,a2,b2, e1,i);
+					return;
 				}
 			}
 		}
-		return null;
+		return;
 	}
 	/*
 	 * t, a1,b1,a2,b2
 	 * Flips edge a1,b1 and a2,b2 into a1,a2 and b1,b2
 	 */
 
-	private Tour flip(Tour t, short a1, short b1, short a2, short b2, int e1,
+	private void flip(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
 		t.setEdge(e1, G.getEdge(a1, a2), G);
 		t.setEdge(e2, G.getEdge(b1, b2), G);
-		return t;
+		return;
 	}
 
 	private int fetchFirstEdge(Tour t){
@@ -54,7 +55,6 @@ public class TwoOpt implements Improver {
 	}
 	
 	private Edge findCandidate(){
-		
 		return null;
 	}
 }

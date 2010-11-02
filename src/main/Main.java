@@ -166,8 +166,8 @@ public class Main
 	}
 	private Tour improveTour(Graph g, Tour t){
 		Improver imp = new TwoOpt();
-		for(int i = 0; i < 300; i++){
-			t = imp.improve(g, t);
+		for(int i = 0; i < 3000; i++){
+			imp.improve(g, t);
 		}
 		return t;
 	}

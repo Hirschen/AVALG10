@@ -92,7 +92,7 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getSuccessorNode(int tourPosition)
 	{
-		if(tourPosition >= edges.size()){
+		if(tourPosition >= edges.size()-1){
 			return getNode(0);
 		}else{
 			return getNode(tourPosition + 1);
@@ -157,12 +157,13 @@ public class Tour implements Iterable<Edge>
 		for (Edge e : edges)
 		{
 			sb.append(e.nodeA);
-			sb.append(' ');
+			sb.append('\n');
 		}
 
 		if (edges.size() > 1)
 		{
 			sb.append(edges.get(edges.size() - 1).nodeB);
+			sb.append('\n');
 		}
 
 		return sb.toString();
@@ -178,6 +179,7 @@ public class Tour implements Iterable<Edge>
 		return edges.indexOf(e);
 	}
 
+	@Override
 	public Iterator<Edge> iterator() 
 	{
 		// TODO Auto-generated method stub
