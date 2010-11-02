@@ -1,5 +1,6 @@
 package main;
 
+import java.util.Arrays;
 
 /**
  * // TODO: Graph is a ...
@@ -32,7 +33,7 @@ public class Graph
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
-			for (short b =  (short) (a + 1) ; b < nodeCount; b++)
+			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				short distance = (short) calculateDistance(a, b);
 
@@ -104,25 +105,40 @@ public class Graph
 	 * @param g
 	 * @return
 	 */
-	public Edge[] createEdgeList(Graph g)
+	public Edge getEdge(int a, int b)
 	{
-		Edge[] edges = new Edge[g.countEdges()];
-		int ep = 0;
-		for (short a = 0; a < g.countNodes(); a++)
-		{
-			for (short b = (short) (a + 1); b < g.countNodes(); b++)
-			{
-				edges[ep++] = new Edge(a, b, (short) g.distance(a, b));
-			}
-		}
+		return edges[a][b];
+	}
+
+	public Edge[][] getEdges()
+	{
 		return edges;
 	}
-	
+
+	/**
+	 * @param g
+	 * @return
+	 */
+	public Edge[] getSortedEdgeList()
+	{
+		Edge[] list = new Edge[edgeCount];
+		int ep = 0;
+		for (int a = 0; a < nodeCount; a++)
+		{
+			for (int b = a + 1; b < nodeCount; b++)
+			{
+				list[ep++] = edges[a][b];
+			}
+		}
+		Arrays.sort(list);
+		return list;
+	}
+
 	/*
 	 * 
 	 * 
 	 */
-	public class Edge implements Comparable<Edge>
+	public final class Edge implements Comparable<Edge>
 	{
 		public final short nodeA;
 		public final short nodeB;
@@ -148,4 +164,5 @@ public class Graph
 			return nodeA + "-[" + length + "]-" + nodeB;
 		}
 	}
+
 }
