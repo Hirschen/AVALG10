@@ -29,6 +29,8 @@ public class Graph
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 
+		assert (nodeCount < Short.MAX_VALUE);
+
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
@@ -37,7 +39,7 @@ public class Graph
 			{
 				long distance = calculateDistance(a, b);
 
-				assert (distance < Integer.MAX_VALUE);
+				// assert (distance < Integer.MAX_VALUE);
 				int dist = (int) distance;
 				
 				// Store calculated values
