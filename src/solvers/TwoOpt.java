@@ -11,7 +11,6 @@ public class TwoOpt implements Improver {
 		
 	}
 
-	@Override
 	public Tour improve(Graph g, Tour t) {
 		G=g;
 		Edge E1,tmpE; //EDGE

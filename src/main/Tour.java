@@ -163,7 +163,6 @@ public class Tour implements Iterable<Edge>
 		return edges.indexOf(e);
 	}
 
-	@Override
 	public Iterator<Edge> iterator() 
 	{
 		// TODO Auto-generated method stub
