@@ -23,6 +23,10 @@ public class Tour
 		}
 	}
 
+	public Tour() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getLength()
 	{
 		return tour.length;

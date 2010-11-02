@@ -6,49 +6,52 @@ import main.Tour;
 public class LinKernighan implements Improver {
 	
 	private short[] incl;
-	private Tour best_t;
+	private Tour Best_t;
 	private Tour T;
 	private Graph G;
 	private int BestG2K;
 
 	public LinKernighan(Tour t, Graph g) {
-		
 	}
 
 	public Tour improve(Graph g, Tour t) {
-		long G0 = g.distance(1, 2), Gain, tmp; //TODO FIRST EDGE!
+		long G0 = g.distance(1, 2), Gain; //TODO FIRST EDGE!
+		Tour tmp;
 		do{
 			tmp = getSeqMoves(t.getNode(0), t.getNode(1), G0, Gain);
 			//TODO Update tour!
-		}while (Gain <= 0 && t2 != null);
+		}while (Gain <= 0 && tmp != null);
 	}
 
 	/*
 	 * 
 	 */
-	private int getSeqMoves(int t1, int t2, long G0, long Gain) {
+	private Tour getSeqMoves(int t1, int t2, long G0, long Gain) {
 		t[1] = t1; t[2] = t2;
 		BestG2K = Integer.MIN_VALUE;
-		Best_t[2 * K] = null;
+		int i;
+		Best_t = new Tour();
 		Gain = getSeqMovesRec(2, G0);
-		if (Gain <= 0 && Best_t[2 * K] != NULL) {
-			for (i = 1; i <= 2 * K; i++){
-				t[i] = Best_t[i];
+		if (Gain <= 0 && Best_t != null) {
+			for (i = 1; i <= 2 * K; i++){//K?
+				T.setNode(i, Best_t.getNode(i));
 			}
 			executeMove(K);
 		}
-		return Best_t[2 * K];
+		return Best_t;
 	}
 
 	private int getSeqMovesRec(int k, long G0){
 		int G1,G2,G3,Gain;
-		double n1,n2,n3,n4;
+		int n1 = T.getNode(0);
+		int n2 = T.getNode(2*k-2);
 		int i;
 		
-		for (each candidate edge (t2, t3)) {
-			if (t3 != PRED(t2) && t3 != SUC(t2) &&
-			!Added(t2, t3, k - 2) && (G1 = G0 – C(t2, t3)) > 0){
-				t[2 * k - 1] = t3;
+		for (Graph.Edge e : G.getEdges()[n2]) {//each candidate edge (t2, t3)
+			int n3 = e.nodeB;
+			G1 = (int) (G0 - (long) G.distance(n2, n3));
+			if (e.nodeB != T.getPredecessorNode(e.nodeA) && e.nodeB != T.getSuccessorNode(e.nodeA) && !Added(n2, n3, k - 2) && G1 > 0) {
+				T.setNode(2*k-1, n3);
 				for (each t4 in {PRED(t3), SUC(t3)}) {
 					if (!Deleted(t3, t4, k - 2)) {
 						t[2 * k] = t4;
