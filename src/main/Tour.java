@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class Tour implements Iterable<Edge>
 {
-	// private short[] tour;
+	private Graph g;
 	private ArrayList<Edge> edges;
 
 	public Tour()
@@ -123,12 +123,14 @@ public class Tour implements Iterable<Edge>
 	}
 
 	/**
-	 * @param insertAt
+	 * @param setAt
 	 * @param edge
 	 */
-	public void addEdge(int insertAt, Edge edge)
+	public void setEdge(int setAt, Edge edge, Graph g)
 	{
-		edges.add(insertAt, edge);
+		edges.set(setAt, edge);
+		edges.set(setAt-1, g.getEdge(edges.get(setAt-1).nodeB, edge.nodeA));
+		edges.set(setAt+1, g.getEdge(edges.get(setAt+1).nodeA, edge.nodeB));
 	}
 
 	/*
