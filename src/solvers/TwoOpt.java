@@ -1,8 +1,8 @@
 package solvers;
 
+import main.Edge;
 import main.Graph;
 import main.Tour;
-import main.Graph.Edge;
 
 public class TwoOpt implements Improver {
 	private Graph G;
@@ -14,11 +14,13 @@ public class TwoOpt implements Improver {
 	@Override
 	public Tour improve(Graph g, Tour t) {
 		G=g;
-		boolean foundGain;
-		Edge n1 = fetchFirstEdge(t);
+		boolean foundGain = false;
+		Edge e1 = fetchFirstEdge(t);
+		int n1 = e1.nodeA;
+		int n2 = e1.nodeB;
 		
-		for(Edge e : G.getEdges()[n1.nodeA]){
-			for(Edge f : G.getEdges()[n1.nodeB]){
+		for(Edge e : t){
+			if(t.getPredecessorNode(n1) != e.nodeB && t.getSuccessorNode(n2) != e.nodeA){
 				
 			}
 		}

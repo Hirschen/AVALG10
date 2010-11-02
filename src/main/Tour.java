@@ -1,9 +1,10 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
-public class Tour
+public class Tour implements Iterable<Edge>
 {
 	// private short[] tour;
 	private ArrayList<Edge> edges;
@@ -41,9 +42,6 @@ public class Tour
 		}
 	}
 
-	public Tour() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * @return the number of nodes in the tour.
@@ -80,6 +78,7 @@ public class Tour
 	{
 		return edges.get(position);
 	}
+	
 
 	/*
 	 * Get preceding node
@@ -149,6 +148,7 @@ public class Tour
 
 		return sb.toString();
 	}
+	
 
 	/**
 	 * @param e
@@ -157,5 +157,11 @@ public class Tour
 	public int indexOf(Edge e)
 	{
 		return edges.indexOf(e);
+	}
+
+	@Override
+	public Iterator<Edge> iterator() {
+		// TODO Auto-generated method stub
+		return edges.iterator();
 	}
 }
