@@ -1,8 +1,6 @@
 package solvers;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,7 +11,6 @@ import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Main;
-import main.Problem;
 import main.Tour;
 
 /**
@@ -26,7 +23,7 @@ import main.Tour;
  */
 public class KruskalApproximation implements StartApproxer
 {
-	private static final boolean verbose = false;
+	private static final boolean verbose = true;
 
 	/**
 	 * 
@@ -47,7 +44,7 @@ public class KruskalApproximation implements StartApproxer
 		if (verbose)
 		{
 			System.out.println("Graph: " + g);
-			System.out.println("Edges: " + Arrays.toString(edges));
+			// System.out.println("Edges: " + Arrays.toString(edges));
 			time = Main.time();
 		}
 
@@ -195,9 +192,8 @@ public class KruskalApproximation implements StartApproxer
 			}
 			tour.addEdge(insertAt, insertedNode);
 		}
-		// tour.add(new Edge(tour.getFirst().nodeB, tour.getLast().nodeA,
-		// (short) graph.distance(tour.getFirst().nodeB,
-		// tour.getLast().nodeA)));
+		tour.addEdge(graph.getEdge(tour.getLast().nodeB, tour.getFirst().nodeA));
+
 		if (verbose)
 			System.out.println("Tour: " + tour);
 
@@ -206,14 +202,14 @@ public class KruskalApproximation implements StartApproxer
 
 	public static void main(String[] args) throws Exception
 	{
-		/* Kattis */
-		Problem p = new Problem(new File("testdata/kattis.tsp"), new File("testdata/kattis.opt.tour"));
+		/* Kattis * /
+		Problem p = new Problem(new File("testdata/pr2392.tsp"), new File("testdata/pr2392.opt.tour"));
 		Graph g = new Graph(p.coordinates);
 		StartApproxer sa = new KruskalApproximation();
 		Tour t = sa.getTour(g);
 		System.out.println(t);
 		/**/
-		/* Simple graph * /
+		/* Simple graph */
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
 
@@ -227,6 +223,6 @@ public class KruskalApproximation implements StartApproxer
 		StartApproxer sa = new KruskalApproximation();
 		System.out.println(sa.getTour(g));
 		/**/
-		new GraphVisualizer(g, 4);
+		new GraphVisualizer(g, 10).setTour(t);
 	}
 }

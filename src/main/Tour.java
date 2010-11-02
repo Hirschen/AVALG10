@@ -120,7 +120,7 @@ public class Tour implements Iterable<Edge>
 	{
 		if (edges.size() > 0 && edges.get(edges.size() - 1).nodeB != e.nodeA)
 		{
-			throw new RuntimeException("You can not connect " + e + " with this tour. The last edge is " + edges.get(edges.size() - 1) + ". This can not be conneced with " + e + ".");
+			throw new RuntimeException("You can not connect " + e + " with this tour. The last edge is " + edges.get(edges.size() - 1) + ". This can not be connected with " + e + ".");
 		}
 		edges.add(e);
 	}
@@ -160,11 +160,6 @@ public class Tour implements Iterable<Edge>
 			sb.append(' ');
 		}
 
-		if (edges.size() > 1)
-		{
-			sb.append(edges.get(edges.size() - 1).nodeB);
-		}
-
 		return sb.toString();
 	}
 	
@@ -187,5 +182,21 @@ public class Tour implements Iterable<Edge>
 	public void addEdge(int insertAt, Edge edge) {
 		edges.add(insertAt,edge);
 		
+	}
+
+	/**
+	 * @return
+	 */
+	public Edge getLast()
+	{
+		return edges.get(edges.size() - 1);
+	}
+
+	/**
+	 * @return
+	 */
+	public Edge getFirst()
+	{
+		return edges.get(0);
 	}
 }
