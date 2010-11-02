@@ -29,10 +29,10 @@ public class Graph
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		Edge tmp;
-
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
+			// TODO: Creating nullpointers? :(
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				short distance = (short) calculateDistance(a, b);
@@ -88,15 +88,15 @@ public class Graph
 	}
 
 	/**
-	 * @param naiveTour
+	 * @param tour
 	 * @return
 	 */
-	public int calculateLength(Tour naiveTour)
+	public int calculateLength(Tour tour)
 	{
 		int length = 0;
-		for (int i = 1; i < naiveTour.getLength(); i++)
+		for (int i = 0; i < tour.countEdges(); i++)
 		{
-			length += distance(naiveTour.getNode(i - 1), naiveTour.getNode(i));
+			length += tour.getEdge(i).length;
 		}
 		return length;
 	}

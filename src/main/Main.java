@@ -7,7 +7,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import solvers.KruskalApproximation;
+import solvers.NaiveSolver;
 import solvers.StartApproxer;
 
 /**
@@ -81,6 +81,7 @@ public class Main
 		time = time();
 
 		Graph graph = new Graph(g);
+		// new GraphVisualizer(graph);
 
 		System.out.println("Created graph for " + timeDiff(time(), time) + " ms.");
 		time = time();
@@ -95,7 +96,6 @@ public class Main
 		io.flush();
 		System.out.println("Wrote output for " + timeDiff(time(), time) + " ms.");
 
-		new GraphVisualizer(graph);
 		return tour;
 	}
 
@@ -153,7 +153,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new KruskalApproximation();
+		StartApproxer solver = new NaiveSolver();
 		return solver.getTour(graph);
 	}
 }
