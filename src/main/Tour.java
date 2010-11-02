@@ -1,8 +1,10 @@
 package main;
 
+
 public class Tour
 {
 	private short[] tour;
+
 
 	public Tour(int nodes)
 	{
@@ -53,6 +55,38 @@ public class Tour
 		tour[i] = (short) v;
 	}
 
+	/*
+	 TODO: Lagra edges här istället och sedan generera en short[] ?
+	
+	public Edge getLongestEdge()
+	{
+		// TODO
+		return null;
+	}
+
+	public Edge getShortestEdge()
+	{
+		// TODO
+		return null;
+	}
+
+	public void removeEdge(Edge e)
+	{
+		removeEdge(e.nodeA, e.nodeB);
+	}
+
+	public void removeEdge(int nodeA, int nodeB)
+	{
+		edges[nodeA][nodeB] = null;
+		edges[nodeB][nodeA] = null;
+	}
+
+	public void addEdge(Edge e)
+	{
+		edges[e.nodeA][e.nodeB] = e;
+		edges[e.nodeB][e.nodeA] = e;
+	}
+	*/
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()

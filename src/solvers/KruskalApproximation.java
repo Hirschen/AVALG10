@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import main.Graph;
+import main.GraphVisualizer;
 import main.Tour;
 import main.Graph.Edge;
 
@@ -37,9 +38,7 @@ public class KruskalApproximation implements StartApproxer
 	 */
 	public Tour getTour(Graph g)
 	{
-		Edge[] edges = g.createEdgeList(g);
-		Arrays.sort(edges);
-
+		Edge[] edges = g.getSortedEdgeList();
 		if (verbose)
 		{
 			System.out.println("Graph: " + g);
@@ -171,6 +170,8 @@ public class KruskalApproximation implements StartApproxer
 		/* Simple graph */
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
+
+		new GraphVisualizer(g);
 
 		StartApproxer sa = new KruskalApproximation();
 		Tour t = sa.getTour(g);
