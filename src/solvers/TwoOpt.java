@@ -86,9 +86,9 @@ public class TwoOpt implements Improver {
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){
 			Thread.sleep(1);
-			System.out.println(g.calculateLength(t));
+			//System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
-			System.out.println(g.calculateLength(t));
+			//System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println(t);
