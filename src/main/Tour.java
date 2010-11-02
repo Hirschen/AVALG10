@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class Tour implements Iterable<Edge>
@@ -41,7 +42,7 @@ public class Tour implements Iterable<Edge>
 	/**
 	 * @return the number of nodes in the tour.
 	 */
-	public int getLength()
+	public int countNodes()
 	{
 		return edges.size() + 1;
 	}
@@ -147,32 +148,24 @@ public class Tour implements Iterable<Edge>
 	}
 	
 	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2){
-		
 		edges.set(e1, f1);
 		edges.set(e2, f2);
 		reverse(e1,e2, g);
-		
 	}
 	private void reverse(int e1, int e2, Graph g){
 		if(e1 < e2){
-			for (int i = e1+1;i+1 != e2;i++)
-			{
-				if(i == edges.size()-1){
-					i=0;
-				}
-				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
-				edges.set(i, g.getEdge(edges.get(i+1).nodeB,edges.get(i+1).nodeA));
-				edges.set(i+1, tmp);
+		
+			List<Edge> tmp = edges.subList(e1+1, e2-1);
+			int i = tmp.size()-1;
+			Edge[] holder = new Edge[i+1];		
+			for(Edge e: tmp){	
+				holder[i] = g.getEdge(e.nodeB, e.nodeA);
+				i--;
 			}
-		}else{
-			for (int i = e1-1;i-1 != e2;i--)
-			{
-				if(i == 0){
-					i=edges.size()-1;
-				}
-				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
-				edges.set(i, g.getEdge(edges.get(i-1).nodeB,edges.get(i-1).nodeA));
-				edges.set(i-1, tmp);
+			i = 0;
+			for(Edge e: tmp){	
+				tmp.set(i,  holder[i]);
+				i++;
 			}
 		}
 	}
