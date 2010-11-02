@@ -6,9 +6,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 
-import main.Graph;
-import main.Main;
-import main.Tour;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
 

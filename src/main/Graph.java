@@ -10,11 +10,12 @@ import java.util.Arrays;
  */
 public class Graph
 {
-	private int distanceCounts = 0;
 	private double[][] nodes;
 	private Edge[][] edges;
 	private int nodeCount;
 	private int edgeCount;
+
+	private Edge[] sortedEdgeList;
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -32,8 +33,9 @@ public class Graph
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
+			edges[a][a] = new Edge(a, a, 0);
 			// TODO: Creating nullpointers? :(
-			for (short b = a; b < nodeCount; b++)
+			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				long distance = calculateDistance(a, b);
 
@@ -76,8 +78,6 @@ public class Graph
 	{
 		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
 		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
-
-		++distanceCounts; // For stats
 
 		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
 		return distance;
@@ -122,17 +122,20 @@ public class Graph
 	 */
 	public Edge[] getSortedEdgeList()
 	{
-		Edge[] list = new Edge[edgeCount];
+		if (sortedEdgeList != null)
+			return sortedEdgeList;
+
+		sortedEdgeList = new Edge[edgeCount];
 		int ep = 0;
 		for (int a = 0; a < nodeCount; a++)
 		{
 			for (int b = a + 1; b < nodeCount; b++)
 			{
-				list[ep++] = edges[a][b];
+				sortedEdgeList[ep++] = edges[a][b];
 			}
 		}
-		Arrays.sort(list);
-		return list;
+		Arrays.sort(sortedEdgeList);
+		return sortedEdgeList;
 	}
 
 
