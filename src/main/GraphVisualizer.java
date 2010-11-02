@@ -93,6 +93,11 @@ public class GraphVisualizer extends JPanel
 		// Draw tour?
 		if (tour == null)
 			return;
+		
+		for(Edge e : tour){
+			g.setColor(Color.red);
+			g.drawLine((int) graph.getX(e.nodeA) * scale, (int) graph.getY(e.nodeA) * scale, (int) graph.getX(e.nodeB) * scale, (int) graph.getY(e.nodeB) * scale);
+		}
 	}
 }
 
