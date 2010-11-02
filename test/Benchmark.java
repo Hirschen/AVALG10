@@ -67,7 +67,7 @@ public class Benchmark
 				StartApproxer naiveSolver = new NaiveSolver();
 
 				Tour naiveTour = naiveSolver.getTour(graph);
-				Tour optimalTour = new Tour(p.optimalRoute);
+				Tour optimalTour = new Tour(p.optimalRoute, graph);
 				Tour valTour = t;
 
 				double naiveCost = graph.calculateLength(naiveTour);

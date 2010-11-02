@@ -134,35 +134,23 @@ public class Graph
 		return list;
 	}
 
-	/*
-	 * 
-	 * 
+
+	/**
+	 * @param a
+	 * @return
 	 */
-	public final class Edge implements Comparable<Edge>
+	public double getX(int a)
 	{
-		public final short nodeA;
-		public final short nodeB;
-		public final short length;
+		return nodes[a][0];
+	}
 
-		public Edge(short a, short b, short l)
-		{
-			nodeA = a;
-			nodeB = b;
-			length = l;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Comparable#compareTo(java.lang.Object)
-		 */
-		public int compareTo(Edge e)
-		{
-			return this.length - e.length;
-		}
-
-		public String toString()
-		{
-			return nodeA + "-[" + length + "]-" + nodeB;
-		}
+	/**
+	 * @param a
+	 * @return
+	 */
+	public double getY(int a)
+	{
+		return nodes[a][1];
 	}
 
 }
