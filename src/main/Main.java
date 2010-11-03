@@ -7,7 +7,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import solvers.ClarkeWrightApproximation;
+import solvers.NaiveSolver;
 import solvers.StartApproxer;
 
 /**
@@ -160,7 +160,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new ClarkeWrightApproximation();
+		StartApproxer solver = new NaiveSolver();
 		return solver.getTour(graph);
 	}
 	
