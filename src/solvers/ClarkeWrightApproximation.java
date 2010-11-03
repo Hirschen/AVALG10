@@ -82,7 +82,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		int[] nonHubdegree = new int[graph.countNodes()];
 		// Performing the bypass ...
-		while (tour.getLength() != graph.countNodes() && !savings.isEmpty())
+		while (tour.countNodes() != graph.countNodes() && !savings.isEmpty())
 		{
 			Entry<Integer, int[]> saving = savings.pollFirstEntry();
 			int[] nodes = saving.getValue();

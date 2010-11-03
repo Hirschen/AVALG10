@@ -7,8 +7,10 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import solvers.Improver;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
+import solvers.TwoOpt;
 
 /**
  * // TODO: Main is a ...
@@ -168,11 +170,11 @@ public class Main
 
 	private Tour improveTour(Graph g, Tour t)
 	{
-		/*Improver imp = new TwoOpt();
-		for (int i = 0; i < 10; i++)
+		Improver imp = new TwoOpt();
+		for (int i = 0; i < 200; i++)
 		{
 			imp.improve(g, t);
-		}*/
+		}
 		return t;
 	}
 }
