@@ -3,7 +3,6 @@ package main;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class Tour implements Iterable<Edge>
 {
 	private ArrayList<Edge> edges;
@@ -36,7 +35,6 @@ public class Tour implements Iterable<Edge>
 			edges.add(graph.getEdge(tour[i - 1], tour[i]));
 		}
 	}
-
 
 	/**
 	 * @return the number of nodes in the tour.
@@ -73,16 +71,18 @@ public class Tour implements Iterable<Edge>
 	{
 		return edges.get(position);
 	}
-	
 
 	/*
 	 * Get preceding node
 	 */
 	public int getPredecessorNode(int tourPosition)
 	{
-		if(tourPosition <= 0){
-			return getNode(edges.size()-1);
-		}else{
+		if (tourPosition <= 0)
+		{
+			return getNode(edges.size() - 1);
+		}
+		else
+		{
 			return getNode(tourPosition - 1);
 		}
 	}
@@ -92,13 +92,16 @@ public class Tour implements Iterable<Edge>
 	 */
 	public int getSuccessorNode(int tourPosition)
 	{
-		if(tourPosition >= edges.size()-1){
+		if (tourPosition >= edges.size() - 1)
+		{
 			return getNode(0);
-		}else{
+		}
+		else
+		{
 			return getNode(tourPosition + 1);
 		}
 	}
-	
+
 	public Edge getLongestEdge()
 	{
 		// TODO
@@ -124,55 +127,51 @@ public class Tour implements Iterable<Edge>
 		}
 		edges.add(e);
 	}
-	
-	
 
 	/**
 	 * @param setAt
 	 * @param edge
 	 */
-	public void setEdge(int setAt, Edge edge, Graph g, int switchy, Edge sw)
+	public void setEdge(int setAt, Edge edge)
 	{
-		int a = setAt, b = setAt;
-		if(setAt == 0){
-			a = edges.size();
-		}
-		if(setAt == edges.size()-1){
-			b=-1;
-		}
-		
 		edges.set(setAt, edge);
-		//edges.set(a-1, g.getEdge(edges.get(a-1).nodeA, edge.nodeA));
-		edges.set(switchy, sw);
 	}
-	
-	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2){
-		
+
+	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2)
+	{
+
 		edges.set(e1, f1);
 		edges.set(e2, f2);
-		reverse(e1,e2, g);
-		
+		reverse(e1, e2, g);
+
 	}
-	private void reverse(int e1, int e2, Graph g){
-		if(e1 < e2){
-			for (int i = e1+1;i+1 != e2;i++)
+
+	private void reverse(int e1, int e2, Graph g)
+	{
+		if (e1 < e2)
+		{
+			for (int i = e1 + 1; i + 1 != e2; i++)
 			{
-				if(i == edges.size()-1){
-					i=0;
+				if (i == edges.size() - 1)
+				{
+					i = 0;
 				}
-				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
-				edges.set(i, g.getEdge(edges.get(i+1).nodeB,edges.get(i+1).nodeA));
-				edges.set(i+1, tmp);
+				Edge tmp = g.getEdge(edges.get(i).nodeB, edges.get(i).nodeA);
+				edges.set(i, g.getEdge(edges.get(i + 1).nodeB, edges.get(i + 1).nodeA));
+				edges.set(i + 1, tmp);
 			}
-		}else{
-			for (int i = e1-1;i-1 != e2;i--)
+		}
+		else
+		{
+			for (int i = e1 - 1; i - 1 != e2; i--)
 			{
-				if(i == 0){
-					i=edges.size()-1;
+				if (i == 0)
+				{
+					i = edges.size() - 1;
 				}
-				Edge tmp = g.getEdge(edges.get(i).nodeB,edges.get(i).nodeA);
-				edges.set(i, g.getEdge(edges.get(i-1).nodeB,edges.get(i-1).nodeA));
-				edges.set(i-1, tmp);
+				Edge tmp = g.getEdge(edges.get(i).nodeB, edges.get(i).nodeA);
+				edges.set(i, g.getEdge(edges.get(i - 1).nodeB, edges.get(i - 1).nodeA));
+				edges.set(i - 1, tmp);
 			}
 		}
 	}
@@ -193,7 +192,19 @@ public class Tour implements Iterable<Edge>
 
 		return sb.toString();
 	}
-	
+
+	public String toEdgeString()
+	{
+		StringBuilder sb = new StringBuilder();
+		for (Edge e : edges)
+		{
+			sb.append(e);
+			sb.append(", ");
+		}
+
+		return sb.toString();
+
+	}
 
 	/**
 	 * @param e
@@ -204,15 +215,16 @@ public class Tour implements Iterable<Edge>
 		return edges.indexOf(e);
 	}
 
-	public Iterator<Edge> iterator() 
+	public Iterator<Edge> iterator()
 	{
 		// TODO Auto-generated method stub
 		return edges.iterator();
 	}
 
-	public void addEdge(int insertAt, Edge edge) {
-		edges.add(insertAt,edge);
-		
+	public void addEdge(int insertAt, Edge edge)
+	{
+		edges.add(insertAt, edge);
+
 	}
 
 	/**
@@ -229,5 +241,10 @@ public class Tour implements Iterable<Edge>
 	public Edge getFirst()
 	{
 		return edges.get(0);
+	}
+
+	public boolean contains(Edge e)
+	{
+		return edges.contains(e);
 	}
 }

@@ -68,6 +68,11 @@ public class Benchmark
 				Tour optimalTour = new Tour(p.optimalRoute, graph);
 				Tour valTour = t;
 
+				if (t.getLength() != graph.countNodes() + 1)
+				{
+					System.err.println("File " + probFile + ": Tried to answer with " + t.getLength() + " nodes, but graph requires " + (graph.countNodes() + 1) + "!");
+				}
+
 				double naiveCost = graph.calculateLength(naiveTour);
 				double optimalCost = graph.calculateLength(optimalTour);
 				double valCost = graph.calculateLength(valTour);

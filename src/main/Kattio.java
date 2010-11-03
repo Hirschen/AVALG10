@@ -42,8 +42,8 @@ public class Kattio extends PrintWriter
 {
 	public Kattio(InputStream i)
 	{
-		super(new BufferedOutputStream(System.out));
-		r = new BufferedReader(new InputStreamReader(i));
+		super(new BufferedOutputStream(System.out, 1024));
+		r = new BufferedReader(new InputStreamReader(i), 1024);
 	}
 
 	public Kattio(InputStream i, OutputStream o)
