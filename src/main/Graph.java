@@ -34,7 +34,6 @@ public class Graph
 		for (short a = 0; a < nodeCount; a++)
 		{
 			edges[a][a] = new Edge(a, a, 0);
-			// TODO: Creating nullpointers? :(
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				long distance = calculateDistance(a, b);
