@@ -7,8 +7,8 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
-import solvers.NaiveSolver;
 import solvers.StartApproxer;
 import solvers.TwoOpt;
 
@@ -20,8 +20,15 @@ import solvers.TwoOpt;
  */
 public class Main
 {
+	public static boolean verbose = false;
 	private Kattio io;
 	private InputStream input;
+
+	protected double inputTime;
+	protected double graphTime;
+	protected double approxTime;
+	protected double improveTime;
+	protected double outputTime;
 
 	/**
 	 * @param args
@@ -32,6 +39,7 @@ public class Main
 		Main m = new Main(System.in);
 		if (args.length > 0)
 		{
+			verbose = true;
 			m.runVerbose(true);
 		}
 		else
@@ -81,29 +89,34 @@ public class Main
 
 		double[][] g = readInput();
 
-		System.out.println("Read input in " + timeDiff(time(), time) + " ms.");
+		inputTime = timeDiff(time(), time);
+		System.out.println("Read input in " + inputTime + " ms.");
 		time = time();
 
 		Graph graph = new Graph(g);
 		// new GraphVisualizer(graph);
 
-		System.out.println("Created graph for " + timeDiff(time(), time) + " ms.");
+		graphTime = timeDiff(time(), time);
+		System.out.println("Created graph for " + graphTime + " ms.");
 		time = time();
 
 		Tour tour = approximateTour(graph);
 
-		System.out.println("Created approximation for " + timeDiff(time(), time) + " ms.");
+		approxTime = timeDiff(time(), time);
+		System.out.println("Created approximation for " + approxTime + " ms.");
 		time = time();
 
 		tour = improveTour(graph, tour);
 
-		System.out.println("Created improved for " + timeDiff(time(), time) + " ms.");
+		improveTime = timeDiff(time(), time);
+		System.out.println("Created improved for " + improveTime + " ms.");
 		time = time();
 
 		// Output tour
 		io.println(tour);
 		io.flush();
-		System.out.println("Wrote output for " + timeDiff(time(), time) + " ms.");
+		outputTime = timeDiff(time(), time);
+		System.out.println("Wrote output for " + outputTime + " ms.");
 
 		return tour;
 	}
@@ -162,7 +175,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new ClarkeWrightApproximation();
 		return solver.getTour(graph);
 	}
 	
@@ -171,7 +184,7 @@ public class Main
 	private Tour improveTour(Graph g, Tour t)
 	{
 		Improver imp = new TwoOpt();
-		for (int i = 0; i < 200; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			imp.improve(g, t);
 		}

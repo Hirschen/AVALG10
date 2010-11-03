@@ -32,6 +32,12 @@ public class Benchmark
 		double sum = 0.0;
 		int problemSet = 0;
 
+		double inputTime = 0;
+		double graphTime = 0;
+		double approxTime = 0;
+		double improveTime = 0;
+		double outputTime = 0;
+
 		for (File probFile : problemFiles)
 		{
 			try
@@ -57,7 +63,14 @@ public class Benchmark
 				Main m = new Main(pis);
 				Tour t = null;
 				if (DEBUG)
+				{
 					t = m.runVerbose(false);
+					inputTime += m.inputTime;
+					graphTime += m.graphTime;
+					approxTime += m.approxTime;
+					improveTime += m.improveTime;
+					outputTime += m.outputTime;
+				}
 				else
 					t = m.runFast();
 
@@ -114,6 +127,14 @@ public class Benchmark
 		}
 		System.out.println("Result: " + sum + " / " + problemSet);
 		System.out.println("Estimated kattis score: " + (sum / (double) problemSet) * 50.0);
+		if (DEBUG)
+		{
+			System.out.println("\tInput time: " + Math.round(inputTime * 1000) / 1000.0);
+			System.out.println("\tGraph time: " + Math.round(graphTime * 1000) / 1000.0);
+			System.out.println("\tApproximation time: " + Math.round(approxTime * 1000) / 1000.0);
+			System.out.println("\tImprovement time: " + Math.round(improveTime * 1000) / 1000.0);
+			System.out.println("\tOutput time: " + Math.round(outputTime * 1000) / 1000.0);
+		}
 	}
 
 	public static void main(String[] args)

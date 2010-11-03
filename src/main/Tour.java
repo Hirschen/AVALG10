@@ -215,7 +215,6 @@ public class Tour implements Iterable<Edge>
 	public void addEdge(int insertAt, Edge edge)
 	{
 		edges.add(insertAt, edge);
-
 	}
 
 	/**

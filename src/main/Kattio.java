@@ -42,14 +42,13 @@ public class Kattio extends PrintWriter
 {
 	public Kattio(InputStream i)
 	{
-		super(new BufferedOutputStream(System.out, 1024));
-		r = new BufferedReader(new InputStreamReader(i), 1024);
+		this(i, System.out);
 	}
 
 	public Kattio(InputStream i, OutputStream o)
 	{
-		super(new BufferedOutputStream(o));
-		r = new BufferedReader(new InputStreamReader(i));
+		super(new BufferedOutputStream(o, 8192));
+		r = new BufferedReader(new InputStreamReader(i), 8192);
 	}
 
 	public boolean hasMoreTokens()
@@ -82,7 +81,7 @@ public class Kattio extends PrintWriter
 	private StringTokenizer st;
 	private String token;
 
-    private String peekToken()
+	private String peekToken()
 	{
 		if (token == null)
 			try
@@ -102,7 +101,7 @@ public class Kattio extends PrintWriter
 		return token;
 	}
 
-    private String nextToken()
+	private String nextToken()
 	{
 		String ans = peekToken();
 		token = null;

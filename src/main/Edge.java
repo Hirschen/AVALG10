@@ -34,4 +34,12 @@ public final class Edge implements Comparable<Edge>
 	{
 		return nodeA + "-[" + length + "]-" + nodeB;
 	}
+
+	/**
+	 * @return the reverse of this edge
+	 */
+	public Edge getReverse()
+	{
+		return new Edge(nodeB, nodeA, length);
+	}
 }
