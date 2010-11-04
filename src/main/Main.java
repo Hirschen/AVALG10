@@ -2,10 +2,6 @@ package main;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintWriter;
-import java.util.Scanner;
 
 import solvers.Improver;
 import solvers.NaiveSolver;
@@ -20,8 +16,13 @@ import solvers.TwoOpt;
  */
 public class Main
 {
+	public static final boolean verbose = false;
 	private Kattio io;
-	private InputStream input;
+
+	protected double graphTime;
+	protected double approxTime;
+	protected double improveTime;
+	protected double outputTime;
 
 	/**
 	 * @param args
@@ -29,8 +30,8 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		Main m = new Main(System.in);
-		if (args.length > 0)
+		Main m = new Main();
+		if (verbose && args.length > 0)
 		{
 			m.runVerbose(true);
 		}
@@ -43,9 +44,13 @@ public class Main
 	/**
 	 * 
 	 */
+	public Main()
+	{
+		this(System.in);
+	}
+
 	public Main(InputStream in)
 	{
-		input = in;
 		io = new Kattio(in, System.out);
 	}
 
@@ -55,9 +60,9 @@ public class Main
 	public Tour runFast()
 	{
 		// Read input
-		double[][] g = readInput();
+		// double[][] g = readInput();
 
-		Graph graph = new Graph(g);
+		Graph graph = new Graph(io);
 		Tour tour = approximateTour(graph);
 		tour = improveTour(graph, tour);
 
@@ -75,35 +80,34 @@ public class Main
 	public Tour runVerbose(boolean delayedInput) throws IOException
 	{
 		if (delayedInput)
-			haxInput();
+			waitForInput();
 
 		double time = time();
 
-		double[][] g = readInput();
-
-		System.out.println("Read input in " + timeDiff(time(), time) + " ms.");
-		time = time();
-
-		Graph graph = new Graph(g);
+		Graph graph = new Graph(io);
 		// new GraphVisualizer(graph);
 
-		System.out.println("Created graph for " + timeDiff(time(), time) + " ms.");
+		graphTime = timeDiff(time(), time);
+		System.out.println("Created graph for " + graphTime + " ms.");
 		time = time();
 
 		Tour tour = approximateTour(graph);
 
-		System.out.println("Created approximation for " + timeDiff(time(), time) + " ms.");
+		approxTime = timeDiff(time(), time);
+		System.out.println("Created approximation for " + approxTime + " ms.");
 		time = time();
 
 		tour = improveTour(graph, tour);
 
-		System.out.println("Created improved for " + timeDiff(time(), time) + " ms.");
+		improveTime = timeDiff(time(), time);
+		System.out.println("Created improved for " + improveTime + " ms.");
 		time = time();
 
 		// Output tour
 		io.println(tour);
 		io.flush();
-		System.out.println("Wrote output for " + timeDiff(time(), time) + " ms.");
+		outputTime = timeDiff(time(), time);
+		System.out.println("Wrote output for " + outputTime + " ms.");
 
 		return tour;
 	}
@@ -124,27 +128,16 @@ public class Main
 	/**
 	 * @throws IOException
 	 */
-	private void haxInput() throws IOException
+	private void waitForInput() throws IOException
 	{
-		PipedOutputStream pout = new PipedOutputStream();
-		PipedInputStream pin = new PipedInputStream(pout);
-
-		PrintWriter out = new PrintWriter(pout, true);
-		Scanner sc = new Scanner(input);
-		String line = sc.nextLine();
-		while (!line.equals(""))
-		{
-			out.println(line);
-			line = sc.nextLine();
-		}
-		out.println();
-		io = new Kattio(pin, System.out);
+		System.out.print("Paste problem here: (start with a newline) ");
+		System.in.read();
 	}
 
 	/**
 	 * @return
 	 */
-	private double[][] readInput()
+	protected double[][] readInput()
 	{
 		int size = io.getInt();
 		double[][] g = new double[size][2];
@@ -165,13 +158,11 @@ public class Main
 		StartApproxer solver = new NaiveSolver();
 		return solver.getTour(graph);
 	}
-	
-	
 
 	private Tour improveTour(Graph g, Tour t)
 	{
 		Improver imp = new TwoOpt();
-		for (int i = 0; i < 200; i++)
+		for (int i = 0; i < 3000; i++)
 		{
 			imp.improve(g, t);
 		}

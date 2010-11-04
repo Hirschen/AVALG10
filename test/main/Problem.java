@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -68,23 +69,19 @@ public class Problem
 	{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(optFile)));
 
-		Properties properties = new Properties();
-		String prop = in.readLine();
-		while (!prop.equals("TOUR_SECTION"))
+		ArrayList<Integer> tour = new ArrayList<Integer>();
+
+		String line;
+		while ((line = in.readLine()) != null)
 		{
-			String[] s = prop.split(":");
-			properties.put(s[0].trim().toLowerCase(), s[1].trim());
-			prop = in.readLine();
+			tour.add(Integer.parseInt(line.trim()));
 		}
 
-		int[] tour = new int[Integer.parseInt(properties.getProperty("dimension"))];
+		int[] t = new int[tour.size()];
+		for (int i = 0; i < t.length; i++)
+			t[i] = tour.get(i);
 
-		for (int i = 0; i < tour.length; i++)
-		{
-			tour[i] = Integer.parseInt(in.readLine().trim()) - 1;
-		}
-
-		return tour;
+		return t;
 	}
 
 	/*
@@ -121,7 +118,8 @@ public class Problem
 
 	public static void main(String[] args) throws IOException
 	{
-		Problem p = new Problem(new File("testdata/fall6.tsp"), new File("testdata/fall6.opt.tour"));
+		String name = (args.length == 1 ? args[0] : "pcb442");
+		Problem p = new Problem(new File("testdata/" + name + ".tsp"), new File("testdata/" + name + ".opt.tour"));
 		System.out.println(p);
 	}
 

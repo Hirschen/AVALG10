@@ -10,11 +10,13 @@ import java.util.Arrays;
  */
 public class Graph
 {
-	private int distanceCounts = 0;
 	private double[][] nodes;
 	private Edge[][] edges;
+
 	private int nodeCount;
 	private int edgeCount;
+
+	private Edge[] sortedEdges;// TODO: Remove
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -32,15 +34,39 @@ public class Graph
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
-			// TODO: Creating nullpointers? :(
-			for (short b = a; b < nodeCount; b++)
+			edges[a][a] = new Edge(a, a, 0);
+			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
-				long distance = calculateDistance(a, b);
-
 				// assert (distance < Integer.MAX_VALUE);
-				int dist = (int) distance;
+				int dist = calculateDistance(a, b);
 				
 				// Store calculated values
+				edges[a][b] = new Edge(a, b, dist);
+				edges[b][a] = new Edge(b, a, dist);
+			}
+		}
+	}
+
+	public Graph(Kattio io)
+	{
+		nodeCount = io.getInt();
+		nodes = new double[nodeCount][2];
+
+		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
+		edges = new Edge[nodeCount][nodeCount];
+		
+		// Read and store nodes
+		for (short a = 0; a < nodeCount; a++)
+		{
+			// TODO: Do we really use nodes[][]?
+			nodes[a][0] = io.getDouble();
+			nodes[a][1] = io.getDouble();
+
+			// Precalculate edges
+			edges[a][a] = new Edge(a, a, 0);
+			for (short b = (short) (a - 1); b >= 0; b--)
+			{
+				int dist = calculateDistance(a, b);
 				edges[a][b] = new Edge(a, b, dist);
 				edges[b][a] = new Edge(b, a, dist);
 			}
@@ -72,18 +98,16 @@ public class Graph
 	 *            the second node.
 	 * @return the euclidean distance between two nodes.
 	 */
-	private long calculateDistance(int nodeA, int nodeB)
+	private int calculateDistance(int nodeA, int nodeB)
 	{
 		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
 		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
-		++distanceCounts; // For stats
-
 		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
-		return distance;
+		return (int) distance;
 	}
 
-	public long distance(int nodeA, int nodeB)
+	public int distance(int nodeA, int nodeB)
 	{
 		return edges[nodeA][nodeB].length;
 	}
@@ -122,17 +146,20 @@ public class Graph
 	 */
 	public Edge[] getSortedEdgeList()
 	{
-		Edge[] list = new Edge[edgeCount];
+		if (sortedEdges != null)
+			return sortedEdges;
+
+		sortedEdges = new Edge[edgeCount];
 		int ep = 0;
 		for (int a = 0; a < nodeCount; a++)
 		{
 			for (int b = a + 1; b < nodeCount; b++)
 			{
-				list[ep++] = edges[a][b];
+				sortedEdges[ep++] = edges[a][b];
 			}
 		}
-		Arrays.sort(list);
-		return list;
+		Arrays.sort(sortedEdges);
+		return sortedEdges;
 	}
 
 
