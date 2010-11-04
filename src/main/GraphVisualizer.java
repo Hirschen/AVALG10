@@ -84,11 +84,19 @@ public class GraphVisualizer extends JPanel
 		// Draw edges
 		for (int a = 0; a < graph.countNodes(); a++)
 		{
+			for(Edge e : graph.neighbours[a])
+			{
+				g.setColor(new Color(190, 190, 190));
+				g.drawLine((int) graph.getX(e.nodeA) * scale, (int) graph.getY(e.nodeA) * scale, (int) graph.getX(e.nodeB) * scale, (int) graph.getY(e.nodeB) * scale);
+
+			}
+			/*
 			for (int b = a + 1; b < graph.countNodes(); b++)
 			{
 				g.setColor(new Color(190, 190, 190));
 				g.drawLine((int) graph.getX(a) * scale, (int) graph.getY(a) * scale, (int) graph.getX(b) * scale, (int) graph.getY(b) * scale);
 			}
+			*/
 		}
 		// Draw nodes
 		int maxX = 0;

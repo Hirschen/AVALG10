@@ -29,9 +29,9 @@ public final class Edge implements Comparable<Edge>
 	}
 
 	/**
-	 * @return the reverse of this edge
+	 * @return the inverse of this edge
 	 */
-	public Edge getReverse()
+	public Edge invert()
 	{
 		return new Edge(nodeB, nodeA, length);
 	}

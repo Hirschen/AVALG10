@@ -70,7 +70,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		if (Main.verbose)
 		{
-			gv = new GraphVisualizer(graph, 5);
+			gv = new GraphVisualizer(graph, 6);
 			gv.setTour(tour);
 			gv.setHilightedEdges(edges);
 		}
@@ -182,7 +182,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 		return savings;
 	}
 
-	private final class Saving implements Comparable<Object>
+	private final class Saving implements Comparable<Saving>
 	{
 		public final int saving;
 		public final Edge edge;
@@ -196,9 +196,9 @@ public class ClarkeWrightApproximation implements StartApproxer
 		/* (non-Javadoc)
 		 * @see java.lang.Comparable#compareTo(java.lang.Object)
 		 */
-		public int compareTo(Object s)
+		public int compareTo(Saving s)
 		{
-			return (saving < ((Saving) s).saving ? 1 : -1);
+			return (saving < s.saving ? 1 : -1);
 		}
 	}
 
@@ -269,10 +269,10 @@ public class ClarkeWrightApproximation implements StartApproxer
 			// System.out.println("Tour after:  " + edges);
 			System.out.println("Node count: " + addedNodes);
 			gv.repaint();
-			/* * /
+			/* */
 			try
 			{
-				Thread.sleep(500);
+				Thread.sleep(100);
 			}
 			catch (InterruptedException e)
 			{
@@ -316,14 +316,14 @@ public class ClarkeWrightApproximation implements StartApproxer
 			if (append)
 			{
 				if (reverse)
-					largeTour.addLast(smallTour.removeLast().getReverse());
+					largeTour.addLast(smallTour.removeLast().invert());
 				else
 					largeTour.addLast(smallTour.removeFirst());
 			}
 			else
 			{
 				if (reverse)
-					largeTour.addFirst(smallTour.removeFirst().getReverse());
+					largeTour.addFirst(smallTour.removeFirst().invert());
 				else
 					largeTour.addFirst(smallTour.removeLast());
 			}

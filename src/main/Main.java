@@ -3,8 +3,8 @@ package main;
 import java.io.IOException;
 import java.io.InputStream;
 
+import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
-import solvers.NaiveSolver;
 import solvers.StartApproxer;
 import solvers.TwoOpt;
 
@@ -16,7 +16,7 @@ import solvers.TwoOpt;
  */
 public class Main
 {
-	public static final boolean verbose = false;
+	public static final boolean verbose = true;
 	private Kattio io;
 
 	protected double graphTime;
@@ -155,7 +155,7 @@ public class Main
 	 */
 	private Tour approximateTour(Graph graph)
 	{
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new ClarkeWrightApproximation();
 		return solver.getTour(graph);
 	}
 

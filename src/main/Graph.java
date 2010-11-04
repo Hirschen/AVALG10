@@ -17,6 +17,7 @@ public class Graph
 	private int edgeCount;
 
 	private Edge[] sortedEdges;// TODO: Remove
+	protected Edge[][] neighbours;
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -55,12 +56,21 @@ public class Graph
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new Edge[nodeCount][nodeCount];
 		
+		
+		double width = 0;
+		double height = 0;
+		
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
 			// TODO: Do we really use nodes[][]?
 			nodes[a][0] = io.getDouble();
 			nodes[a][1] = io.getDouble();
+			
+			if (nodes[a][0] > width)
+				width = nodes[a][0];
+			if (nodes[a][1] > height)
+				height = nodes[a][1];
 
 			// Precalculate edges
 			edges[a][a] = new Edge(a, a, 0);
@@ -71,6 +81,40 @@ public class Graph
 				edges[b][a] = new Edge(b, a, dist);
 			}
 		}
+		int size = (int) ((width + height) / 2);
+		int sizePerNode = size / nodeCount;
+		int neighBourThreshold = sizePerNode * 2;
+		neighbours = new Edge[nodeCount][4];
+		System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
+
+		for (short a = 0; a < nodeCount; a++)
+		{
+			short b = 0;
+			for (int neighbor = 0; neighbor < neighbours[a].length; neighbor++)
+			{
+				while (edges[a][b].length > neighBourThreshold)
+				{
+					if (++b == nodeCount)
+					{
+						neighBourThreshold *= 2;
+						if (Main.verbose)
+							System.out.println("Increasing search threshold to " + neighBourThreshold);
+						b = 0;
+						neighbor = 0;
+					}
+				}
+				neighbours[a][neighbor] = edges[a][b];
+				if (++b == nodeCount)
+				{
+					neighBourThreshold *= 2;
+					if (Main.verbose)
+						System.out.println("Increasing search threshold to " + neighBourThreshold);
+					b = 0;
+					neighbor = 0;
+				}
+			}
+		}
+		int a = 1;
 	}
 
 	/**
