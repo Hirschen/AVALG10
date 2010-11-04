@@ -7,9 +7,25 @@ import main.Tour;
 
 public class TwoOpt implements Improver {
 	private Graph G;
+	private int searchSize = -1;;
 	
 	public TwoOpt(){
-		
+	}
+	public TwoOpt(int tourSize){
+		searchSize = setSearchSize(tourSize);
+	}
+	private int setSearchSize(int s){
+		int res = 4;
+		if(s > 10){
+			res = 6;
+		}
+		if(s > 100){
+			res = 10;
+		}
+		if(s > 500){
+			res = 20;
+		}
+		return res;
 	}
 	/*
 	 * (non-Javadoc)
@@ -24,18 +40,39 @@ public class TwoOpt implements Improver {
 		short b1 = E1.nodeB;
 		short a2, b2;
 		
-		for(int i=0; i < t.countEdges(); i++){
-			tmpE = t.getEdge(i);
-			a2=tmpE.nodeA;
-			b2=tmpE.nodeB;
-			if(E1 != tmpE && tmpE.nodeB != E1.nodeA && tmpE.nodeA != E1.nodeB
-					&& tmpE.nodeB != E1.nodeB && tmpE.nodeA != E1.nodeA && checkFeasbility(e1,i,t)){
-				if((tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0){
+		if(searchSize == -1){
+			for(int i=0; i < t.countEdges(); i++){
+				tmpE = t.getEdge(i);
+				a2=tmpE.nodeA;
+				b2=tmpE.nodeB;
+				if(E1 != tmpE && 
+					(tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+					&& checkFeasbility(e1,i,t)){
 					flip2opt(t,a1,b1,a2,b2, e1,i);
 					return;
 				}
 			}
+		}else{
+			int j = e1-searchSize;
+			for(int i=0; i < 2*searchSize; i++, j++){
+				if(j < 0){
+					j = t.countEdges()+j;
+				}
+				if(j > t.countEdges()-1){
+					j = 0;
+				}
+				tmpE = t.getEdge(j);
+				a2=tmpE.nodeA;
+				b2=tmpE.nodeB;
+				if(E1 != tmpE && 
+					(tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+					&& checkFeasbility(e1,j,t)){
+					flip2opt(t,a1,b1,a2,b2, e1,j);
+					return;
+				}
+			}
 		}
+		
 		return;
 	}
 	private boolean checkFeasbility(int e1, int e2, Tour t){
@@ -49,10 +86,6 @@ public class TwoOpt implements Improver {
 		}
 		return true;
 	}
-	/*
-	 * t, a1,b1,a2,b2
-	 * Flips edge a1,b1 and a2,b2 into a1,a2 and b1,b2
-	 */
 
 	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
@@ -70,8 +103,9 @@ public class TwoOpt implements Improver {
 		return (int) (Math.random()*(t.countEdges()-1));
 	}
 	
-	private Edge findCandidate(){
-		return null;
+	private int findCandidate(){
+		//TODO
+		return 0;
 	}
 	public static void main(String[] args) throws InterruptedException
 	{
@@ -83,21 +117,14 @@ public class TwoOpt implements Improver {
 		StartApproxer sa = new NaiveSolver();
 		Tour t = sa.getTour(g);
 		vis.setTour(t);
-		Improver imp = new TwoOpt();
+		Improver imp = new TwoOpt(t.countEdges());
 		for(int i = 0; i < 1000; i++){
 			Thread.sleep(1);
-			System.out.println(g.calculateLength(t));
+			//System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
-			System.out.println(g.calculateLength(t));
+			//System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println(t);
-		/**/
-		/* Graph with branching * /
-		double[][] coords = new double[][] { { 2, 2 }, { 2, 4 }, { 3, 3 }, { 6, 3 } };
-		Graph g = new Graph(coords);
-		StartApproxer sa = new KruskalApproximation();
-		System.out.println(sa.getTour(g));
-		/**/
 	}
 }
