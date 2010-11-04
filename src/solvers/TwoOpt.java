@@ -28,12 +28,11 @@ public class TwoOpt implements Improver {
 			tmpE = t.getEdge(i);
 			a2=tmpE.nodeA;
 			b2=tmpE.nodeB;
-			if(E1 != tmpE && tmpE.nodeB != E1.nodeA && tmpE.nodeA != E1.nodeB
-					&& tmpE.nodeB != E1.nodeB && tmpE.nodeA != E1.nodeA && checkFeasbility(e1,i,t)){
-				if((tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0){
-					flip2opt(t,a1,b1,a2,b2, e1,i);
-					return;
-				}
+			if(E1 != tmpE && 
+				(tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+				&& checkFeasbility(e1,i,t)){
+				flip2opt(t,a1,b1,a2,b2, e1,i);
+				return;
 			}
 		}
 		return;
@@ -49,10 +48,6 @@ public class TwoOpt implements Improver {
 		}
 		return true;
 	}
-	/*
-	 * t, a1,b1,a2,b2
-	 * Flips edge a1,b1 and a2,b2 into a1,a2 and b1,b2
-	 */
 
 	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
@@ -70,8 +65,9 @@ public class TwoOpt implements Improver {
 		return (int) (Math.random()*(t.countEdges()-1));
 	}
 	
-	private Edge findCandidate(){
-		return null;
+	private int findCandidate(){
+		//TODO
+		return 0;
 	}
 	public static void main(String[] args) throws InterruptedException
 	{
@@ -92,12 +88,5 @@ public class TwoOpt implements Improver {
 			vis.updateUI();
 		}
 		System.out.println(t);
-		/**/
-		/* Graph with branching * /
-		double[][] coords = new double[][] { { 2, 2 }, { 2, 4 }, { 3, 3 }, { 6, 3 } };
-		Graph g = new Graph(coords);
-		StartApproxer sa = new KruskalApproximation();
-		System.out.println(sa.getTour(g));
-		/**/
 	}
 }
