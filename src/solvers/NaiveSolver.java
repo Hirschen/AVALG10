@@ -37,6 +37,9 @@ public class NaiveSolver implements StartApproxer
 		for (int i = 1; i < graph.countNodes(); i++)
 		{
 			int best = -1;
+
+			// Find the closest unused neighbor
+
 			for (int j = 0; j < graph.countNodes(); j++)
 			{
 				if (used[j])

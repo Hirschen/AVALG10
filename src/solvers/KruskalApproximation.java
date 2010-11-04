@@ -48,7 +48,7 @@ public class KruskalApproximation implements StartApproxer
 
 		double time = Main.time();
 
-		Tour t = buildTour(mst, g);
+		Tour t = buildResult(new ArrayList<Edge>(mst), g);
 
 		if (verbose)
 		{

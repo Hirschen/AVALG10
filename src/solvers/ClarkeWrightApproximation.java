@@ -1,11 +1,8 @@
 package solvers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import main.Edge;
 import main.Graph;
@@ -14,14 +11,28 @@ import main.Main;
 import main.Tour;
 
 /**
- * // TODO: ClarkeWrightApproximation is a ...
+ * ClarkeWrightApproximation is a variation of the Clarke-Wright savings
+ * algorithm. It creates a start approximation for the tsp problem. It find a
+ * random node, which is calls the "hub node". It then draws paths to and from
+ * every other node to the "hub node". After that it can create a sub-optimal
+ * tour by using the triangle inequality.
+ * 
+ * 
+ * TODO: Extend Graph to get the best performance as possible? (only calculate
+ * the edges we need).
+ * 
+ * TODO: Store "neighbors" of nodes then we dont have to have such a huge
+ * savings-list.
+ * 
+ * TODO: Implement TourConstruction-object for all the merging and such.
+ * 
+ * TODO: Document the methods.
  * 
  * @author Martin Nycander
- * @since
+ * @since 2010-11-03
  */
 public class ClarkeWrightApproximation implements StartApproxer
 {
-	private static boolean debug;
 	private Graph graph;
 	private Tour tour;
 	private LinkedList<LinkedList<Edge>> edges;
@@ -31,12 +42,13 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 	private GraphVisualizer gv;
 
+	private final boolean measureTime = true;
+
 	/**
 	 * 
 	 */
 	public ClarkeWrightApproximation()
 	{
-		debug = Main.verbose;
 	}
 
 	/* (non-Javadoc)
@@ -55,7 +67,8 @@ public class ClarkeWrightApproximation implements StartApproxer
 		this.graph = graph;
 		this.tour = new Tour();
 		edges = new LinkedList<LinkedList<Edge>>();
-		if (debug)
+
+		if (Main.verbose)
 		{
 			gv = new GraphVisualizer(graph, 5);
 			gv.setTour(tour);
@@ -64,32 +77,48 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		// Take an arbitrarily good hub node
 		hubNode = (int) Math.round(Math.random() * ((double) graph.countNodes() - 1));
-		if (debug)
+		if (Main.verbose)
 		{
 			System.out.println("Hub node: " + hubNode);
 		}
 
+		double time = 0.0;
+		if (Main.verbose || measureTime)
+		{
+			time = Main.time();
+		}
+
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		TreeMap<Integer, int[]> savings = calculateSavings(graph);
+		Saving[] savings = calculateSavings(graph);
+
+		if (Main.verbose || measureTime)
+		{
+			System.out.println("Calculated savings in: " + Main.timeDiff(Main.time(), time) + " ms.");
+			time = Main.time();
+		}
 
 		// Go through the non-hub city pairs in descending order of savings.
 		int[] nonHubdegree = new int[graph.countNodes()];
-		// Performing the bypass ...
-		Iterator<Entry<Integer, int[]>> iterator = savings.entrySet().iterator();
-		while (iterator.hasNext() && !(addedNodes == graph.countNodes() - 1 && edges.size() == 1))
+		int sp = 0;
+		while (sp < savings.length && !(addedNodes == graph.countNodes() - 1 && edges.size() == 1))
 		{
-			Entry<Integer, int[]> saving = iterator.next();
+			Saving saving = savings[sp++];
 
-			int[] nodes = saving.getValue();
-			int a = nodes[0];
-			int b = nodes[1];
+			int a = saving.edge.nodeA;
+			int b = saving.edge.nodeB;
 
 			if (tryToAddEdge(a, b, nonHubdegree))
 			{
 				nonHubdegree[a]++;
 				nonHubdegree[b]++;
 			}
+		}
+
+		if (Main.verbose || measureTime)
+		{
+			System.out.println("Found path in: " + Main.timeDiff(Main.time(), time) + " ms.");
+			time = Main.time();
 		}
 
 		// Now merge all seperate tours
@@ -106,7 +135,10 @@ public class ClarkeWrightApproximation implements StartApproxer
 		// add path to the hubNode
 		tour.addEdge(graph.getEdge(t.getLast().nodeB, hubNode));
 
-		if (debug)
+		if (Main.verbose || measureTime)
+			System.out.println("Constructed tour in: " + Main.timeDiff(Main.time(), time) + " ms.");
+
+		if (Main.verbose)
 		{
 			gv.setHilightedEdges(null);
 			gv.setTour(tour);
@@ -117,33 +149,57 @@ public class ClarkeWrightApproximation implements StartApproxer
 	}
 
 	/**
+	 * Calculates how much distance is saved for every pair of non-hub nodes.
+	 * 
 	 * @param graph
-	 * @return
+	 *            the graph containing the nodes.
+	 * @return a sorted list of all savings
 	 */
-	private TreeMap<Integer, int[]> calculateSavings(Graph graph)
+	private Saving[] calculateSavings(Graph graph)
 	{
-		TreeMap<Integer, int[]> savings = new TreeMap<Integer, int[]>(new Comparator<Integer>()
-		{
-			public int compare(Integer a, Integer b)
-			{
-				return (a < b ? 1 : -1);
-			}
-		});
-		for (int a = 0; a < graph.countNodes(); a++)
+		int nodes = graph.countNodes() - 1;
+		Saving[] savings = new Saving[(nodes * (nodes - 1)) / 2];
+		int p = 0;
+
+		int nodeCount = graph.countNodes();
+		for (int a = 0; a < nodeCount; a++)
 		{
 			if (a == hubNode)
 				continue;
 
-			for (int b = a + 1; b < graph.countNodes(); b++)
+			int hubNodeToA = graph.getEdge(hubNode, a).length;
+
+			for (int b = a + 1; b < nodeCount; b++)
 			{
 				if (b == hubNode)
 					continue;
-
-				int save = (int) (graph.distance(hubNode, a) + graph.distance(hubNode, b) - graph.distance(a, b));
-				savings.put(save, new int[] { a, b });
+				Edge e = graph.getEdge(a, b);
+				int save = hubNodeToA + graph.getEdge(hubNode, b).length - e.length;
+				savings[p++] = new Saving(save, e);
 			}
 		}
+		Arrays.sort(savings);
 		return savings;
+	}
+
+	private final class Saving implements Comparable<Object>
+	{
+		public final int saving;
+		public final Edge edge;
+
+		public Saving(int save, Edge e)
+		{
+			saving = save;
+			edge = e;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
+		public int compareTo(Object s)
+		{
+			return (saving < ((Saving) s).saving ? 1 : -1);
+		}
 	}
 
 	private boolean tryToAddEdge(int a, int b, int[] nonHubdegree)
@@ -152,7 +208,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 		// than two other non-hub cities.
 		if (nonHubdegree[a] >= 2 || nonHubdegree[b] >= 2)
 		{
-			if (debug)
+			if (Main.verbose)
 				System.out.println("  " + a + "->" + b + ": Already has degree 2.");
 			return false;
 		}
@@ -160,16 +216,17 @@ public class ClarkeWrightApproximation implements StartApproxer
 		// ... or create a cycle of nonhub cities
 		if (createsCycleOfNonHubNodes(a, b))
 		{
-			if (debug)
+			if (Main.verbose)
 				System.out.println("  " + a + "->" + b + ": Would create a cycle.");
 			return false;
 		}
 
-		if (debug)
+		if (Main.verbose)
 		{
 			System.out.println("+ " + a + "->" + b);
 		}
 
+		// Find all tours which might fit our edge
 		ArrayList<LinkedList<Edge>> matches = new ArrayList<LinkedList<Edge>>();
 		for (LinkedList<Edge> unFinishedTour : edges)
 		{
@@ -184,6 +241,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		if (matches.isEmpty())
 		{
+			// Create a new tour!
 			LinkedList<Edge> l = new LinkedList<Edge>();
 			l.add(graph.getEdge(a, b));
 			edges.add(l);
@@ -192,66 +250,26 @@ public class ClarkeWrightApproximation implements StartApproxer
 		}
 		else if (matches.size() == 1)
 		{
+			// Append the edge to the matched tour!
 			addToTour(a, b, matches.get(0));
 			addedNodes++;
 		}
 		else if (matches.size() == 2)
 		{
 			// Stop. Mergetime!
-			if (debug)
-			{
-				System.out.println("\tMerging! Glue is: " + a + "->" + b);
-				System.out.println("\tTours before: " + edges);
-			}
-			LinkedList<Edge> smallTour = matches.get(0);
-			LinkedList<Edge> largeTour = matches.get(1);
-			if (largeTour.size() < smallTour.size())
-			{
-				smallTour = matches.get(1);
-				largeTour = matches.get(0);
-			}
-
-			addToTour(a, b, largeTour);
-
-
-			boolean reverse = (smallTour.getLast().nodeB == largeTour.getLast().nodeB || smallTour.getFirst().nodeA == largeTour.getFirst().nodeA);
-			boolean append = (smallTour.getLast().nodeB == largeTour.getLast().nodeB || largeTour.getLast().nodeB == smallTour.getFirst().nodeA);
-
-			// Reverse the smallest and add it to the bigger tour
-			while (!smallTour.isEmpty())
-			{
-				if (append)
-				{
-					if (reverse)
-						largeTour.addLast(smallTour.removeLast().getReverse());
-					else
-						largeTour.addLast(smallTour.removeFirst());
-				}
-				else
-				{
-					if (reverse)
-						largeTour.addFirst(smallTour.removeFirst().getReverse());
-					else
-						largeTour.addFirst(smallTour.removeLast());
-				}
-			}
-
-			edges.remove(smallTour);
-			if (debug)
-			{
-				System.out.println("\tTours after:  " + edges);
-			}
+			merge(a, b, matches);
 		}
 		else
 		{
 			throw new RuntimeException("Oh dear..");
 		}
 
-		if (debug)
+		if (Main.verbose)
 		{
 			// System.out.println("Tour after:  " + edges);
 			System.out.println("Node count: " + addedNodes);
 			gv.repaint();
+			/* * /
 			try
 			{
 				Thread.sleep(500);
@@ -261,9 +279,61 @@ public class ClarkeWrightApproximation implements StartApproxer
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			/**/
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param a
+	 * @param b
+	 * @param matches
+	 */
+	private void merge(int a, int b, ArrayList<LinkedList<Edge>> matches)
+	{
+		if (Main.verbose)
+		{
+			System.out.println("\tMerging! Glue is: " + a + "->" + b);
+			System.out.println("\tTours before: " + edges);
+		}
+		LinkedList<Edge> smallTour = matches.get(0);
+		LinkedList<Edge> largeTour = matches.get(1);
+		if (largeTour.size() < smallTour.size())
+		{
+			smallTour = matches.get(1);
+			largeTour = matches.get(0);
+		}
+
+		addToTour(a, b, largeTour);
+
+		boolean reverse = (smallTour.getLast().nodeB == largeTour.getLast().nodeB || smallTour.getFirst().nodeA == largeTour.getFirst().nodeA);
+		boolean append = (smallTour.getLast().nodeB == largeTour.getLast().nodeB || largeTour.getLast().nodeB == smallTour.getFirst().nodeA);
+
+		// Reverse the smallest and add it to the bigger tour
+		while (!smallTour.isEmpty())
+		{
+			if (append)
+			{
+				if (reverse)
+					largeTour.addLast(smallTour.removeLast().getReverse());
+				else
+					largeTour.addLast(smallTour.removeFirst());
+			}
+			else
+			{
+				if (reverse)
+					largeTour.addFirst(smallTour.removeFirst().getReverse());
+				else
+					largeTour.addFirst(smallTour.removeLast());
+			}
+		}
+
+		edges.remove(smallTour);
+		if (Main.verbose)
+		{
+			System.out.println("\tTours after:  " + edges);
+		}
 	}
 
 	/**

@@ -17,6 +17,18 @@ public final class Edge implements Comparable<Edge>
 	}
 
 	/**
+	 * @param a
+	 * @param b
+	 * @param calculateDistance
+	 */
+	public Edge(int a, int b, int d)
+	{
+		nodeA = (short) a;
+		nodeB = (short) b;
+		length = d;
+	}
+
+	/**
 	 * @return the reverse of this edge
 	 */
 	public Edge getReverse()
