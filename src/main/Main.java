@@ -64,7 +64,6 @@ public class Main
 		Graph graph = new Graph(io);
 		Tourable tour = approximateTour(graph);
 		tour = improveTour(graph, tour);
-
 		// Output tour
 		tour.printTo(io);
 		io.flush();
@@ -155,7 +154,7 @@ public class Main
 		Tourable t = solver.getTour(graph);
 		/* * /
 		StartApproxer solver = new NaiveSolver();
-		Tour t = solver.getTour(graph);
+		Tourable t = solver.getTour(graph);
 		/* */
 		return t;
 	}
