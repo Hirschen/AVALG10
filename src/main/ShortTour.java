@@ -21,7 +21,7 @@ public class ShortTour implements Tourable
 	 */
 	public ShortTour(int size)
 	{
-		nodes = new short[size+1];
+		nodes = new short[size];
 		for (int i = 0; i < nodes.length; i++)
 			nodes[i] = -1;
 	}

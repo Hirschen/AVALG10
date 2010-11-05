@@ -40,8 +40,7 @@ public class TwoOpt implements Improver {
 	 */
 	public void improve(Graph g, Tourable t)
 	{
-		short a1 = fetchFirstEdge(t);
-		short b1 = (short) (a1+1);
+		short a1 = fetchFirstEdge(t), b1 = (short) (a1+1 % (t.countNodes()-1));
 		short a2, b2;
 		
 		
@@ -49,6 +48,9 @@ public class TwoOpt implements Improver {
 		if(searchSize == -1){
 			for( a2=0; a2 < t.countNodes()-1; a2++){
 				b2=(short) (a2+1);
+				if(b2 == t.countNodes()-1){
+					b2 = 0;
+				}
 				if(t.getNode(a1) != t.getNode(a2) && 
 					gotGain(g, t, a1, b1, a2, b2) 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
@@ -81,17 +83,17 @@ public class TwoOpt implements Improver {
 		return (g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
 				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > minGain;
 	}
-
+	
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
 		int tmp = Math.abs(b1-a2);
-		if(tmp == 0 || tmp == t.countNodes()-3){
+		if(tmp == 0 ){
 			return false;
 		}
-		if((a1 == 0 && a2 == t.countNodes()-2) || (a1 == 1 && a2 == t.countNodes()-2)
+		/*if((a1 == 0 && a2 == t.countNodes()-2) || (a1 == 1 && a2 == t.countNodes()-2)
 				|| (a2 == 0 && a1 == t.countNodes()-3) || (a2 == 1 && a2 == t.countNodes()-2)){
 			return false;
-		}
+		}*/
 		return true;
 	}
 
@@ -109,7 +111,6 @@ public class TwoOpt implements Improver {
 
 		StartApproxer sa = new NaiveSolver();
 		Tourable t = sa.getTour(g);
-		t.addNode(t.getNode(0));
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){
