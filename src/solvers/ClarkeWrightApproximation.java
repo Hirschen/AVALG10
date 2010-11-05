@@ -8,7 +8,8 @@ import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Main;
-import main.Tour;
+import main.ShortTour;
+import main.Tourable;
 
 /**
  * ClarkeWrightApproximation is a variation of the Clarke-Wright savings
@@ -34,49 +35,45 @@ import main.Tour;
 public class ClarkeWrightApproximation implements StartApproxer
 {
 	private Graph graph;
-	private Tour tour;
 	private LinkedList<LinkedList<Edge>> edges;
-	private int addedNodes = 0;
 
-	private int hubNode;
+	private short hubNode;
 
 	private GraphVisualizer gv;
 
-	private final boolean measureTime = true;
+	private final boolean measureTime = false;
 
 	/**
 	 * 
 	 */
 	public ClarkeWrightApproximation()
 	{
+		edges = new LinkedList<LinkedList<Edge>>();
 	}
 
 	/* (non-Javadoc)
 	 * @see solvers.StartApproxer#getTour(main.Graph)
 	 */
-	public Tour getTour(Graph graph)
+	public Tourable getTour(Graph graph)
 	{
 		// Special case for one node.
 		if (graph.countNodes() == 1)
 		{
-			Tour tour = new Tour(1);
-			tour.addEdge(graph.getEdge(0, 0));
+			Tourable tour = new ShortTour(1);
+			tour.addNode((short) 0);
 			return tour;
 		}
 
 		this.graph = graph;
-		this.tour = new Tour();
-		edges = new LinkedList<LinkedList<Edge>>();
 
 		if (Main.verbose)
 		{
 			gv = new GraphVisualizer(graph, 6);
-			gv.setTour(tour);
 			gv.setHilightedEdges(edges);
 		}
 
 		// Take an arbitrarily good hub node
-		hubNode = (int) Math.round(Math.random() * ((double) graph.countNodes() - 1));
+		hubNode = (short) Math.round(Math.random() * ((double) graph.countNodes() - 1));
 		if (Main.verbose)
 		{
 			System.out.println("Hub node: " + hubNode);
@@ -101,18 +98,35 @@ public class ClarkeWrightApproximation implements StartApproxer
 		// Go through the non-hub city pairs in descending order of savings.
 		int[] nonHubdegree = new int[graph.countNodes()];
 		int sp = 0;
-		while (sp < savings.length && !(addedNodes == graph.countNodes() - 1 && edges.size() == 1))
+		int edgeGoal = graph.countNodes() - 2;
+		int addedEdges = 0;
+		while (sp < savings.length && addedEdges < edgeGoal)
 		{
 			Saving saving = savings[sp++];
 
 			int a = saving.edge.nodeA;
 			int b = saving.edge.nodeB;
 
-			if (tryToAddEdge(a, b, nonHubdegree))
+			// ...so it does not cause a non-hub city to become adjacent to more
+			// than two other non-hub cities.
+			if (nonHubdegree[a] >= 2 || nonHubdegree[b] >= 2)
 			{
-				nonHubdegree[a]++;
-				nonHubdegree[b]++;
+				if (Main.verbose)
+					System.out.println("  " + a + "->" + b + ": Already has degree 2.");
+				continue;
 			}
+
+			// ... or create a cycle of nonhub cities
+			if (createsCycleOfNonHubNodes(a, b))
+			{
+				if (Main.verbose)
+					System.out.println("  " + a + "->" + b + ": Would create a cycle.");
+				continue;
+			}
+
+			addEdge(a, b, nonHubdegree);
+			nonHubdegree[a]++;
+			nonHubdegree[b]++;
 		}
 
 		if (Main.verbose || measureTime)
@@ -121,19 +135,18 @@ public class ClarkeWrightApproximation implements StartApproxer
 			time = Main.time();
 		}
 
-		// Now merge all seperate tours
-		Tour tour = new Tour(graph.countNodes());
-
+		// Let's create a tour!
 		LinkedList<Edge> t = edges.getFirst();
+		Tourable tour = new ShortTour(graph.countNodes());
 		// add path to the hubNode
-		tour.addEdge(graph.getEdge(hubNode, t.getFirst().nodeA));
+		tour.addNode(hubNode);
 		// add constructed tour
 		for (Edge e : t)
 		{
-			tour.addEdge(e);
+			tour.addNode(e.nodeA);
 		}
 		// add path to the hubNode
-		tour.addEdge(graph.getEdge(t.getLast().nodeB, hubNode));
+		tour.addNode(t.getLast().nodeB);
 
 		if (Main.verbose || measureTime)
 			System.out.println("Constructed tour in: " + Main.timeDiff(Main.time(), time) + " ms.");
@@ -158,24 +171,25 @@ public class ClarkeWrightApproximation implements StartApproxer
 	private Saving[] calculateSavings(Graph graph)
 	{
 		int nodes = graph.countNodes() - 1;
-		Saving[] savings = new Saving[(nodes * (nodes - 1)) / 2];
-		int p = 0;
-
 		int nodeCount = graph.countNodes();
+		Saving[] savings = new Saving[nodes * (nodes - 1) / 2];
+		int ep = 0;
 		for (int a = 0; a < nodeCount; a++)
 		{
 			if (a == hubNode)
 				continue;
-
+			
 			int hubNodeToA = graph.getEdge(hubNode, a).length;
 
 			for (int b = a + 1; b < nodeCount; b++)
 			{
 				if (b == hubNode)
 					continue;
+
 				Edge e = graph.getEdge(a, b);
 				int save = hubNodeToA + graph.getEdge(hubNode, b).length - e.length;
-				savings[p++] = new Saving(save, e);
+
+				savings[ep++] = new Saving(save, e);
 			}
 		}
 		Arrays.sort(savings);
@@ -198,29 +212,15 @@ public class ClarkeWrightApproximation implements StartApproxer
 		 */
 		public int compareTo(Saving s)
 		{
+			if (s == null)
+				return -1;
+
 			return (saving < s.saving ? 1 : -1);
 		}
 	}
 
-	private boolean tryToAddEdge(int a, int b, int[] nonHubdegree)
+	private void addEdge(int a, int b, int[] nonHubdegree)
 	{
-		// ...so it does not cause a non-hub city to become adjacent to more
-		// than two other non-hub cities.
-		if (nonHubdegree[a] >= 2 || nonHubdegree[b] >= 2)
-		{
-			if (Main.verbose)
-				System.out.println("  " + a + "->" + b + ": Already has degree 2.");
-			return false;
-		}
-
-		// ... or create a cycle of nonhub cities
-		if (createsCycleOfNonHubNodes(a, b))
-		{
-			if (Main.verbose)
-				System.out.println("  " + a + "->" + b + ": Would create a cycle.");
-			return false;
-		}
-
 		if (Main.verbose)
 		{
 			System.out.println("+ " + a + "->" + b);
@@ -245,14 +245,11 @@ public class ClarkeWrightApproximation implements StartApproxer
 			LinkedList<Edge> l = new LinkedList<Edge>();
 			l.add(graph.getEdge(a, b));
 			edges.add(l);
-
-			addedNodes += 2;
 		}
 		else if (matches.size() == 1)
 		{
 			// Append the edge to the matched tour!
 			addToTour(a, b, matches.get(0));
-			addedNodes++;
 		}
 		else if (matches.size() == 2)
 		{
@@ -266,13 +263,11 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		if (Main.verbose)
 		{
-			// System.out.println("Tour after:  " + edges);
-			System.out.println("Node count: " + addedNodes);
 			gv.repaint();
 			/* */
 			try
 			{
-				Thread.sleep(100);
+				Thread.sleep(50);
 			}
 			catch (InterruptedException e)
 			{
@@ -281,8 +276,6 @@ public class ClarkeWrightApproximation implements StartApproxer
 			}
 			/**/
 		}
-
-		return true;
 	}
 
 	/**

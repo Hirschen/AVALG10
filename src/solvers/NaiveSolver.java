@@ -1,7 +1,8 @@
 package solvers;
 
 import main.Graph;
-import main.Tour;
+import main.ShortTour;
+import main.Tourable;
 
 
 /**
@@ -24,38 +25,33 @@ public class NaiveSolver implements StartApproxer
 	/* (non-Javadoc)
 	 * @see Solver#getSolution(Graph)
 	 */
-	public Tour getTour(Graph graph)
+	public Tourable getTour(Graph graph)
 	{
-		Tour tour = new Tour();
-		if(graph.countNodes() == 1){
-			tour.addEdge(graph.getEdge(0, 0));
-			return tour;
-		}
+		Tourable tour = new ShortTour(graph.countNodes());
+
 		boolean[] used = new boolean[graph.countNodes()];
 		used[0] = true;
-		int previous = 0;
+		tour.setNode(0, (short) 0);
 		for (int i = 1; i < graph.countNodes(); i++)
 		{
-			int best = -1;
+			short best = -1;
 
 			// Find the closest unused neighbor
 
-			for (int j = 0; j < graph.countNodes(); j++)
+			for (short j = 0; j < graph.countNodes(); j++)
 			{
 				if (used[j])
 					continue;
 
-				if (best == -1 || graph.distance(previous, j) < graph.distance(previous, best))
+				if (best == -1 || graph.distance(i - 1, j) < graph.distance(i - 1, best))
 				{
 					best = j;
 				}
 			}
 
-			tour.addEdge(graph.getEdge(previous, best));
+			tour.setNode(i, best);
 			used[best] = true;
-			previous = best;
 		}
-		tour.addEdge(graph.getEdge(previous, 0));
 		return tour;
 	}
 

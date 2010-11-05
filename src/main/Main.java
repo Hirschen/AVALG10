@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import solvers.ClarkeWrightApproximation;
-import solvers.Improver;
 import solvers.StartApproxer;
-import solvers.TwoOpt;
 
 /**
  * // TODO: Main is a ...
@@ -16,7 +14,7 @@ import solvers.TwoOpt;
  */
 public class Main
 {
-	public static final boolean verbose = true;
+	public static final boolean verbose = false;
 	private Kattio io;
 
 	protected double graphTime;
@@ -34,6 +32,10 @@ public class Main
 		if (verbose && args.length > 0)
 		{
 			m.runVerbose(true);
+			System.out.println("Created graph for " + m.graphTime + " ms.");
+			System.out.println("Created approximation for " + m.approxTime + " ms.");
+			System.out.println("Created improved for " + m.improveTime + " ms.");
+			System.out.println("Wrote output for " + m.outputTime + " ms.");
 		}
 		else
 		{
@@ -57,17 +59,14 @@ public class Main
 	/**
 	 * 
 	 */
-	public Tour runFast()
+	public Tourable runFast()
 	{
-		// Read input
-		// double[][] g = readInput();
-
 		Graph graph = new Graph(io);
-		Tour tour = approximateTour(graph);
+		Tourable tour = approximateTour(graph);
 		tour = improveTour(graph, tour);
 
 		// Output tour
-		io.println(tour);
+		tour.printTo(io);
 		io.flush();
 
 		return tour;
@@ -77,7 +76,7 @@ public class Main
 	 * @throws IOException
 	 * 
 	 */
-	public Tour runVerbose(boolean delayedInput) throws IOException
+	public Tourable runVerbose(boolean delayedInput) throws IOException
 	{
 		if (delayedInput)
 			waitForInput();
@@ -88,26 +87,22 @@ public class Main
 		// new GraphVisualizer(graph);
 
 		graphTime = timeDiff(time(), time);
-		System.out.println("Created graph for " + graphTime + " ms.");
 		time = time();
 
-		Tour tour = approximateTour(graph);
+		Tourable tour = approximateTour(graph);
 
 		approxTime = timeDiff(time(), time);
-		System.out.println("Created approximation for " + approxTime + " ms.");
 		time = time();
 
 		tour = improveTour(graph, tour);
 
 		improveTime = timeDiff(time(), time);
-		System.out.println("Created improved for " + improveTime + " ms.");
 		time = time();
 
 		// Output tour
-		io.println(tour);
+		tour.printTo(io);
 		io.flush();
 		outputTime = timeDiff(time(), time);
-		System.out.println("Wrote output for " + outputTime + " ms.");
 
 		return tour;
 	}
@@ -153,19 +148,25 @@ public class Main
 	 * @param graph
 	 * @return
 	 */
-	private Tour approximateTour(Graph graph)
+	private Tourable approximateTour(Graph graph)
 	{
+		/* */
 		StartApproxer solver = new ClarkeWrightApproximation();
-		return solver.getTour(graph);
+		Tourable t = solver.getTour(graph);
+		/* * /
+		StartApproxer solver = new NaiveSolver();
+		Tour t = solver.getTour(graph);
+		/* */
+		return t;
 	}
 
-	private Tour improveTour(Graph g, Tour t)
+	private Tourable improveTour(Graph g, Tourable t)
 	{
-		Improver imp = new TwoOpt();
-		for (int i = 0; i < 3000; i++)
+		/*Improver imp = new TwoOpt();
+		for (int i = 0; i < 0; i++)
 		{
 			imp.improve(g, t);
-		}
+		}*/
 		return t;
 	}
 }

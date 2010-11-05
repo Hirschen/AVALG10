@@ -1,6 +1,6 @@
 package solvers;
 import main.Graph;
-import main.Tour;
+import main.Tourable;
 
 
 /**
@@ -11,5 +11,5 @@ import main.Tour;
  */
 public interface StartApproxer
 {
-	Tour getTour(Graph g);
+	Tourable getTour(Graph g);
 }

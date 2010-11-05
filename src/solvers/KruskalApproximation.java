@@ -1,15 +1,13 @@
 package solvers;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Main;
-import main.Tour;
+import main.ShortTour;
+import main.Tourable;
 
 /**
  * <a href="http://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal's
@@ -34,27 +32,27 @@ public class KruskalApproximation implements StartApproxer
 	/* (non-Javadoc)
 	 * @see solvers.StartApproxer#getTour(main.Graph)
 	 */
-	public Tour getTour(Graph g)
+	public Tourable getTour(Graph g)
 	{
 		// Special case for one node.
 		if (g.countNodes() == 1)
 		{
-			Tour tour = new Tour(1);
-			tour.addEdge(g.getEdge(0, 0));
+			Tourable tour = new ShortTour(1);
+			tour.addNode((short) 0);
 			return tour;
 		}
 
+		@SuppressWarnings("unused")
 		HashSet<Edge> mst = findMinimumSpanningTree(g);
 
 		double time = Main.time();
 
-		Tour t = buildResult(new ArrayList<Edge>(mst), g);
-
+		// ...
 		if (verbose)
 		{
 			System.out.println("Built result in: " + Main.timeDiff(Main.time(), time) + " ms.");
 		}
-		return t;
+		return null;
 	}
 
 	/**
@@ -134,7 +132,8 @@ public class KruskalApproximation implements StartApproxer
 		throw new RuntimeException("Could not find a minimum spanning tree. This should be impossible in a complete graph.");
 	}
 
-	private Tour buildTour(HashSet<Edge> mst, Graph graph)
+	@SuppressWarnings("unused")
+	private Tourable buildTour(HashSet<Edge> mst, Graph graph)
 	{
 		// Find the node with the most edges
 		int centerNode = 0;
@@ -162,94 +161,16 @@ public class KruskalApproximation implements StartApproxer
 		// highestDegree + ")");
 
 		// Draw a tour
-		Tour tour = new Tour((graph.countNodes() - 1) * 2);
+		Tourable tour = new ShortTour((graph.countNodes() - 1) * 2);
 		for (int node = 0; node < graph.countNodes(); node++)
 		{
 			if (node == centerNode)
 				continue;
 
-			tour.addEdge(graph.getEdge(centerNode, node));
-			tour.addEdge(graph.getEdge(node, centerNode));
+			tour.addNode((short) centerNode);
+			tour.addNode((short) node);
+			tour.addNode((short) centerNode);
 		}
-
-		return tour;
-	}
-	
-	/**
-	 * @param mst
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private Tour buildResult(List<Edge> mst, Graph graph)
-	{
-		Tour tour = new Tour();
-		tour.addEdge(mst.get(0));
-
-		List<Edge> todo = new ArrayList<Edge>(mst);
-
-		// Go over all the edges in the minimum spanning tree
-		for (int i = 1; i < mst.size(); i++)
-		{
-			Edge edge = mst.get(i);
-
-			if (verbose)
-				System.out.println(" inc. Tour: " + tour);
-
-			Edge insertedNode = null;
-			int insertAt = -1;
-			// Find any connecting edge
-			Iterator<Edge> it = todo.iterator();
-			while (it.hasNext())
-			{
-				Edge e = it.next();
-				if (edge.nodeA == e.nodeB)
-				{
-					insertAt = tour.indexOf(e) + 1;
-					insertedNode = edge;
-					it.remove();
-					break;
-				}
-				if (edge.nodeB == e.nodeA)
-				{
-					insertAt = tour.indexOf(e);
-					insertedNode = edge;
-					it.remove();
-					break;
-				}
-				if (edge.nodeA == e.nodeA)
-				{
-					insertAt = tour.indexOf(e);
-					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
-					it.remove();
-					break;
-				}
-				if (edge.nodeB == e.nodeB)
-				{
-					insertAt = tour.indexOf(e) + 1;
-					insertedNode = new Edge(edge.nodeB, edge.nodeA, edge.length);
-					it.remove();
-					break;
-				}
-			}
-			if (insertAt == -1)
-			{
-				insertAt = 0;
-			}
-
-			if (insertAt < tour.countEdges())
-			{
-				Edge neighbour = tour.getEdge(insertAt);
-				if (insertedNode.nodeB != neighbour.nodeA)
-				{
-					tour.addEdge(insertAt, new Edge(insertedNode.nodeB, neighbour.nodeA, edge.length));
-				}
-			}
-			tour.addEdge(insertAt, insertedNode);
-		}
-		tour.addEdge(graph.getEdge(tour.getLast().nodeB, tour.getFirst().nodeA));
-
-		if (verbose)
-			System.out.println("Tour: " + tour);
 
 		return tour;
 	}
@@ -268,7 +189,7 @@ public class KruskalApproximation implements StartApproxer
 		Graph g = new Graph(coords);
 
 		StartApproxer sa = new KruskalApproximation();
-		Tour t = sa.getTour(g);
+		Tourable t = sa.getTour(g);
 		System.out.println(t);
 		/**/
 		/* Graph with branching * /

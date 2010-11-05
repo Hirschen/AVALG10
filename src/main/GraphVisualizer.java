@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.util.Collection;
 
 import javax.swing.JFrame;
@@ -24,10 +25,12 @@ public class GraphVisualizer extends JPanel
 	private JFrame frame;
 
 	private Graph graph;
-	private Tour tour;
+	private Tourable tour;
 	private Collection<? extends Collection<Edge>> hilightedEdges;
 
-	private int scale;
+	private double scale;
+
+	private Point offset = new Point(0, 0);
 
 	public GraphVisualizer(Graph g)
 	{
@@ -37,14 +40,50 @@ public class GraphVisualizer extends JPanel
 	/**
 	 * 
 	 */
-	public GraphVisualizer(Graph g, int scale)
+	public GraphVisualizer(Graph g, double scale)
 	{
 		graph = g;
 		this.scale = scale;
 		createFrame();
+
+		int maxX = 0;
+		int maxY = 0;
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		for (int a = 0; a < graph.countNodes(); a++)
+		{
+			int x = (int) graph.getX(a);
+			int y = (int) graph.getY(a);
+
+			maxX = Math.max(x, maxX);
+			maxY = Math.max(y, maxY);
+			minX = Math.min(x, minX);
+			minY = Math.min(y, minY);
+		}
+
+		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+
+		int graphHeight = maxY - minY;
+		int graphWidth = maxX - minX;
+
+		this.scale = Math.min((double) (frame.getHeight() - 100) / (double) graphHeight, (double) frame.getWidth() / (double) graphWidth);
+		offset = new Point((int) (minX * this.scale), (int) (minY * this.scale));
+		System.out.print("Scale: " + this.scale + " ");
+		System.out.println("Offset: " + offset + " ");
+
+		/*
+				int fw = frame.getWidth();
+				int fh = frame.getHeight() + 100;
+				if (maxX + 40 > fw || maxY + 40 > fh)
+				{
+					this.setMinimumSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
+					this.setPreferredSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
+					frame.pack();
+				}
+		*/
 	}
 
-	public void setTour(Tour t)
+	public void setTour(Tourable t)
 	{
 		tour = t;
 	}
@@ -80,50 +119,27 @@ public class GraphVisualizer extends JPanel
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		// Set some default settings
 		g.setColor(Color.black);
-		g.translate(20, 20);
+		g.translate(20 - offset.x, 20 - offset.y);
 		// Draw edges
 		for (int a = 0; a < graph.countNodes(); a++)
 		{
-			for(Edge e : graph.neighbours[a])
-			{
-				g.setColor(new Color(190, 190, 190));
-				g.drawLine((int) graph.getX(e.nodeA) * scale, (int) graph.getY(e.nodeA) * scale, (int) graph.getX(e.nodeB) * scale, (int) graph.getY(e.nodeB) * scale);
-
-			}
-			/*
 			for (int b = a + 1; b < graph.countNodes(); b++)
 			{
 				g.setColor(new Color(190, 190, 190));
-				g.drawLine((int) graph.getX(a) * scale, (int) graph.getY(a) * scale, (int) graph.getX(b) * scale, (int) graph.getY(b) * scale);
+				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
 			}
-			*/
 		}
 		// Draw nodes
-		int maxX = 0;
-		int maxY = 0;
 		for (int a = 0; a < graph.countNodes(); a++)
 		{
 			int size = 4;
 			g.setColor(Color.black);
-			int x = (int) graph.getX(a) * scale - size / 2;
-			int y = (int) graph.getY(a) * scale - size / 2;
+			int x = (int) (graph.getX(a) * scale - size / 2);
+			int y = (int) (graph.getY(a) * scale - size / 2);
 			g.drawOval(x, y, size, size);
 
 			g.setColor(Color.blue);
 			g.drawString("  " + a, x, y);
-
-			maxX = Math.max(x, maxX);
-			maxY = Math.max(y, maxY);
-
-		}
-
-		int fw = frame.getWidth();
-		int fh = frame.getHeight() + 100;
-		if (maxX + 40 > fw || maxY + 40 > fh)
-		{
-			this.setMinimumSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-			this.setPreferredSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-			frame.pack();
 		}
 
 		drawTour(g);
@@ -146,7 +162,7 @@ public class GraphVisualizer extends JPanel
 			g.setColor(colors[i % colors.length]);
 			for (Edge e : c)
 			{
-				g.drawLine((int) graph.getX(e.nodeA) * scale, (int) graph.getY(e.nodeA) * scale, (int) graph.getX(e.nodeB) * scale, (int) graph.getY(e.nodeB) * scale);
+				g.drawLine((int) (graph.getX(e.nodeA) * scale), (int) (graph.getY(e.nodeA) * scale), (int) (graph.getX(e.nodeB) * scale), (int) (graph.getY(e.nodeB) * scale));
 			}
 			i++;
 		}
@@ -161,10 +177,13 @@ public class GraphVisualizer extends JPanel
 		if (tour == null)
 			return;
 
-		for (Edge e : tour)
+		int a = tour.getNode(0);
+		for (int i = 0; i <= tour.countNodes(); i++)
 		{
+			int b = tour.getNode(i % tour.countNodes());
 			g.setColor(new Color(255, 0, 0, 100));
-			g.drawLine((int) graph.getX(e.nodeA) * scale, (int) graph.getY(e.nodeA) * scale, (int) graph.getX(e.nodeB) * scale, (int) graph.getY(e.nodeB) * scale);
+			g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
+			a = b;
 		}
 	}
 }

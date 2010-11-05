@@ -3,7 +3,7 @@ package solvers;
 import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
-import main.Tour;
+import main.Tourable;
 
 public class TwoOpt implements Improver {
 	private Graph G;
@@ -31,7 +31,8 @@ public class TwoOpt implements Improver {
 	 * (non-Javadoc)
 	 * @see solvers.Improver#improve(main.Graph, main.Tour)
 	 */
-	public void improve(Graph g, Tour t) {
+	public void improve(Graph g, Tourable t)
+	{
 		G=g;
 		Edge E1,tmpE; //EDGE
 		int e1 = fetchFirstEdge(t);
@@ -75,7 +76,9 @@ public class TwoOpt implements Improver {
 		
 		return;
 	}
-	private boolean checkFeasbility(int e1, int e2, Tour t){
+
+	private boolean checkFeasbility(int e1, int e2, Tourable t)
+	{
 		int tmp = Math.abs(e1-e2);
 		if(tmp <= 1 || tmp >= t.countEdges()-3){
 			return false;
@@ -87,7 +90,7 @@ public class TwoOpt implements Improver {
 		return true;
 	}
 
-	private void flip2opt(Tour t, short a1, short b1, short a2, short b2, int e1,
+	private void flip2opt(Tourable t, short a1, short b1, short a2, short b2, int e1,
 			int e2) {
 		if(e1 < e2){
 			t.switchEdges(G, e1, e2, G.getEdge(a1, a2), G.getEdge(b1, b2));
@@ -99,7 +102,8 @@ public class TwoOpt implements Improver {
 		return;
 	}
 
-	private int fetchFirstEdge(Tour t){
+	private int fetchFirstEdge(Tourable t)
+	{
 		return (int) (Math.random()*(t.countEdges()-1));
 	}
 	
@@ -115,7 +119,7 @@ public class TwoOpt implements Improver {
 		GraphVisualizer vis = new GraphVisualizer(g);
 
 		StartApproxer sa = new NaiveSolver();
-		Tour t = sa.getTour(g);
+		Tourable t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt(t.countEdges());
 		for(int i = 0; i < 1000; i++){
