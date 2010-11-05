@@ -129,7 +129,7 @@ public class ShortTour implements Tourable
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < nodes.length - 1; i++)
+		for (int i = 0; i < nodes.length; i++)
 		{
 			sb.append(nodes[i]);
 			sb.append(' ');
