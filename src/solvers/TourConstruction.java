@@ -31,7 +31,6 @@ public class TourConstruction implements Iterable<UnfinishedTour>
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
 	 */
-	@Override
 	public Iterator<UnfinishedTour> iterator()
 	{
 		return edges.iterator();

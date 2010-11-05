@@ -65,7 +65,7 @@ public class ShortTour implements Tourable
 	 */
 	public int countNodes()
 	{
-		return addPointer;
+		return addPointer - 1;
 	}
 
 	/* (non-Javadoc)
@@ -111,7 +111,7 @@ public class ShortTour implements Tourable
 	 */
 	public void printTo(Kattio out)
 	{
-		for (int i = 0; i < nodes.length; i++)
+		for (int i = 0; i < nodes.length - 1; i++)
 		{
 			out.print(nodes[i]);
 			out.print(' ');
@@ -129,7 +129,7 @@ public class ShortTour implements Tourable
 		
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < nodes.length; i++)
+		for (int i = 0; i < nodes.length - 1; i++)
 		{
 			sb.append(nodes[i]);
 			sb.append(' ');

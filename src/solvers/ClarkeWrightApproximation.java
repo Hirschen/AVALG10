@@ -179,7 +179,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 			if (a == hubNode)
 				continue;
 			
-			int hubNodeToA = graph.getEdge(hubNode, a).length;
+			int hubNodeToA = graph.distance(hubNode, a);
 
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{

@@ -1,13 +1,5 @@
 package solvers;
 
-import java.util.HashSet;
-
-import main.Edge;
-import main.Graph;
-import main.GraphVisualizer;
-import main.Main;
-import main.ShortTour;
-import main.Tourable;
 
 /**
  * <a href="http://en.wikipedia.org/wiki/Kruskal's_algorithm">Kruskal's
@@ -16,175 +8,175 @@ import main.Tourable;
  * 
  * @author Martin Nycander
  * @since
- */
-public class KruskalApproximation implements StartApproxer
-{
-	private static final boolean verbose = false;
+ * /
+ public class KruskalApproximation implements StartApproxer
+ {
+ private static final boolean verbose = false;
 
-	/**
-	 * 
-	 */
-	public KruskalApproximation()
-	{
+ /**
+ * 
+ * /
+ public KruskalApproximation()
+ {
 
-	}
+ }
 
-	/* (non-Javadoc)
-	 * @see solvers.StartApproxer#getTour(main.Graph)
-	 */
-	public Tourable getTour(Graph g)
-	{
-		// Special case for one node.
-		if (g.countNodes() == 1)
-		{
-			Tourable tour = new ShortTour(1);
-			tour.addNode((short) 0);
-			return tour;
-		}
+ /* (non-Javadoc)
+ * @see solvers.StartApproxer#getTour(main.Graph)
+ * /
+ public Tourable getTour(Graph g)
+ {
+ // Special case for one node.
+ if (g.countNodes() == 1)
+ {
+ Tourable tour = new ShortTour(1);
+ tour.addNode((short) 0);
+ return tour;
+ }
 
-		@SuppressWarnings("unused")
-		HashSet<Edge> mst = findMinimumSpanningTree(g);
+ @SuppressWarnings("unused")
+ HashSet<Edge> mst = findMinimumSpanningTree(g);
 
-		double time = Main.time();
+ double time = Main.time();
 
-		// ...
-		if (verbose)
-		{
-			System.out.println("Built result in: " + Main.timeDiff(Main.time(), time) + " ms.");
-		}
-		return null;
-	}
+ // ...
+ if (verbose)
+ {
+ System.out.println("Built result in: " + Main.timeDiff(Main.time(), time) + " ms.");
+ }
+ return null;
+ }
 
-	/**
-	 * @param g
-	 */
-	@SuppressWarnings("unchecked")
-	private HashSet<Edge> findMinimumSpanningTree(Graph g)
-	{
-		Edge[] edges = g.getSortedEdgeList();
+ /**
+ * @param g
+ * /
+ @SuppressWarnings("unchecked")
+ private HashSet<Edge> findMinimumSpanningTree(Graph g)
+ {
+ Edge[] edges = g.getSortedEdgeList();
 
-		double time;
-		if (verbose)
-		{
-			System.out.println("Graph: " + g);
-			// System.out.println("Edges: " + Arrays.toString(edges));
-			time = Main.time();
-		}
+ double time;
+ if (verbose)
+ {
+ System.out.println("Graph: " + g);
+ // System.out.println("Edges: " + Arrays.toString(edges));
+ time = Main.time();
+ }
 
 
-		HashSet<Edge>[] forest = new HashSet[g.countNodes()];
-		HashSet<Edge> treeA;
-		HashSet<Edge> treeB;
-		for (int ep = 0; ep < edges.length; ep++)
-		{
-			// remove an edge with minimum weight from S
-			Edge e = edges[ep];
+ HashSet<Edge>[] forest = new HashSet[g.countNodes()];
+ HashSet<Edge> treeA;
+ HashSet<Edge> treeB;
+ for (int ep = 0; ep < edges.length; ep++)
+ {
+ // remove an edge with minimum weight from S
+ Edge e = edges[ep];
 
-			// make sure that edge connects two different trees.
-			treeA = forest[e.nodeA];
-			treeB = forest[e.nodeB];
-			if (treeA != null && treeA == treeB)
-			{
-				continue;
-			}
+ // make sure that edge connects two different trees.
+ treeA = forest[e.nodeA];
+ treeB = forest[e.nodeB];
+ if (treeA != null && treeA == treeB)
+ {
+ continue;
+ }
 
-			// combine the two trees into a single tree
-			HashSet<Edge> tree = null;
-			if (treeA != null && treeB == null)
-			{
-				tree = treeA;
-			}
-			else if (treeA == null && treeB != null)
-			{
-				tree = treeB;
-			}
-			else if (treeA != null && treeB != null)
-			{
-				treeA.addAll(treeB);
-				for (Edge te : treeB)
-				{
-					forest[te.nodeA] = treeA;
-					forest[te.nodeB] = treeA;
-				}
-				tree = treeA;
-			}
-			else
-			// treeA == null && treeB == null
-			{
-				tree = new HashSet<Edge>();
-			}
-			
-			// then add it to the tree and update the forest
-			tree.add(e);
-			forest[e.nodeA] = tree;
-			forest[e.nodeB] = tree;
+ // combine the two trees into a single tree
+ HashSet<Edge> tree = null;
+ if (treeA != null && treeB == null)
+ {
+ tree = treeA;
+ }
+ else if (treeA == null && treeB != null)
+ {
+ tree = treeB;
+ }
+ else if (treeA != null && treeB != null)
+ {
+ treeA.addAll(treeB);
+ for (Edge te : treeB)
+ {
+ forest[te.nodeA] = treeA;
+ forest[te.nodeB] = treeA;
+ }
+ tree = treeA;
+ }
+ else
+ // treeA == null && treeB == null
+ {
+ tree = new HashSet<Edge>();
+ }
 
-			if (tree.size() == g.countNodes() - 1)
-			{
-				if (verbose)
-				{
-					System.out.println("MST: " + tree);
-					System.out.println("Found MST in: " + Main.timeDiff(Main.time(), time) + " ms.");
-				}
-				return tree;
-			}
-		}
-		throw new RuntimeException("Could not find a minimum spanning tree. This should be impossible in a complete graph.");
-	}
+ // then add it to the tree and update the forest
+ tree.add(e);
+ forest[e.nodeA] = tree;
+ forest[e.nodeB] = tree;
 
-	@SuppressWarnings("unused")
-	private Tourable buildTour(HashSet<Edge> mst, Graph graph)
-	{
-		// Find the node with the most edges
-		int centerNode = 0;
-		int highestDegree = -1;
+ if (tree.size() == g.countNodes() - 1)
+ {
+ if (verbose)
+ {
+ System.out.println("MST: " + tree);
+ System.out.println("Found MST in: " + Main.timeDiff(Main.time(), time) + " ms.");
+ }
+ return tree;
+ }
+ }
+ throw new RuntimeException("Could not find a minimum spanning tree. This should be impossible in a complete graph.");
+ }
 
-		for (int node = 0; node < graph.countNodes(); node++)
-		{
-			int degree = 0;
-			for (Edge edge : mst)
-			{
-				if (edge.nodeA == node)
-					degree++;
-				if (edge.nodeB == node)
-					degree++;
-			}
+ @SuppressWarnings("unused")
+ private Tourable buildTour(HashSet<Edge> mst, Graph graph)
+ {
+ // Find the node with the most edges
+ int centerNode = 0;
+ int highestDegree = -1;
 
-			if (degree > highestDegree)
-			{
-				highestDegree = degree;
-				centerNode = node;
-			}
-		}
+ for (int node = 0; node < graph.countNodes(); node++)
+ {
+ int degree = 0;
+ for (Edge edge : mst)
+ {
+ if (edge.nodeA == node)
+ degree++;
+ if (edge.nodeB == node)
+ degree++;
+ }
 
-		// System.out.println("Center node: " + centerNode + " (degree " +
-		// highestDegree + ")");
+ if (degree > highestDegree)
+ {
+ highestDegree = degree;
+ centerNode = node;
+ }
+ }
 
-		// Draw a tour
-		Tourable tour = new ShortTour((graph.countNodes() - 1) * 2);
-		for (int node = 0; node < graph.countNodes(); node++)
-		{
-			if (node == centerNode)
-				continue;
+ // System.out.println("Center node: " + centerNode + " (degree " +
+ // highestDegree + ")");
 
-			tour.addNode((short) centerNode);
-			tour.addNode((short) node);
-			tour.addNode((short) centerNode);
-		}
+ // Draw a tour
+ Tourable tour = new ShortTour((graph.countNodes() - 1) * 2);
+ for (int node = 0; node < graph.countNodes(); node++)
+ {
+ if (node == centerNode)
+ continue;
 
-		return tour;
-	}
+ tour.addNode((short) centerNode);
+ tour.addNode((short) node);
+ tour.addNode((short) centerNode);
+ }
 
-	public static void main(String[] args) throws Exception
-	{
-		/* Kattis * /
-		Problem p = new Problem(new File("testdata/pr2392.tsp"), new File("testdata/pr2392.opt.tour"));
-		Graph g = new Graph(p.coordinates);
-		StartApproxer sa = new KruskalApproximation();
-		Tour t = sa.getTour(g);
-		System.out.println(t);
-		/**/
-		/* Simple graph */
+ return tour;
+ }
+
+ public static void main(String[] args) throws Exception
+ {
+ /* Kattis * /
+ Problem p = new Problem(new File("testdata/pr2392.tsp"), new File("testdata/pr2392.opt.tour"));
+ Graph g = new Graph(p.coordinates);
+ StartApproxer sa = new KruskalApproximation();
+ Tour t = sa.getTour(g);
+ System.out.println(t);
+ /**/
+		/* Simple graph * /
 		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 3, 3 }, { 3, 6 }, { 6, 3 } };
 		Graph g = new Graph(coords);
 
@@ -197,7 +189,8 @@ public class KruskalApproximation implements StartApproxer
 		Graph g = new Graph(coords);
 		StartApproxer sa = new KruskalApproximation();
 		System.out.println(sa.getTour(g));
-		/**/
+		/** /
 		new GraphVisualizer(g, 10).setTour(t);
 	}
 }
+/**/

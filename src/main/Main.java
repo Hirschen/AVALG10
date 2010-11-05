@@ -64,7 +64,7 @@ public class Main
 		Graph graph = new Graph(io);
 		Tourable tour = approximateTour(graph);
 		tour = improveTour(graph, tour);
-
+		tour.addNode(tour.getNode(0));
 		// Output tour
 		tour.printTo(io);
 		io.flush();
@@ -90,6 +90,7 @@ public class Main
 		time = time();
 
 		Tourable tour = approximateTour(graph);
+		tour.addNode(tour.getNode(0));
 
 		approxTime = timeDiff(time(), time);
 		time = time();

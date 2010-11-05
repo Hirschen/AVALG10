@@ -19,7 +19,7 @@ import solvers.ClarkeWrightApproximation.Saving;
 public class Graph
 {
 	private double[][] nodes;
-	private Edge[][] edges;
+	private int[][] edges;
 
 	private int nodeCount;
 	private int edgeCount;
@@ -35,20 +35,19 @@ public class Graph
 		nodeCount = coordinates.length;
 		nodes = coordinates;
 
-		edges = new Edge[nodeCount][nodeCount];
+		edges = new int[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 
 		// Precalculate edges
 		for (short a = 0; a < nodeCount; a++)
 		{
-			edges[a][a] = new Edge(a, a, 0);
+			edges[a][a] = 0;
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				int dist = calculateDistance(a, b);
 
 				// Store calculated values
-				edges[a][b] = new Edge(a, b, dist);
-				edges[b][a] = new Edge(b, a, dist);
+				edges[a][b] = dist;
 			}
 		}
 	}
@@ -59,7 +58,7 @@ public class Graph
 		nodes = new double[nodeCount][2];
 
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
-		edges = new Edge[nodeCount][nodeCount];
+		edges = new int[nodeCount][nodeCount];
 
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
@@ -68,12 +67,14 @@ public class Graph
 			nodes[a][1] = io.getDouble();
 
 			// Precalculate edges
-			edges[a][a] = new Edge(a, a, 0);
+			edges[a][a] = 0;
 			for (short b = 0; b < a; b++)
 			{
 				int dist = calculateDistance(a, b);
-				edges[a][b] = new Edge(a, b, dist);
-				edges[b][a] = new Edge(b, a, dist);
+				if (a < b)
+					edges[a][b] = dist;
+				else
+					edges[b][a] = dist;
 			}
 		}
 	}
@@ -115,7 +116,7 @@ public class Graph
 
 	public int distance(int nodeA, int nodeB)
 	{
-		return edges[nodeA][nodeB].length;
+		return edges[nodeA][nodeB];
 	}
 
 	/**
@@ -130,46 +131,14 @@ public class Graph
 		for (short i = 1; i < tour.countNodes(); i++)
 		{
 			short current = tour.getNode(i);
-			length += edges[previous][current].length;
+			length += distance(previous, current);
 			previous = current;
 		}
 		if (previous != first)
-			length += edges[previous][first].length;
+			length += distance(previous, first);
 		return length;
 	}
 
-	/**
-	 * @param g
-	 * @return
-	 */
-	public Edge getEdge(int a, int b)
-	{
-		return edges[a][b];
-	}
-
-	public Edge[][] getEdges()
-	{
-		return edges;
-	}
-
-	/**
-	 * @param g
-	 * @return
-	 */
-	public Edge[] getSortedEdgeList()
-	{
-		Edge[] sortedEdges = new Edge[edgeCount];
-		int ep = 0;
-		for (int a = 0; a < nodeCount; a++)
-		{
-			for (int b = a + 1; b < nodeCount; b++)
-			{
-				sortedEdges[ep++] = edges[a][b];
-			}
-		}
-		Arrays.sort(sortedEdges);
-		return sortedEdges;
-	}
 
 	/**
 	 * @param a
@@ -206,14 +175,14 @@ public class Graph
 			if (a == hubNode)
 				continue;
 
-			int hubNodeToA = edges[hubNode][a].length;
+			int hubNodeToA = distance(hubNode, a);
 
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				if (b == hubNode)
 					continue;
 
-				int save = hubNodeToA + edges[hubNode][b].length - edges[a][b].length;
+				int save = hubNodeToA + distance(hubNode, b) - distance(a, b);
 				savings[ep++] = cw.new Saving(save, a, b);
 			}
 		}
@@ -224,63 +193,37 @@ public class Graph
 	/**
 	 * @param width
 	 * @param height
-	 * @return
+	 * @return / public Edge[][] calculateApproximateNeighbours(double width,
+	 *         double height) { if (nodeCount == 1) { return new Edge[][] { new
+	 *         Edge[] { edges[0][0] } }; } int size = (int) Math.max(width,
+	 *         height) / 2; int neighBourThreshold = size + 1;
+	 * 
+	 *         int neighbourCount = nodeCount - 1; if (nodeCount > 100)
+	 *         neighbourCount = 25; else if (nodeCount > 500) neighbourCount =
+	 *         50; else if (nodeCount > 750) neighbourCount = 100;
+	 * 
+	 *         Edge[][] neighbours = new Edge[nodeCount][neighbourCount];
+	 *         System.out.println("Searching for " + neighbours[0].length +
+	 *         " neighbours with distance threshold " + neighBourThreshold);
+	 * 
+	 *         for (short a = 0; a < nodeCount; a++) { int b = (a + 1) %
+	 *         nodeCount; int startB = b; for (int neighbour = 0; neighbour <
+	 *         neighbours[a].length; neighbour++) { // Find a worthy neighbour
+	 *         while (edges[a][b].length > neighBourThreshold || a == b) { b =
+	 *         (b + 1 == nodeCount ? 0 : b + 1);
+	 * 
+	 *         // If we have looked at all nodes, increase the threshold if (b
+	 *         == a) { neighBourThreshold *= 2; if (Main.verbose)
+	 *         System.out.println("Increasing threshold to " +
+	 *         neighBourThreshold + "..."); b = startB; } }
+	 * 
+	 *         // Add this as a neighbour neighbours[a][neighbour] =
+	 *         edges[a][b]; b = (b == nodeCount - 1 ? 0 : b + 1);
+	 * 
+	 *         // If we have looked at all nodes, increase the threshold if (b
+	 *         == a) { neighBourThreshold *= 2; if (Main.verbose)
+	 *         System.out.println("Increasing threshold to " +
+	 *         neighBourThreshold + "..."); b = startB; } } } return neighbours;
+	 *         }
 	 */
-	public Edge[][] calculateApproximateNeighbours(double width, double height)
-	{
-		if (nodeCount == 1)
-		{
-			return new Edge[][] { new Edge[] { edges[0][0] } };
-		}
-		int size = (int) Math.max(width, height) / 2;
-		int neighBourThreshold = size + 1;
-
-		int neighbourCount = nodeCount - 1;
-		if (nodeCount > 100)
-			neighbourCount = 25;
-		else if (nodeCount > 500)
-			neighbourCount = 50;
-		else if (nodeCount > 750)
-			neighbourCount = 100;
-
-		Edge[][] neighbours = new Edge[nodeCount][neighbourCount];
-		System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
-
-		for (short a = 0; a < nodeCount; a++)
-		{
-			int b = (a + 1) % nodeCount;
-			int startB = b;
-			for (int neighbour = 0; neighbour < neighbours[a].length; neighbour++)
-			{
-				// Find a worthy neighbour
-				while (edges[a][b].length > neighBourThreshold || a == b)
-				{
-					b = (b + 1 == nodeCount ? 0 : b + 1);
-
-					// If we have looked at all nodes, increase the threshold
-					if (b == a)
-					{
-						neighBourThreshold *= 2;
-						if (Main.verbose)
-							System.out.println("Increasing threshold to " + neighBourThreshold + "...");
-						b = startB;
-					}
-				}
-
-				// Add this as a neighbour
-				neighbours[a][neighbour] = edges[a][b];
-				b = (b == nodeCount - 1 ? 0 : b + 1);
-
-				// If we have looked at all nodes, increase the threshold
-				if (b == a)
-				{
-					neighBourThreshold *= 2;
-					if (Main.verbose)
-						System.out.println("Increasing threshold to " + neighBourThreshold + "...");
-					b = startB;
-				}
-			}
-		}
-		return neighbours;
-	}
 }
