@@ -155,9 +155,8 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#switchEdges(main.Graph, int, int, main.Edge, main.Edge)
 	 */
-	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2)
+	public void switchEdges(Graph g, short a1, short b1, short a2, short b2)
 	{
-		// TODO Auto-generated method stub
-
+		
 	}
 }
