@@ -65,7 +65,7 @@ public class ShortTour implements Tourable
 	 */
 	public int countNodes()
 	{
-		return addPointer - 1;
+		return addPointer;
 	}
 
 	/* (non-Javadoc)

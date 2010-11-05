@@ -74,7 +74,7 @@ public class Benchmark
 
 					});
 					thread.start();
-					PrintStream bout = System.out;
+					// PrintStream bout = System.out;
 					System.setOut(new PrintStream(new OutputStream()
 					{
 						public void write(int b) throws IOException
@@ -94,7 +94,7 @@ public class Benchmark
 					else
 						t = m.runFast();
 
-					System.setOut(bout);
+					// System.setOut(bout);
 
 					Graph graph = new Graph(p.coordinates);
 					StartApproxer naiveSolver = new NaiveSolver();

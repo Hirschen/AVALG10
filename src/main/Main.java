@@ -3,7 +3,7 @@ package main;
 import java.io.IOException;
 import java.io.InputStream;
 
-import solvers.ClarkeWrightApproximation;
+import solvers.NaiveSolver;
 import solvers.StartApproxer;
 
 /**
@@ -63,8 +63,8 @@ public class Main
 	{
 		Graph graph = new Graph(io);
 		Tourable tour = approximateTour(graph);
-		tour = improveTour(graph, tour);
 		tour.addNode(tour.getNode(0));
+		tour = improveTour(graph, tour);
 		// Output tour
 		tour.printTo(io);
 		io.flush();
@@ -151,12 +151,12 @@ public class Main
 	 */
 	private Tourable approximateTour(Graph graph)
 	{
-		/* */
+		/* * /
 		StartApproxer solver = new ClarkeWrightApproximation();
 		Tourable t = solver.getTour(graph);
-		/* * /
+		/* */
 		StartApproxer solver = new NaiveSolver();
-		Tour t = solver.getTour(graph);
+		Tourable t = solver.getTour(graph);
 		/* */
 		return t;
 	}

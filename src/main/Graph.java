@@ -48,6 +48,7 @@ public class Graph
 
 				// Store calculated values
 				edges[a][b] = dist;
+				edges[b][a] = dist;
 			}
 		}
 	}
@@ -71,10 +72,8 @@ public class Graph
 			for (short b = 0; b < a; b++)
 			{
 				int dist = calculateDistance(a, b);
-				if (a < b)
-					edges[a][b] = dist;
-				else
-					edges[b][a] = dist;
+				edges[a][b] = dist;
+				edges[b][a] = dist;
 			}
 		}
 	}
@@ -131,11 +130,11 @@ public class Graph
 		for (short i = 1; i < tour.countNodes(); i++)
 		{
 			short current = tour.getNode(i);
-			length += distance(previous, current);
+			length += edges[previous][current];
 			previous = current;
 		}
 		if (previous != first)
-			length += distance(previous, first);
+			length += edges[previous][first];
 		return length;
 	}
 
@@ -175,14 +174,14 @@ public class Graph
 			if (a == hubNode)
 				continue;
 
-			int hubNodeToA = distance(hubNode, a);
+			int hubNodeToA = edges[hubNode][a];
 
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				if (b == hubNode)
 					continue;
 
-				int save = hubNodeToA + distance(hubNode, b) - distance(a, b);
+				int save = hubNodeToA + edges[hubNode][b] - edges[a][b];
 				savings[ep++] = cw.new Saving(save, a, b);
 			}
 		}
