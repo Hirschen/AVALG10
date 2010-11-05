@@ -43,11 +43,9 @@ public class TwoOpt implements Improver {
 			for( a2=0; a2 < t.countNodes()-1; a2++){
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
-					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
-							-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
+					gotGain(g, t, a1, b1, a2, b2) 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
-					System.out.println("Length of tour: "+g.calculateLength(t));
-					t.switchEdges(a1, b1, a2, b2);
+					t.switch2Edges(a1, b1, a2, b2);
 					return;
 				}
 			}
@@ -62,17 +60,20 @@ public class TwoOpt implements Improver {
 				}
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
-						(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
-								-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
+						gotGain(g, t, a1, b1, a2, b2) 
 						&& checkFeasbility(a1,b1,a2,b2,t)){
-						System.out.println("Length of tour: "+g.calculateLength(t));
-						t.switchEdges(a1, b1, a2, b2);
+						t.switch2Edges(a1, b1, a2, b2);
 						return;
 				}
 			}
 		}
 		
 		return;
+	}
+	private boolean gotGain(Graph g, Tourable t, short a1, short b1, short a2,
+			short b2) {
+		return (g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
+				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0;
 	}
 
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
@@ -86,12 +87,6 @@ public class TwoOpt implements Improver {
 			return false;
 		}
 		return true;
-	}
-
-	private void flip2opt(Tourable t, short a1, short b1, short a2, short b2) {
-		
-		t.switchEdges(a1, b1, a2, b2);
-		return;
 	}
 
 	private short fetchFirstEdge(Tourable t)
@@ -112,6 +107,7 @@ public class TwoOpt implements Improver {
 
 		StartApproxer sa = new NaiveSolver();
 		Tourable t = sa.getTour(g);
+		t.addNode(t.getNode(0));
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){

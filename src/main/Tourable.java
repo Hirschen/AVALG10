@@ -49,5 +49,5 @@ public interface Tourable extends Iterable<Short>
 
 	void addEdge(Edge e);
 
-	void switchEdges(short a1, short a2, short b1, short b2);
+	void switch2Edges(short a1, short a2, short b1, short b2);
 }
