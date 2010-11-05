@@ -5,7 +5,7 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private int minGain = 15; //Algoritmen fungerar när vi har lite högre gain krav :D
+	private int minGain = 20; //Algoritmen fungerar när vi har lite högre gain krav :D
 
 	public ThreeOpt(){}
 	
