@@ -74,7 +74,7 @@ public class TwoOpt implements Improver {
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
 		int tmp = Math.abs(a1-a2);
-		if(tmp <= 1 || tmp >= t.countNodes()-4){
+		if(tmp <= 1 || tmp >= t.countNodes()-3){
 			return false;
 		}
 		if((a1 == 0 && a2 == t.countNodes()-3) || (a1 == 1 && a2 == t.countNodes()-2)
@@ -85,12 +85,7 @@ public class TwoOpt implements Improver {
 	}
 
 	private void flip2opt(Tourable t, short a1, short b1, short a2, short b2) {
-		if(a1 < a2){
-			t.switchEdges(G, a1, a2, b1, b2);
-		}
-		else{
-			t.switchEdges(G, a2, a1, b2, b1);
-		}
+		t.switchEdges(G, a1, a2, b1, b2);
 		return;
 	}
 
@@ -113,9 +108,9 @@ public class TwoOpt implements Improver {
 		StartApproxer sa = new NaiveSolver();
 		Tourable t = sa.getTour(g);
 		vis.setTour(t);
-		Improver imp = new TwoOpt(t.countNodes()-1);
+		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){
-			Thread.sleep(1);
+			Thread.sleep(5000);
 			//System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
 			//System.out.println(g.calculateLength(t));
