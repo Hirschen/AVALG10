@@ -5,9 +5,8 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private int minGain = 5;
+	private int minGain = 15; //Algoritmen fungerar när vi har lite högre gain krav :D
 
-	
 	public ThreeOpt(){}
 	
 	public ThreeOpt(int minimumGain){
@@ -15,21 +14,25 @@ public class ThreeOpt implements Improver {
 	}
 	
 	public void improve(Graph g, Tourable t) {
-		short a1 = fetchEdge(t);
-		short b1 = (short) (a1+1);
+		short a1 = fetchEdge(t), b1 = (short) (a1+1);
 		short a2 = fetchEdge(t), b2,a3 = fetchEdge(t),b3,i,j;
 		
-		for( i=0; i < t.countNodes()-1/2; i++){
+		for( i=0; i < (t.countNodes()-1)/2; i++){
 			while(a2 == a1 || b1 == a2){
 				a2 = fetchEdge(t);
 			}
 			b2=(short) (a2+1);
+			if(b2 == t.countNodes()-1){
+				b2 = 0;
+			}
 			for(j=0; j < (t.countNodes()-1)/2; j++){
 				while(a3 == a1 || a3 == a2 || a3 == b1 || a3 == b2){
 					a3 = fetchEdge(t);
 				}
 				b3=(short) (a3+1);
-			
+				if(b3 == t.countNodes()-1){
+					b3 = 0;
+				}
 				if(checkFeasibility(t, a1,b1,a2,b2,a3,b3)){
 					int gain = gotGain(g,t, a1,b1,a2,b2,a3,b3);
 					if(gain == 0){
@@ -96,13 +99,12 @@ public class ThreeOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,3} };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5} };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
 		StartApproxer sa = new NaiveSolver();
 		Tourable t = sa.getTour(g);
-		t.addNode(t.getNode(0));
 		vis.setTour(t);
 		Improver imp = new ThreeOpt();
 		for(int i = 0; i < 1000; i++){
