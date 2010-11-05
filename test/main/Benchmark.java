@@ -138,7 +138,7 @@ public class Benchmark
 
 				if (DEBUG)
 				{
-					System.out.println(probFile.getName() + ":\t" + ((double) Math.round(1000000.0 * score / runs)) / 1000000.0);
+					System.out.println("(" + (problemSet + 1) + "/" + problemFiles.length + ") " + probFile.getName() + ":\t" + ((double) Math.round(1000000.0 * score / runs)) / 1000000.0 + " p");
 				}
 
 				problemSet++;

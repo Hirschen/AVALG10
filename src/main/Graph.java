@@ -2,15 +2,23 @@ package main;
 
 import java.util.Arrays;
 
+import solvers.ClarkeWrightApproximation;
+import solvers.ClarkeWrightApproximation.Saving;
+
 /**
- * // TODO: Graph is a ...
+ * The Graph class is a data structure for storing complete symmetric weighted
+ * graphs.
+ * 
+ * 
+ * TODO: Vaska riktade kanter? (Vi behöver inte hålla koll på riktningen
+ * egentligen, det ger bara en massa extra arbete)
  * 
  * @author Martin Nycander
  * @since
  */
 public class Graph
 {
-	private double[][] nodes;
+	private int[][] nodes;
 	private Edge[][] edges;
 
 	private int nodeCount;
@@ -24,8 +32,14 @@ public class Graph
 	 */
 	public Graph(double[][] coordinates)
 	{
-		nodes = coordinates;
 		nodeCount = coordinates.length;
+		nodes = new int[nodeCount][2];
+		for (short a = 0; a < nodeCount; a++)
+		{
+			nodes[a][0] = (int) coordinates[a][0];
+			nodes[a][1] = (int) coordinates[a][1];
+		}
+
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 
@@ -35,7 +49,6 @@ public class Graph
 			edges[a][a] = new Edge(a, a, 0);
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
-				// assert (distance < Integer.MAX_VALUE);
 				int dist = calculateDistance(a, b);
 
 				// Store calculated values
@@ -48,29 +61,21 @@ public class Graph
 	public Graph(Kattio io)
 	{
 		nodeCount = io.getInt();
-		nodes = new double[nodeCount][2];
+		nodes = new int[nodeCount][2];
 
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new Edge[nodeCount][nodeCount];
 
-		double width = 0;
-		double height = 0;
-
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
-			// TODO: Do we really use nodes[][]?
-			nodes[a][0] = io.getDouble();
-			nodes[a][1] = io.getDouble();
-
-			if (nodes[a][0] > width)
-				width = nodes[a][0];
-			if (nodes[a][1] > height)
-				height = nodes[a][1];
+			// Yeah! int. So sue me!
+			nodes[a][0] = (int) io.getDouble();
+			nodes[a][1] = (int) io.getDouble();
 
 			// Precalculate edges
 			edges[a][a] = new Edge(a, a, 0);
-			for (short b = (short) (a - 1); b >= 0; b--)
+			for (short b = 0; b < a; b++)
 			{
 				int dist = calculateDistance(a, b);
 				edges[a][b] = new Edge(a, b, dist);
@@ -79,68 +84,6 @@ public class Graph
 		}
 	}
 
-	/**
-	 * @param width
-	 * @param height
-	 * @return
-	 */
-	public Edge[][] calculateApproximateNeighbours(double width, double height)
-	{
-		if (nodeCount == 1)
-		{
-			return new Edge[][] { new Edge[] { edges[0][0] } };
-		}
-		int size = (int) Math.max(width, height) / 2;
-		int neighBourThreshold = size + 1;
-
-		int neighbourCount = nodeCount - 1;
-		if (nodeCount > 100)
-			neighbourCount = 25;
-		else if (nodeCount > 500)
-			neighbourCount = 50;
-		else if (nodeCount > 750)
-			neighbourCount = 100;
-
-		Edge[][] neighbours = new Edge[nodeCount][neighbourCount];
-		System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
-
-		for (short a = 0; a < nodeCount; a++)
-		{
-			int b = (a + 1) % nodeCount;
-			int startB = b;
-			for (int neighbour = 0; neighbour < neighbours[a].length; neighbour++)
-			{
-				// Find a worthy neighbour
-				while (edges[a][b].length > neighBourThreshold || a == b)
-				{
-					b = (b + 1 == nodeCount ? 0 : b + 1);
-
-					// If we have looked at all nodes, increase the threshold
-					if (b == a)
-					{
-						neighBourThreshold *= 2;
-						if (Main.verbose)
-							System.out.println("Increasing threshold to " + neighBourThreshold + "...");
-						b = startB;
-					}
-				}
-
-				// Add this as a neighbour
-				neighbours[a][neighbour] = edges[a][b];
-				b = (b == nodeCount - 1 ? 0 : b + 1);
-
-				// If we have looked at all nodes, increase the threshold
-				if (b == a)
-				{
-					neighBourThreshold *= 2;
-					if (Main.verbose)
-						System.out.println("Increasing threshold to " + neighBourThreshold + "...");
-					b = startB;
-				}
-			}
-		}
-		return neighbours;
-	}
 
 	/**
 	 * @return the number of nodes in the graph.
@@ -170,11 +113,10 @@ public class Graph
 	 */
 	private int calculateDistance(int nodeA, int nodeB)
 	{
-		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
-		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
+		int xDiff = nodes[nodeA][0] - nodes[nodeB][0];
+		int yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
-		long distance = Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
-		return (int) distance;
+		return (int) Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
 	}
 
 	public int distance(int nodeA, int nodeB)
@@ -253,4 +195,98 @@ public class Graph
 		return nodes[a][1];
 	}
 
+	/**
+	 * Calculates how much distance is saved for every pair of non-hub nodes.
+	 * 
+	 * @param graph
+	 *            the graph containing the nodes.
+	 * @return a sorted list of all savings
+	 */
+	public Saving[] calculateSavings(ClarkeWrightApproximation cw, short hubNode)
+	{
+		int nodes = nodeCount - 1;
+		Saving[] savings = new Saving[nodes * (nodes - 1) / 2];
+		int ep = 0;
+		for (int a = 0; a < nodeCount; a++)
+		{
+			if (a == hubNode)
+				continue;
+
+			int hubNodeToA = edges[hubNode][a].length;
+
+			for (int b = a + 1; b < nodeCount; b++)
+			{
+				if (b == hubNode)
+					continue;
+
+				int save = hubNodeToA + edges[hubNode][b].length - edges[a][b].length;
+				savings[ep++] = cw.new Saving(save, a, b);
+			}
+		}
+		Arrays.sort(savings);
+		return savings;
+	}
+
+	/**
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public Edge[][] calculateApproximateNeighbours(double width, double height)
+	{
+		if (nodeCount == 1)
+		{
+			return new Edge[][] { new Edge[] { edges[0][0] } };
+		}
+		int size = (int) Math.max(width, height) / 2;
+		int neighBourThreshold = size + 1;
+
+		int neighbourCount = nodeCount - 1;
+		if (nodeCount > 100)
+			neighbourCount = 25;
+		else if (nodeCount > 500)
+			neighbourCount = 50;
+		else if (nodeCount > 750)
+			neighbourCount = 100;
+
+		Edge[][] neighbours = new Edge[nodeCount][neighbourCount];
+		System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
+
+		for (short a = 0; a < nodeCount; a++)
+		{
+			int b = (a + 1) % nodeCount;
+			int startB = b;
+			for (int neighbour = 0; neighbour < neighbours[a].length; neighbour++)
+			{
+				// Find a worthy neighbour
+				while (edges[a][b].length > neighBourThreshold || a == b)
+				{
+					b = (b + 1 == nodeCount ? 0 : b + 1);
+
+					// If we have looked at all nodes, increase the threshold
+					if (b == a)
+					{
+						neighBourThreshold *= 2;
+						if (Main.verbose)
+							System.out.println("Increasing threshold to " + neighBourThreshold + "...");
+						b = startB;
+					}
+				}
+
+				// Add this as a neighbour
+				neighbours[a][neighbour] = edges[a][b];
+				b = (b == nodeCount - 1 ? 0 : b + 1);
+
+				// If we have looked at all nodes, increase the threshold
+				if (b == a)
+				{
+					neighBourThreshold *= 2;
+					if (Main.verbose)
+						System.out.println("Increasing threshold to " + neighBourThreshold + "...");
+					b = startB;
+				}
+			}
+		}
+		return neighbours;
+	}
 }

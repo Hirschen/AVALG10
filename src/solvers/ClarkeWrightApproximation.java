@@ -18,13 +18,6 @@ import main.Tourable;
  * every other node to the "hub node". After that it can create a sub-optimal
  * tour by using the triangle inequality.
  * 
- * 
- * TODO: Extend Graph to get the best performance as possible? (only calculate
- * the edges we need).
- * 
- * TODO: Store "neighbors" of nodes then we dont have to have such a huge
- * savings-list.
- * 
  * TODO: Implement TourConstruction-object for all the merging and such.
  * 
  * TODO: Document the methods.
@@ -87,7 +80,8 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		Saving[] savings = calculateSavings(graph);
+		// Saving[] savings = calculateSavings(graph);
+		Saving[] savings = graph.calculateSavings(this, hubNode);
 
 		if (Main.verbose || measureTime)
 		{
@@ -104,8 +98,8 @@ public class ClarkeWrightApproximation implements StartApproxer
 		{
 			Saving saving = savings[sp++];
 
-			int a = saving.edge.nodeA;
-			int b = saving.edge.nodeB;
+			int a = saving.a;
+			int b = saving.b;
 
 			// ...so it does not cause a non-hub city to become adjacent to more
 			// than two other non-hub cities.
@@ -186,25 +180,25 @@ public class ClarkeWrightApproximation implements StartApproxer
 				if (b == hubNode)
 					continue;
 
-				Edge e = graph.getEdge(a, b);
-				int save = hubNodeToA + graph.getEdge(hubNode, b).length - e.length;
-
-				savings[ep++] = new Saving(save, e);
+				int save = hubNodeToA + graph.distance(hubNode, b) - graph.distance(a, b);
+				savings[ep++] = new Saving(save, a, b);
 			}
 		}
 		Arrays.sort(savings);
 		return savings;
 	}
 
-	private final class Saving implements Comparable<Saving>
+	public final class Saving implements Comparable<Saving>
 	{
 		public final int saving;
-		public final Edge edge;
+		public final int a;
+		public final int b;
 
-		public Saving(int save, Edge e)
+		public Saving(int save, int a, int b)
 		{
 			saving = save;
-			edge = e;
+			this.a = a;
+			this.b = b;
 		}
 
 		/* (non-Javadoc)
