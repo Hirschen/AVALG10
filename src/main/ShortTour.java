@@ -21,7 +21,7 @@ public class ShortTour implements Tourable
 	 */
 	public ShortTour(int size)
 	{
-		nodes = new short[size+1];
+		nodes = new short[size];
 		for (int i = 0; i < nodes.length; i++)
 			nodes[i] = -1;
 	}
@@ -56,7 +56,7 @@ public class ShortTour implements Tourable
 	{
 		nodes[position] = node;
 
-		if (position > addPointer)
+		if (position >= addPointer)
 			addPointer = position + 1;
 	}
 
@@ -111,7 +111,7 @@ public class ShortTour implements Tourable
 	 */
 	public void printTo(Kattio out)
 	{
-		for (int i = 0; i < nodes.length - 1; i++)
+		for (int i = 0; i < nodes.length; i++)
 		{
 			out.print(nodes[i]);
 			out.print(' ');
@@ -126,7 +126,7 @@ public class ShortTour implements Tourable
 	@Override
 	public String toString()
 	{
-		
+
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < nodes.length - 1; i++)
@@ -158,72 +158,90 @@ public class ShortTour implements Tourable
 	 */
 	public void switch2EdgesOpted(short a1, short b1, short a2, short b2)
 	{
-		if(Math.abs(a2-a1) < addPointer/2){
-			if(b1 < a2){
+		if (Math.abs(a2 - a1) < addPointer / 2)
+		{
+			if (b1 < a2)
+			{
 				short tmp = nodes[a2];
 				nodes[a2] = nodes[b1];
 				nodes[b1] = tmp;
-				
-				reverseBetweenEdges(b1,a2);
+
+				reverseBetweenEdges(b1, a2);
 			}
-			else{
+			else
+			{
 				short tmp = nodes[a1];
 				nodes[a1] = nodes[b2];
 				nodes[b2] = tmp;
-				reverseBetweenEdges(b2,a1);
+				reverseBetweenEdges(b2, a1);
 			}
 		}
-		else{
-			if(b1 > a2){
+		else
+		{
+			if (b1 > a2)
+			{
 				short tmp = nodes[a2];
 				nodes[a2] = nodes[b1];
 				nodes[b1] = tmp;
-				
-				reverseBetweenEdgesWithLeap(b1,a2);
+
+				reverseBetweenEdgesWithLeap(b1, a2);
 			}
-			else{
+			else
+			{
 				short tmp = nodes[a1];
 				nodes[a1] = nodes[b2];
 				nodes[b2] = tmp;
-				reverseBetweenEdgesWithLeap(b2,a1);
+				reverseBetweenEdgesWithLeap(b2, a1);
 			}
 		}
 	}
-	private void reverseBetweenEdges(short p1, short p2){
-		short distance = (short) (p2-p1-1), i, j;
-		if(distance < 0){
+
+	private void reverseBetweenEdges(short p1, short p2)
+	{
+		short distance = (short) (p2 - p1 - 1), i, j;
+		if (distance < 0)
+		{
 			reverseBetweenEdgesWithLeap(p1, p2);
 			return;
 		}
 		short[] tmp = new short[distance];
-		for(i =(short) (p2-1), j=0; j < distance; i--, j++){
+		for (i = (short) (p2 - 1), j = 0; j < distance; i--, j++)
+		{
 			tmp[j] = nodes[i];
 		}
-		for(j = 0; j < distance; i++, j++){
-			nodes[i+1] = tmp[j];
+		for (j = 0; j < distance; i++, j++)
+		{
+			nodes[i + 1] = tmp[j];
 		}
 	}
-	private void reverseBetweenEdgesWithLeap(short p1, short p2){
+
+	private void reverseBetweenEdgesWithLeap(short p1, short p2)
+	{
 		short distance, i, j;
-		distance = (short) (addPointer-p1+p2-1);
-		if(distance < 0){
+		distance = (short) (addPointer - p1 + p2 - 1);
+		if (distance < 0)
+		{
 			reverseBetweenEdges(p1, p2);
 			return;
 		}
 		short[] tmp = new short[distance];
 		// p2 -> 0
-		for(i =(short) (p2-1), j=0; i >= 0 ; i--, j++){
+		for (i = (short) (p2 - 1), j = 0; i >= 0; i--, j++)
+		{
 			tmp[j] = nodes[i];
 		}
 		// size -> p1
-		for(i =(short) (addPointer-1); j < distance; i--, j++){
+		for (i = (short) (addPointer - 1); j < distance; i--, j++)
+		{
 			tmp[j] = nodes[i];
 		}
 		// 
-		for(i = (short) (p1+1), j = 0; i <= addPointer-1; i++, j++){
+		for (i = (short) (p1 + 1), j = 0; i <= addPointer - 1; i++, j++)
+		{
 			nodes[i] = tmp[j];
 		}
-		for(i = 0; j < distance; i++, j++){
+		for (i = 0; j < distance; i++, j++)
+		{
 			nodes[i] = tmp[j];
 		}
 	}
