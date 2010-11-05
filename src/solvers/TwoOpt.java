@@ -6,15 +6,23 @@ import main.Tourable;
 
 public class TwoOpt implements Improver {
 
-	private short searchSize = -1;;
+	private short searchSize = -1;
+	private int minGain = 0;
 	
 	public TwoOpt(){
 	}
-	public TwoOpt(int tourSize){
-		searchSize = (short) setSearchSize(tourSize);
+	public TwoOpt(short tourSize){
+		searchSize = setSearchSize(tourSize);
 	}
-	private int setSearchSize(int s){
-		int res = 4;
+	public TwoOpt(int minimumGain){
+		minGain = minimumGain;
+	}
+	public TwoOpt(int tourSize, int minimumGain){
+		searchSize = (short) setSearchSize(tourSize);
+		minGain = minimumGain;
+	}
+	private short setSearchSize(int s){
+		short res = 4;
 		if(s > 10){
 			res = 6;
 		}
@@ -44,7 +52,7 @@ public class TwoOpt implements Improver {
 				if(t.getNode(a1) != t.getNode(a2) && 
 					gotGain(g, t, a1, b1, a2, b2) 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
-					t.switch2Edges(a1, b1, a2, b2);
+					t.switch2EdgesOpted(a1, b1, a2, b2);
 					return;
 				}
 			}
@@ -61,7 +69,7 @@ public class TwoOpt implements Improver {
 				if(t.getNode(a1) != t.getNode(a2) && 
 						gotGain(g, t, a1, b1, a2, b2) 
 						&& checkFeasbility(a1,b1,a2,b2,t)){
-						t.switch2Edges(a1, b1, a2, b2);
+						t.switch2EdgesOpted(a1, b1, a2, b2);
 						return;
 				}
 			}
@@ -71,7 +79,7 @@ public class TwoOpt implements Improver {
 	private boolean gotGain(Graph g, Tourable t, short a1, short b1, short a2,
 			short b2) {
 		return (g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
-				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0;
+				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > minGain;
 	}
 
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)

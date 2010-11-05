@@ -156,7 +156,7 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#switchEdges(main.Graph, int, int, main.Edge, main.Edge)
 	 */
-	public void switch2Edges(short a1, short b1, short a2, short b2)
+	public void switch2EdgesOpted(short a1, short b1, short a2, short b2)
 	{
 		if(Math.abs(a2-a1) < addPointer/2){
 			if(b1 < a2){
@@ -189,8 +189,12 @@ public class ShortTour implements Tourable
 			}
 		}
 	}
-	public void reverseBetweenEdges(short p1, short p2){
+	private void reverseBetweenEdges(short p1, short p2){
 		short distance = (short) (p2-p1-1), i, j;
+		if(distance < 0){
+			reverseBetweenEdgesWithLeap(p1, p2);
+			return;
+		}
 		short[] tmp = new short[distance];
 		for(i =(short) (p2-1), j=0; j < distance; i--, j++){
 			tmp[j] = nodes[i];
@@ -199,16 +203,20 @@ public class ShortTour implements Tourable
 			nodes[i+1] = tmp[j];
 		}
 	}
-	public void reverseBetweenEdgesWithLeap(short p1, short p2){
+	private void reverseBetweenEdgesWithLeap(short p1, short p2){
 		short distance, i, j;
 		distance = (short) (addPointer-p1+p2-1);
+		if(distance < 0){
+			reverseBetweenEdges(p1, p2);
+			return;
+		}
 		short[] tmp = new short[distance];
 		// p2 -> 0
 		for(i =(short) (p2-1), j=0; i >= 0 ; i--, j++){
 			tmp[j] = nodes[i];
 		}
 		// size -> p1
-		for(i =(short) addPointer; j < distance; i--, j++){
+		for(i =(short) (addPointer-1); j < distance; i--, j++){
 			tmp[j] = nodes[i];
 		}
 		// 

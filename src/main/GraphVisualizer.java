@@ -121,14 +121,14 @@ public class GraphVisualizer extends JPanel
 		g.setColor(Color.black);
 		g.translate(20 - offset.x, 20 - offset.y);
 		// Draw edges
-		for (int a = 0; a < graph.countNodes(); a++)
+		/*for (int a = 0; a < graph.countNodes(); a++)
 		{
 			for (int b = a + 1; b < graph.countNodes(); b++)
 			{
 				g.setColor(new Color(190, 190, 190));
 				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
 			}
-		}
+		}*/
 		// Draw nodes
 		for (int a = 0; a < graph.countNodes(); a++)
 		{
