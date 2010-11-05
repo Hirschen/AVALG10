@@ -44,12 +44,10 @@ public class TwoOpt implements Improver {
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
 					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
-							-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+							-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
 					System.out.println("Length of tour: "+g.calculateLength(t));
-					System.out.println("Gain: "+(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
-							-(g.distance(a1, a2)+g.distance(b1, b2))));
-					flip2opt(t,a1,b1,a2,b2);
+					t.switchEdges(a1, b1, a2, b2);
 					return;
 				}
 			}
@@ -64,10 +62,12 @@ public class TwoOpt implements Improver {
 				}
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
-					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
-					&& checkFeasbility(a1,b1,a2,b2,t)){
-					flip2opt(t,a1,b1,a2,b2);
-					return;
+						(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
+								-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
+						&& checkFeasbility(a1,b1,a2,b2,t)){
+						System.out.println("Length of tour: "+g.calculateLength(t));
+						t.switchEdges(a1, b1, a2, b2);
+						return;
 				}
 			}
 		}
@@ -78,13 +78,13 @@ public class TwoOpt implements Improver {
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
 		int tmp = Math.abs(b1-a2);
-		if(tmp <= 3 || tmp >= t.countNodes()-2){
+		if(tmp == 0 || tmp == t.countNodes()-3){
 			return false;
 		}
-		/*if((a1 == 0 && a2 == t.countNodes()-3) || (a1 == 1 && a2 == t.countNodes()-2)
+		if((a1 == 0 && a2 == t.countNodes()-2) || (a1 == 1 && a2 == t.countNodes()-2)
 				|| (a2 == 0 && a1 == t.countNodes()-3) || (a2 == 1 && a2 == t.countNodes()-2)){
 			return false;
-		}*/
+		}
 		return true;
 	}
 
@@ -96,7 +96,7 @@ public class TwoOpt implements Improver {
 
 	private short fetchFirstEdge(Tourable t)
 	{
-		return (short) (Math.random()*(t.countNodes()-2));
+		return (short) (Math.random()*(t.countNodes()-1));
 	}
 	
 	private int findCandidate(){
@@ -121,6 +121,7 @@ public class TwoOpt implements Improver {
 			//System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
+		System.out.println("Length of tour: "+g.calculateLength(t));
 		System.out.println(t);
 	}
 }

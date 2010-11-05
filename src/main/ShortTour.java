@@ -127,6 +127,7 @@ public class ShortTour implements Tourable
 	@Override
 	public String toString()
 	{
+		
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < nodes.length; i++)
@@ -162,6 +163,7 @@ public class ShortTour implements Tourable
 			short tmp = nodes[a2];
 			nodes[a2] = nodes[b1];
 			nodes[b1] = tmp;
+			
 			reverseBetweenEdges(b1,a2);
 		}
 		else{
@@ -172,6 +174,16 @@ public class ShortTour implements Tourable
 		}
 	}
 	public void reverseBetweenEdges(short p1, short p2){
+		short distance = (short) (p2-p1-1), i, j;
+		short[] tmp = new short[distance];
+		for(i =(short) (p2-1), j=0; j < distance; i--, j++){
+			tmp[j] = nodes[i];
+		}
+		for(j = 0; j < distance; i++, j++){
+			nodes[i+1] = tmp[j];
+		}
+	}
+	public void reverseBetweenEdgesWithLeap(short p1, short p2){
 		if(p1 < p2){
 			short distance = (short) (p2-p1-1), i, j;
 			short[] tmp = new short[distance];
