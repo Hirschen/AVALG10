@@ -21,7 +21,7 @@ public class ShortTour implements Tourable
 	 */
 	public ShortTour(int size)
 	{
-		nodes = new short[size];
+		nodes = new short[size+1];
 		for (int i = 0; i < nodes.length; i++)
 			nodes[i] = -1;
 	}
@@ -126,6 +126,7 @@ public class ShortTour implements Tourable
 	@Override
 	public String toString()
 	{
+		
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < nodes.length; i++)
@@ -155,9 +156,67 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#switchEdges(main.Graph, int, int, main.Edge, main.Edge)
 	 */
-	public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2)
+	public void switch2Edges(short a1, short b1, short a2, short b2)
 	{
-		// TODO Auto-generated method stub
-
+		if(Math.abs(a2-a1) < addPointer/2){
+			if(b1 < a2){
+				short tmp = nodes[a2];
+				nodes[a2] = nodes[b1];
+				nodes[b1] = tmp;
+				
+				reverseBetweenEdges(b1,a2);
+			}
+			else{
+				short tmp = nodes[a1];
+				nodes[a1] = nodes[b2];
+				nodes[b2] = tmp;
+				reverseBetweenEdges(b2,a1);
+			}
+		}
+		else{
+			if(b1 > a2){
+				short tmp = nodes[a2];
+				nodes[a2] = nodes[b1];
+				nodes[b1] = tmp;
+				
+				reverseBetweenEdgesWithLeap(b1,a2);
+			}
+			else{
+				short tmp = nodes[a1];
+				nodes[a1] = nodes[b2];
+				nodes[b2] = tmp;
+				reverseBetweenEdgesWithLeap(b2,a1);
+			}
+		}
+	}
+	public void reverseBetweenEdges(short p1, short p2){
+		short distance = (short) (p2-p1-1), i, j;
+		short[] tmp = new short[distance];
+		for(i =(short) (p2-1), j=0; j < distance; i--, j++){
+			tmp[j] = nodes[i];
+		}
+		for(j = 0; j < distance; i++, j++){
+			nodes[i+1] = tmp[j];
+		}
+	}
+	public void reverseBetweenEdgesWithLeap(short p1, short p2){
+		short distance, i, j;
+		distance = (short) (addPointer-p1+p2-1);
+		short[] tmp = new short[distance];
+		// p2 -> 0
+		for(i =(short) (p2-1), j=0; i >= 0 ; i--, j++){
+			tmp[j] = nodes[i];
+		}
+		// size -> p1
+		for(i =(short) addPointer; j < distance; i--, j++){
+			tmp[j] = nodes[i];
+		}
+		// 
+		for(i = (short) (p1+1), j = 0; i <= addPointer-1; i++, j++){
+			nodes[i] = tmp[j];
+		}
+		for(i = 0; j < distance; i++, j++){
+			nodes[i] = tmp[j];
+		}
 	}
 }

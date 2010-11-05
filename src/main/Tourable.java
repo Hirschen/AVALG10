@@ -47,9 +47,7 @@ public interface Tourable extends Iterable<Short>
 	 */
 	String toString();
 
-	@Deprecated
 	void addEdge(Edge e);
 
-	@Deprecated
-	void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2);
+	void switch2Edges(short a1, short a2, short b1, short b2);
 }

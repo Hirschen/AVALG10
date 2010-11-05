@@ -1,18 +1,17 @@
 package solvers;
 
-import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Tourable;
 
 public class TwoOpt implements Improver {
-	private Graph G;
-	private int searchSize = -1;;
+
+	private short searchSize = -1;;
 	
 	public TwoOpt(){
 	}
 	public TwoOpt(int tourSize){
-		searchSize = setSearchSize(tourSize);
+		searchSize = (short) setSearchSize(tourSize);
 	}
 	private int setSearchSize(int s){
 		int res = 4;
@@ -33,78 +32,65 @@ public class TwoOpt implements Improver {
 	 */
 	public void improve(Graph g, Tourable t)
 	{
-		G=g;
-		Edge E1,tmpE; //EDGE
-		int e1 = fetchFirstEdge(t);
-		E1 = t.getEdge(e1);
-		short a1 = E1.nodeA;
-		short b1 = E1.nodeB;
+		short a1 = fetchFirstEdge(t);
+		short b1 = (short) (a1+1);
 		short a2, b2;
 		
+		
+		
 		if(searchSize == -1){
-			for(int i=0; i < t.countEdges(); i++){
-				tmpE = t.getEdge(i);
-				a2=tmpE.nodeA;
-				b2=tmpE.nodeB;
-				if(E1 != tmpE && 
-					(tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
-					&& checkFeasbility(e1,i,t)){
-					flip2opt(t,a1,b1,a2,b2, e1,i);
+			for( a2=0; a2 < t.countNodes()-1; a2++){
+				b2=(short) (a2+1);
+				if(t.getNode(a1) != t.getNode(a2) && 
+					gotGain(g, t, a1, b1, a2, b2) 
+					&& checkFeasbility(a1,b1,a2,b2,t)){
+					t.switch2Edges(a1, b1, a2, b2);
 					return;
 				}
 			}
 		}else{
-			int j = e1-searchSize;
-			for(int i=0; i < 2*searchSize; i++, j++){
-				if(j < 0){
-					j = t.countEdges()+j;
+			a2 = (short) (a1-searchSize);
+			for(int i=0; i < 2*searchSize; i++, a2++){
+				if(a2 < 0){
+					a2 = (short) (t.countNodes()-1+a2);
 				}
-				if(j > t.countEdges()-1){
-					j = 0;
+				if(a2 > t.countNodes()-2){
+					a2 = 0;
 				}
-				tmpE = t.getEdge(j);
-				a2=tmpE.nodeA;
-				b2=tmpE.nodeB;
-				if(E1 != tmpE && 
-					(tmpE.length+E1.length-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
-					&& checkFeasbility(e1,j,t)){
-					flip2opt(t,a1,b1,a2,b2, e1,j);
-					return;
+				b2=(short) (a2+1);
+				if(t.getNode(a1) != t.getNode(a2) && 
+						gotGain(g, t, a1, b1, a2, b2) 
+						&& checkFeasbility(a1,b1,a2,b2,t)){
+						t.switch2Edges(a1, b1, a2, b2);
+						return;
 				}
 			}
 		}
 		
 		return;
 	}
+	private boolean gotGain(Graph g, Tourable t, short a1, short b1, short a2,
+			short b2) {
+		return (g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
+				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0;
+	}
 
-	private boolean checkFeasbility(int e1, int e2, Tourable t)
+	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
-		int tmp = Math.abs(e1-e2);
-		if(tmp <= 1 || tmp >= t.countEdges()-3){
+		int tmp = Math.abs(b1-a2);
+		if(tmp == 0 || tmp == t.countNodes()-3){
 			return false;
 		}
-		if((e1 == 0 && e2 == t.countEdges()-2) || (e1 == 1 && e2 == t.countEdges()-1)
-				|| (e2 == 0 && e1 == t.countEdges()-2) || (e2 == 1 && e2 == t.countEdges()-1)){
+		if((a1 == 0 && a2 == t.countNodes()-2) || (a1 == 1 && a2 == t.countNodes()-2)
+				|| (a2 == 0 && a1 == t.countNodes()-3) || (a2 == 1 && a2 == t.countNodes()-2)){
 			return false;
 		}
 		return true;
 	}
 
-	private void flip2opt(Tourable t, short a1, short b1, short a2, short b2, int e1,
-			int e2) {
-		if(e1 < e2){
-			t.switchEdges(G, e1, e2, G.getEdge(a1, a2), G.getEdge(b1, b2));
-		}
-		else{
-			t.switchEdges(G, e2, e1, G.getEdge(a2, a1), G.getEdge(b2, b1));
-		}
-		//System.out.println("Changed " + a1+ " "+b1 + " and " + a2 + " "+b2+" Edge:"+e1+" and "+e2 );
-		return;
-	}
-
-	private int fetchFirstEdge(Tourable t)
+	private short fetchFirstEdge(Tourable t)
 	{
-		return (int) (Math.random()*(t.countEdges()-1));
+		return (short) (Math.random()*(t.countNodes()-1));
 	}
 	
 	private int findCandidate(){
@@ -120,8 +106,9 @@ public class TwoOpt implements Improver {
 
 		StartApproxer sa = new NaiveSolver();
 		Tourable t = sa.getTour(g);
+		t.addNode(t.getNode(0));
 		vis.setTour(t);
-		Improver imp = new TwoOpt(t.countEdges());
+		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){
 			Thread.sleep(1);
 			//System.out.println(g.calculateLength(t));
@@ -129,6 +116,7 @@ public class TwoOpt implements Improver {
 			//System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
+		System.out.println("Length of tour: "+g.calculateLength(t));
 		System.out.println(t);
 	}
 }
