@@ -66,7 +66,6 @@ public class TwoOpt implements Improver {
 				}
 			}
 		}
-		
 		return;
 	}
 	private boolean gotGain(Graph g, Tourable t, short a1, short b1, short a2,
@@ -93,10 +92,6 @@ public class TwoOpt implements Improver {
 		return (short) (Math.random()*(t.countNodes()-1));
 	}
 	
-	private int findCandidate(){
-		//TODO
-		return 0;
-	}
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
