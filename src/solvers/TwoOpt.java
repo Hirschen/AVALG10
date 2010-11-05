@@ -36,7 +36,7 @@ public class TwoOpt implements Improver {
 		short a1 = fetchFirstEdge(t);
 		short b1 = (short) (a1+1);
 		short a2, b2;
-		System.out.println("Length of tour: "+g.calculateLength(t));
+		
 		
 		
 		if(searchSize == -1){
@@ -46,6 +46,7 @@ public class TwoOpt implements Improver {
 					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
 							-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
+					System.out.println("Length of tour: "+g.calculateLength(t));
 					System.out.println("Gain: "+(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
 							-(g.distance(a1, a2)+g.distance(b1, b2))));
 					flip2opt(t,a1,b1,a2,b2);
