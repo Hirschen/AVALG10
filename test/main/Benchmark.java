@@ -98,7 +98,6 @@ public class Benchmark
 
 					Graph graph = new Graph(p.coordinates);
 					StartApproxer naiveSolver = new NaiveSolver();
-
 					Tourable naiveTour = naiveSolver.getTour(graph);
 					Tourable optimalTour = new ShortTour(p.optimalRoute);
 					Tourable valTour = t;

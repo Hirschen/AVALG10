@@ -7,10 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Point;
-import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import solvers.TourConstruction;
+import solvers.UnfinishedTour;
 
 /**
  * // TODO: Visualizer is a ...
@@ -26,7 +28,7 @@ public class GraphVisualizer extends JPanel
 
 	private Graph graph;
 	private Tourable tour;
-	private Collection<? extends Collection<Edge>> hilightedEdges;
+	private TourConstruction hilightedEdges;
 
 	private double scale;
 
@@ -88,9 +90,9 @@ public class GraphVisualizer extends JPanel
 		tour = t;
 	}
 
-	public void setHilightedEdges(Collection<? extends Collection<Edge>> edges)
+	public void setTourConstruction(TourConstruction tour2)
 	{
-		hilightedEdges = edges;
+		hilightedEdges = tour2;
 	}
 
 	/**
@@ -157,12 +159,15 @@ public class GraphVisualizer extends JPanel
 
 		Color[] colors = new Color[] { Color.green, Color.blue, Color.yellow, Color.magenta, Color.cyan, Color.orange, Color.pink };
 		int i = 0;
-		for (Collection<Edge> c : hilightedEdges)
+		for (UnfinishedTour c : hilightedEdges)
 		{
 			g.setColor(colors[i % colors.length]);
-			for (Edge e : c)
+			short a = c.get(0);
+			for (int u = 1; u < c.size(); u++)
 			{
-				g.drawLine((int) (graph.getX(e.nodeA) * scale), (int) (graph.getY(e.nodeA) * scale), (int) (graph.getX(e.nodeB) * scale), (int) (graph.getY(e.nodeB) * scale));
+				short b = c.get(u);
+				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
+				a = b;
 			}
 			i++;
 		}

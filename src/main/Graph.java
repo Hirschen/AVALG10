@@ -201,14 +201,14 @@ public class Graph
 		int nodes = nodeCount - 1;
 		Saving[] savings = new Saving[nodes * (nodes - 1) / 2];
 		int ep = 0;
-		for (int a = 0; a < nodeCount; a++)
+		for (short a = 0; a < nodeCount; a++)
 		{
 			if (a == hubNode)
 				continue;
 
 			int hubNodeToA = edges[hubNode][a].length;
 
-			for (int b = a + 1; b < nodeCount; b++)
+			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{
 				if (b == hubNode)
 					continue;
