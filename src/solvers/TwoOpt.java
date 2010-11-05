@@ -1,6 +1,5 @@
 package solvers;
 
-import main.Edge;
 import main.Graph;
 import main.GraphVisualizer;
 import main.Tourable;

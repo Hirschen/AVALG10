@@ -1,7 +1,6 @@
 package main;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * // TODO: ShortTour is a ...
@@ -192,7 +191,6 @@ public class ShortTour implements Tourable
 	}
 	public void reverseBetweenEdges(short p1, short p2){
 		short distance = (short) (p2-p1-1), i, j;
-		System.out.println(distance);
 		short[] tmp = new short[distance];
 		for(i =(short) (p2-1), j=0; j < distance; i--, j++){
 			tmp[j] = nodes[i];
@@ -201,13 +199,9 @@ public class ShortTour implements Tourable
 			nodes[i+1] = tmp[j];
 		}
 	}
-	/*
-	 * p1 > p2
-	 */
 	public void reverseBetweenEdgesWithLeap(short p1, short p2){
 		short distance, i, j;
 		distance = (short) (addPointer-p1+p2-1);
-		System.out.println(distance);
 		short[] tmp = new short[distance];
 		// p2 -> 0
 		for(i =(short) (p2-1), j=0; i >= 0 ; i--, j++){
@@ -225,33 +219,4 @@ public class ShortTour implements Tourable
 			nodes[i] = tmp[j];
 		}
 	}
-	
-	/*public void switchEdges(Graph g, int e1, int e2, Edge f1, Edge f2)
-	{
-		edges.set(e1, f1);
-		edges.set(e2, f2);
-		reverse(e1, e2, g);
-	}
-
-	private void reverse(int e1, int e2, Graph g)
-	{
-		if (e1 < e2)
-		{
-
-			List<Edge> tmp = edges.subList(e1 + 1, e2);
-			int i = tmp.size() - 1;
-			Edge[] holder = new Edge[i + 1];
-			for (Edge e : tmp)
-			{
-				holder[i] = g.getEdge(e.nodeB, e.nodeA);
-				i--;
-			}
-			i = 0;
-			for (Edge e : tmp)
-			{
-				tmp.set(i, holder[i]);
-				i++;
-			}
-		}
-	}*/
 }
