@@ -18,7 +18,7 @@ import solvers.ClarkeWrightApproximation.Saving;
  */
 public class Graph
 {
-	private int[][] nodes;
+	private double[][] nodes;
 	private Edge[][] edges;
 
 	private int nodeCount;
@@ -33,12 +33,7 @@ public class Graph
 	public Graph(double[][] coordinates)
 	{
 		nodeCount = coordinates.length;
-		nodes = new int[nodeCount][2];
-		for (short a = 0; a < nodeCount; a++)
-		{
-			nodes[a][0] = (int) coordinates[a][0];
-			nodes[a][1] = (int) coordinates[a][1];
-		}
+		nodes = coordinates;
 
 		edges = new Edge[nodeCount][nodeCount];
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
@@ -61,7 +56,7 @@ public class Graph
 	public Graph(Kattio io)
 	{
 		nodeCount = io.getInt();
-		nodes = new int[nodeCount][2];
+		nodes = new double[nodeCount][2];
 
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new Edge[nodeCount][nodeCount];
@@ -69,9 +64,8 @@ public class Graph
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
-			// Yeah! int. So sue me!
-			nodes[a][0] = (int) io.getDouble();
-			nodes[a][1] = (int) io.getDouble();
+			nodes[a][0] = io.getDouble();
+			nodes[a][1] = io.getDouble();
 
 			// Precalculate edges
 			edges[a][a] = new Edge(a, a, 0);
@@ -113,8 +107,8 @@ public class Graph
 	 */
 	private int calculateDistance(int nodeA, int nodeB)
 	{
-		int xDiff = nodes[nodeA][0] - nodes[nodeB][0];
-		int yDiff = nodes[nodeA][1] - nodes[nodeB][1];
+		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
+		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
 		return (int) Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
 	}
