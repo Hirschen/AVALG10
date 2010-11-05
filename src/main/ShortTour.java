@@ -156,32 +156,30 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#switchEdges(main.Graph, int, int, main.Edge, main.Edge)
 	 */
-	public void switchEdges(Graph g, short a1, short b1, short a2, short b2)
+	public void switchEdges(short a1, short b1, short a2, short b2)
 	{
-		if(a1 < a2){
-			short tmp = nodes[b1];
-			nodes[b1] = nodes[a2];
-			nodes[a2] = tmp;
+		if(b1 < a2){
+			short tmp = nodes[a2];
+			nodes[a2] = nodes[b1];
+			nodes[b1] = tmp;
 			reverseBetweenEdges(b1,a2);
 		}
 		else{
-			short tmp = nodes[b2];
-			nodes[b2] = nodes[a1];
-			nodes[a1] = tmp;
+			short tmp = nodes[a1];
+			nodes[a1] = nodes[b2];
+			nodes[b2] = tmp;
 			reverseBetweenEdges(b2,a1);
 		}
-		
-		
 	}
 	public void reverseBetweenEdges(short p1, short p2){
 		if(p1 < p2){
-			short distance = (short) (p2-p1), i, j;
+			short distance = (short) (p2-p1-1), i, j;
 			short[] tmp = new short[distance];
-			for(i = (short) (p2-1), j=0; j < distance; i--, j++){
+			for(i =(short) (p2-1), j=0; j < distance; i--, j++){
 				tmp[j] = nodes[i];
 			}
 			for(j = 0; j < distance; i++, j++){
-				nodes[i] = tmp[j];
+				nodes[i+1] = tmp[j];
 			}
 		}
 	}

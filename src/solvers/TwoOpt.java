@@ -6,7 +6,7 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class TwoOpt implements Improver {
-	private Graph G;
+
 	private short searchSize = -1;;
 	
 	public TwoOpt(){
@@ -33,18 +33,21 @@ public class TwoOpt implements Improver {
 	 */
 	public void improve(Graph g, Tourable t)
 	{
-		G=g;
 		short a1 = fetchFirstEdge(t);
 		short b1 = (short) (a1+1);
 		short a2, b2;
+		System.out.println("Length of tour: "+g.calculateLength(t));
 		
 		
 		if(searchSize == -1){
 			for( a2=0; a2 < t.countNodes()-1; a2++){
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
-					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
+							-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
+					System.out.println("Gain: "+(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
+							-(g.distance(a1, a2)+g.distance(b1, b2))));
 					flip2opt(t,a1,b1,a2,b2);
 					return;
 				}
@@ -55,12 +58,12 @@ public class TwoOpt implements Improver {
 				if(a2 < 0){
 					a2 = (short) (t.countNodes()-1+a2);
 				}
-				if(a2 > t.countNodes()-1-1){
+				if(a2 > t.countNodes()-2){
 					a2 = 0;
 				}
 				b2=(short) (a2+1);
 				if(t.getNode(a1) != t.getNode(a2) && 
-					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))-(g.distance(a1, a2)+g.distance(b1, b2))) > 0 
+					(g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2)))) > 0 
 					&& checkFeasbility(a1,b1,a2,b2,t)){
 					flip2opt(t,a1,b1,a2,b2);
 					return;
@@ -73,19 +76,20 @@ public class TwoOpt implements Improver {
 
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
-		int tmp = Math.abs(a1-a2);
-		if(tmp <= 1 || tmp >= t.countNodes()-3){
+		int tmp = Math.abs(b1-a2);
+		if(tmp <= 3 || tmp >= t.countNodes()-2){
 			return false;
 		}
-		if((a1 == 0 && a2 == t.countNodes()-3) || (a1 == 1 && a2 == t.countNodes()-2)
+		/*if((a1 == 0 && a2 == t.countNodes()-3) || (a1 == 1 && a2 == t.countNodes()-2)
 				|| (a2 == 0 && a1 == t.countNodes()-3) || (a2 == 1 && a2 == t.countNodes()-2)){
 			return false;
-		}
+		}*/
 		return true;
 	}
 
 	private void flip2opt(Tourable t, short a1, short b1, short a2, short b2) {
-		t.switchEdges(G, a1, a2, b1, b2);
+		
+		t.switchEdges(a1, b1, a2, b2);
 		return;
 	}
 
@@ -110,7 +114,7 @@ public class TwoOpt implements Improver {
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
 		for(int i = 0; i < 1000; i++){
-			Thread.sleep(5000);
+			Thread.sleep(1);
 			//System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
 			//System.out.println(g.calculateLength(t));
