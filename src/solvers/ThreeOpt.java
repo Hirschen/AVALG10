@@ -5,7 +5,7 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private int minGain = 15; //Algoritmen fungerar när vi har lite högre gain krav :D
+	private int minGain = 5; //Algoritmen fungerar när vi har lite högre gain krav :D
 
 	public ThreeOpt(){}
 	
@@ -56,7 +56,7 @@ public class ThreeOpt implements Improver {
 		if((g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
 				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2))))
 				+
-				(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(a3), t.getNode(b3))
+				(g.distance(t.getNode(b1), t.getNode(b2))+g.distance(t.getNode(a3), t.getNode(b3))
 						-(g.distance(t.getNode(a1), t.getNode(a3))+g.distance(t.getNode(a2), t.getNode(b3)))
 				) > minGain){
 			return 1;
@@ -64,7 +64,7 @@ public class ThreeOpt implements Improver {
 		if((g.distance(t.getNode(a1), t.getNode(b1))+g.distance(t.getNode(a2), t.getNode(b2))
 				-(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(b1), t.getNode(b2))))
 				+
-				(g.distance(t.getNode(b1), t.getNode(b2))+g.distance(t.getNode(a3), t.getNode(b3))
+				(g.distance(t.getNode(a1), t.getNode(a2))+g.distance(t.getNode(a3), t.getNode(b3))
 						-(g.distance(t.getNode(b1), t.getNode(a3))+g.distance(t.getNode(b2), t.getNode(b3)))
 				) > minGain){
 			return 2;
@@ -75,7 +75,7 @@ public class ThreeOpt implements Improver {
 	private boolean checkFeasibility(Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
 		int tmp = Math.abs(a1-a2), tmp2 = Math.abs(a2-a3), tmp3 = Math.abs(a1-a3);
 		
-		if(tmp <= 1 || tmp2 <= 1 || tmp3 <= 1 || t.countNodes() -3 == tmp || t.countNodes() -3 == tmp2 || t.countNodes() -3 == tmp3){
+		if(tmp <= 0 || tmp2 <= 0 || tmp3 <= 0 || t.countNodes() -2 == tmp || t.countNodes() -2 == tmp2 || t.countNodes() -2 == tmp3){
 			return false;
 		}
 		return true;
@@ -84,11 +84,11 @@ public class ThreeOpt implements Improver {
 	private void threeOptbyTwoOpt(int version, Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
 		if(version == 1){
 			t.switch2EdgesOpted(a1, b1, a2, b2);
-			t.switch2EdgesOpted(a1, a2, a3, b3);
+			t.switch2EdgesOpted(a1, b1, a3, b3);
 		}
 		else{
 			t.switch2EdgesOpted(a1, b1, a2, b2);
-			t.switch2EdgesOpted(b1, b2, a3, b3);
+			t.switch2EdgesOpted(a2, b2, a3, b3);
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class ThreeOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5} };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15} };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
