@@ -5,13 +5,10 @@ import main.ShortTour;
 import main.Tourable;
 
 /**
- * BruteForceOptimal solves the TSP for n <= 8. This constraint exists since it
- * stores the tour as a long, and each node is stored as 4 bits (64 / 4 = 16).
- * 
- * 
+ * BruteForceOptimal solves the TSP for n <= 15.
  * 
  * @author Martin Nycander
- * @since
+ * @since 2010-11-07
  */
 public class BruteForceOptimal implements StartApproxer
 {
