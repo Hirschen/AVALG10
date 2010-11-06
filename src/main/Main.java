@@ -149,21 +149,6 @@ public class Main
 	}
 
 	/**
-	 * @return
-	 */
-	protected double[][] readInput()
-	{
-		int size = io.getInt();
-		double[][] g = new double[size][2];
-		for (int i = 0; i < size; i++)
-		{
-			g[i][0] = io.getDouble();
-			g[i][1] = io.getDouble();
-		}
-		return g;
-	}
-
-	/**
 	 * @param graph
 	 * @return
 	 */
@@ -182,7 +167,7 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		/*Improver imp = new TwoOpt();
-		for (int i = 0; i < 2000; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			imp.improve(g, t);
 		}*/
