@@ -3,7 +3,6 @@ package main;
 import java.util.Arrays;
 
 import solvers.ClarkeWrightApproximation;
-import solvers.ClarkeWrightApproximation.Saving;
 
 /**
  * The Graph class is a data structure for storing complete symmetric weighted
@@ -157,10 +156,10 @@ public class Graph
 	 *            the graph containing the nodes.
 	 * @return a sorted list of all savings
 	 */
-	public Saving[] calculateSavings(ClarkeWrightApproximation cw, short hubNode)
+	public long[] calculateSavings(ClarkeWrightApproximation cw, short hubNode)
 	{
 		final int nodes = nodeCount - 1;
-		Saving[] savings = new Saving[nodes * (nodes - 1) / 2];
+		final long[] savings = new long[nodes * (nodes - 1) / 2];
 		int ep = 0;
 		for (short a = 0; a < nodeCount; a++)
 		{
@@ -175,7 +174,9 @@ public class Graph
 					continue;
 
 				int save = hubNodeToA + edges[hubNode][b] - edges[a][b];
-				savings[ep++] = cw.new Saving(save, a, b);
+
+				long v = ((long) save << 20) + ((int) a << 10) + b;
+				savings[ep++] = -v;
 			}
 		}
 		Arrays.sort(savings);

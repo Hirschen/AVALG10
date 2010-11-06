@@ -62,7 +62,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		Saving[] savings = graph.calculateSavings(this, hubNode);
+		long[] savings = graph.calculateSavings(this, hubNode);
 		final int savingsLength = savings.length;
 		int sp = 0;
 
@@ -73,10 +73,10 @@ public class ClarkeWrightApproximation implements StartApproxer
 		// Go through the non-hub city pairs in descending order of savings.
 		while (sp < savingsLength)
 		{
-			Saving saving = savings[sp++];
-
-			short a = saving.a;
-			short b = saving.b;
+			// Here be dragons. Stay away.
+			long saving = -savings[sp++];
+			short a = (short) ((saving & 0xffc00) >> 10);
+			short b = (short) (saving & 0x3ff);
 
 			// ...so it does not cause a non-hub city to become adjacent to more
 			// than two other non-hub cities or create a cycle of nonhub cities
@@ -163,7 +163,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		Saving[] savings = graph.calculateSavings(this, hubNode);
+		long[] savings = graph.calculateSavings(this, hubNode);
 
 		if (Main.verbose || measureTime)
 		{
@@ -178,10 +178,13 @@ public class ClarkeWrightApproximation implements StartApproxer
 		int addedEdges = 0;
 		while (sp < savings.length && addedEdges < edgeGoal)
 		{
-			Saving saving = savings[sp++];
+			long saving = savings[sp++];
 
-			short a = saving.a;
-			short b = saving.b;
+			long tmp = saving / 1000000;
+			int ab = (int) (saving - tmp);
+
+			short a = (short) (ab / 1000);
+			short b = (short) (ab - a);
 
 			// ...so it does not cause a non-hub city to become adjacent to more
 			// than two other non-hub cities.
