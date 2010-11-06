@@ -135,7 +135,7 @@ public class Benchmark
 				totalApproxTime += approxTime / runs;
 				totalImproveTime += improveTime / runs;
 				totalOutputTime += outputTime / runs;
-				results.put(probFile.getName().substring(0, probFile.getName().lastIndexOf('.')), new double[] { graphTime / runs, approxTime / runs, improveTime / runs, outputTime / runs });
+				results.put(probFile.getName().substring(0, probFile.getName().lastIndexOf('.')), new double[] { graphTime / runs, approxTime / runs, improveTime / runs, outputTime / runs, graphTime / runs + approxTime / runs + improveTime / runs + outputTime / runs, score / runs });
 
 				if (DEBUG)
 				{
@@ -163,20 +163,18 @@ public class Benchmark
 			System.out.println("\tImprovement time: " + Math.round(totalImproveTime * 1000) / 1000.0);
 			System.out.println("\tOutput time: " + Math.round(totalOutputTime * 1000) / 1000.0);
 			System.out.println();
+			System.out.println("Test    \tGraph\tApprox\tImprove\tOutput\tTotal\tScore");
 			TreeMap<Double, String> output = new TreeMap<Double, String>();
 			for (Entry<String, double[]> entry : results.entrySet())
 			{
 				String line = entry.getKey() + "    \t";
 				double[] values = entry.getValue();
-				double sumV = 0.0;
 				for (int i = 0; i < values.length; i++)
 				{
 					double v = Math.round(values[i] * 1000) / 1000.0;
 					line += v + "\t";
-					sumV += v;
 				}
-				line += Math.ceil(sumV);
-				output.put(sumV, line);
+				output.put(values[4], line);
 			}
 
 			for (String l : output.values())

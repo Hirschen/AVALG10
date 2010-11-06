@@ -1,7 +1,5 @@
 package solvers;
 
-import java.util.Random;
-
 import main.Graph;
 import main.GraphVisualizer;
 import main.Main;
@@ -26,12 +24,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 {
 	private Graph graph;
 	private TourConstruction tour;
-
 	private short hubNode;
-
-	private GraphVisualizer gv;
-
-	private final boolean measureTime = false;
 
 	/**
 	 * 
@@ -56,13 +49,18 @@ public class ClarkeWrightApproximation implements StartApproxer
 		graph = g;
 		tour = new TourConstruction(g);
 
-
 		// Take an arbitrarily good hub node
-		hubNode = (short) new Random().nextInt(graph.countNodes());
+		hubNode = getHubNode();
+
+		if (Main.verbose)
+		{
+			new GraphVisualizer(graph).setTourConstruction(tour);
+			System.out.println("Hub node: " + hubNode);
+		}
 
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		long[] savings = graph.calculateSavings(this, hubNode);
+		long[] savings = graph.calculateSavings(hubNode);
 		final int savingsLength = savings.length;
 		int sp = 0;
 
@@ -102,6 +100,29 @@ public class ClarkeWrightApproximation implements StartApproxer
 	}
 
 	/**
+	 * @return
+	 */
+	private short getHubNode()
+	{
+		/*if (graph.countNodes() > 500)
+			return (short) new Random().nextInt(graph.countNodes());
+		*/
+		// Find the node with the longest distance to everyone
+		short hub = 0;
+		long dist = graph.sumEdges(hub);
+		for (short i = 1; i < graph.countNodes(); i++)
+		{
+			long d = graph.sumEdges(i);
+			if (d < dist)
+			{
+				dist = d;
+				hub = i;
+			}
+		}
+		return hub;
+	}
+
+	/**
 	 * @param nodes
 	 * @param tour
 	 * @return
@@ -124,151 +145,5 @@ public class ClarkeWrightApproximation implements StartApproxer
 		}
 
 		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see solvers.StartApproxer#getTour(main.Graph)
-	 */
-	public Tourable getTourSlow(Graph graph)
-	{
-		tour = new TourConstruction(graph);
-		// Special case for one node.
-		if (graph.countNodes() == 1)
-		{
-			Tourable tour = new ShortTour(1);
-			tour.addNode((short) 0);
-			return tour;
-		}
-
-		this.graph = graph;
-
-		if (Main.verbose)
-		{
-			gv = new GraphVisualizer(graph, 6);
-			gv.setTourConstruction(tour);
-		}
-
-		// Take an arbitrarily good hub node
-		hubNode = (short) Math.round(Math.random() * ((double) graph.countNodes() - 1));
-		if (Main.verbose)
-		{
-			System.out.println("Hub node: " + hubNode);
-		}
-
-		double time = 0.0;
-		if (Main.verbose || measureTime)
-		{
-			time = Main.time();
-		}
-
-		// Calculate savings for each non-hub node
-		// savings: Save -> nodeA -> nodeB, order descending
-		long[] savings = graph.calculateSavings(this, hubNode);
-
-		if (Main.verbose || measureTime)
-		{
-			System.out.println("Calculated savings in: " + Main.timeDiff(Main.time(), time) + " ms.");
-			time = Main.time();
-		}
-
-		// Go through the non-hub city pairs in descending order of savings.
-		int[] nonHubdegree = new int[graph.countNodes()];
-		int sp = 0;
-		int edgeGoal = graph.countNodes() - 2;
-		int addedEdges = 0;
-		while (sp < savings.length && addedEdges < edgeGoal)
-		{
-			long saving = savings[sp++];
-
-			long tmp = saving / 1000000;
-			int ab = (int) (saving - tmp);
-
-			short a = (short) (ab / 1000);
-			short b = (short) (ab - a);
-
-			// ...so it does not cause a non-hub city to become adjacent to more
-			// than two other non-hub cities.
-			if (nonHubdegree[a] >= 2 || nonHubdegree[b] >= 2)
-			{
-				if (Main.verbose)
-					System.out.println("  " + a + "->" + b + ": Already has degree 2.");
-				continue;
-			}
-
-			// ... or create a cycle of nonhub cities
-			if (createsCycleOfNonHubNodes(a, b))
-			{
-				if (Main.verbose)
-					System.out.println("  " + a + "->" + b + ": Would create a cycle.");
-				continue;
-			}
-
-			tour.addEdge(a, b, nonHubdegree);
-			nonHubdegree[a]++;
-			nonHubdegree[b]++;
-
-			if (Main.verbose)
-			{
-				gv.repaint();
-				/* */
-				try
-				{
-					Thread.sleep(100);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				/**/
-			}
-		}
-
-		if (Main.verbose || measureTime)
-		{
-			System.out.println("Found path in: " + Main.timeDiff(Main.time(), time) + " ms.");
-			time = Main.time();
-		}
-
-		// Let's create a tour!
-		Tourable t = tour.getTour();
-		// add path to the hubNode
-		t.addNode(hubNode);
-
-		if (Main.verbose || measureTime)
-			System.out.println("Constructed tour in: " + Main.timeDiff(Main.time(), time) + " ms.");
-
-		if (Main.verbose)
-		{
-			gv.setTourConstruction(null);
-			gv.setTour(t);
-			gv.repaint();
-		}
-
-		return t;
-	}
-
-	public final class Saving implements Comparable<Saving>
-	{
-		public final int saving;
-		public final short a;
-		public final short b;
-
-		public Saving(int save, short a, short b)
-		{
-			saving = save;
-			this.a = a;
-			this.b = b;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Comparable#compareTo(java.lang.Object)
-		 */
-		public int compareTo(Saving s)
-		{
-			if (s == null)
-				return -1;
-
-			return (saving < s.saving ? 1 : -1);
-		}
 	}
 }

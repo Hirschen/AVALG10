@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -48,6 +50,25 @@ public class GraphVisualizer extends JPanel
 		this.scale = scale;
 		createFrame();
 
+		resize();
+
+		/*
+				int fw = frame.getWidth();
+				int fh = frame.getHeight() + 100;
+				if (maxX + 40 > fw || maxY + 40 > fh)
+				{
+					this.setMinimumSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
+					this.setPreferredSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
+					frame.pack();
+				}
+		*/
+	}
+
+	/**
+	 * 
+	 */
+	private void resize()
+	{
 		int maxX = 0;
 		int maxY = 0;
 		int minX = Integer.MAX_VALUE;
@@ -63,26 +84,13 @@ public class GraphVisualizer extends JPanel
 			minY = Math.min(y, minY);
 		}
 
-		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-
 		int graphHeight = maxY - minY;
 		int graphWidth = maxX - minX;
 
-		this.scale = Math.min((double) (frame.getHeight() - 100) / (double) graphHeight, (double) frame.getWidth() / (double) graphWidth);
+		this.scale = Math.min((double) (frame.getHeight() - 100) / (double) graphHeight, (double) (frame.getWidth() - 50) / (double) graphWidth);
 		offset = new Point((int) (minX * this.scale), (int) (minY * this.scale));
 		System.out.print("Scale: " + this.scale + " ");
 		System.out.println("Offset: " + offset + " ");
-
-		/*
-				int fw = frame.getWidth();
-				int fh = frame.getHeight() + 100;
-				if (maxX + 40 > fw || maxY + 40 > fh)
-				{
-					this.setMinimumSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-					this.setPreferredSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-					frame.pack();
-				}
-		*/
 	}
 
 	public void setTour(Tourable t)
@@ -107,6 +115,17 @@ public class GraphVisualizer extends JPanel
 		frame.add(this);
 		frame.setSize(new Dimension(600, 300));
 		frame.repaint();
+		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+
+		frame.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				resize();
+				repaint();
+			}
+		});
 
 		this.setOpaque(true);
 	}

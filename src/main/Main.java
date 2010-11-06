@@ -5,9 +5,7 @@ import java.io.InputStream;
 
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
-import solvers.NaiveSolver;
 import solvers.StartApproxer;
-import solvers.ThreeOpt;
 import solvers.TwoOpt;
 
 /**
@@ -159,7 +157,7 @@ public class Main
 	private Tourable approximateTour(Graph graph)
 	{
 		/* */
-		StartApproxer solver = new NaiveSolver();
+		StartApproxer solver = new ClarkeWrightApproximation();
 		Tourable t = solver.getTour(graph);
 		/* * /
 		StartApproxer solver = new NaiveSolver();
@@ -174,11 +172,11 @@ public class Main
 		for (int i = 0; i < 100; i++)
 		{
 			imp3.improve(g, t);
-		}*/
+		}
+		/**/
 		//# of laps
-		int random = 1500000/t.countNodes();
+		int random = 2500000 / t.countNodes();
 		int traverseNeighbours = random*2;
-		
 		
 		Improver imp2 = new TwoOpt(t.countNodes());
 		((TwoOpt) imp2).setRandom(true);
@@ -191,6 +189,7 @@ public class Main
 		{
 			imp2.improve(g, t);
 		}
+		/* */
 		return t;
 	}
 }

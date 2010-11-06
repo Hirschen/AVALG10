@@ -2,8 +2,6 @@ package main;
 
 import java.util.Arrays;
 
-import solvers.ClarkeWrightApproximation;
-
 /**
  * The Graph class is a data structure for storing complete symmetric weighted
  * graphs.
@@ -103,7 +101,7 @@ public class Graph
 		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
 		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
-		return (int) Math.sqrt((xDiff * xDiff + yDiff * yDiff));
+		return (int) Math.round(Math.sqrt((xDiff * xDiff + yDiff * yDiff)));
 	}
 
 	public final int distance(int nodeA, int nodeB)
@@ -151,12 +149,14 @@ public class Graph
 
 	/**
 	 * Calculates how much distance is saved for every pair of non-hub nodes.
+	 * Used by the clarke-wright heuristics.
 	 * 
 	 * @param graph
 	 *            the graph containing the nodes.
-	 * @return a sorted list of all savings
+	 * @return a sorted list of all savings, first ten bits is node a, second 10
+	 *         bits are node b, and the rest is the amount of savings.
 	 */
-	public long[] calculateSavings(ClarkeWrightApproximation cw, short hubNode)
+	public long[] calculateSavings(short hubNode)
 	{
 		final int nodes = nodeCount - 1;
 		final long[] savings = new long[nodes * (nodes - 1) / 2];
@@ -181,6 +181,18 @@ public class Graph
 		}
 		Arrays.sort(savings);
 		return savings;
+	}
+
+	/**
+	 * @param hub
+	 * @return
+	 */
+	public long sumEdges(int hub)
+	{
+		long sum = 0;
+		for (int a = 0; a < nodeCount; a++)
+			sum += edges[hub][a];
+		return sum;
 	}
 
 	/**
