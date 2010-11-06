@@ -96,12 +96,12 @@ public class TourConstruction implements Iterable<UnfinishedTour>
 			smallTour = matches.get(1);
 			largeTour = matches.get(0);
 		}
-		largeTour.addEdge(a, b);
 
-		boolean reverse = (smallTour.getLast() == largeTour.getLast() || smallTour.getFirst() == largeTour.getFirst());
-		boolean append = (smallTour.getLast() == largeTour.getLast() || largeTour.getLast() == smallTour.getFirst());
+		int addedNode = largeTour.addEdge(a, b);
+		boolean append = (addedNode == largeTour.getLast());
+		boolean reverse = (addedNode == smallTour.getLast());
 
-		if (append == reverse)
+		if (reverse)
 			smallTour.removeLast();
 		else
 			smallTour.removeFirst();
@@ -119,9 +119,9 @@ public class TourConstruction implements Iterable<UnfinishedTour>
 			else
 			{
 				if (reverse)
-					largeTour.prependNode(smallTour.removeFirst());
-				else
 					largeTour.prependNode(smallTour.removeLast());
+				else
+					largeTour.prependNode(smallTour.removeFirst());
 			}
 		}
 
