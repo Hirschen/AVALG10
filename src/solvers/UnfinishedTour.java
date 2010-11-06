@@ -23,30 +23,32 @@ public class UnfinishedTour
 		end = nodeCount;
 	}
 
-	public void addEdge(short a, short b)
+	public int addEdge(short a, short b)
 	{
 		int last = getLast();
 		int first = getFirst();
 		if (a == last)
 		{
 			appendNode(b);
-			return;
+			return b;
 		}
 		if (b == last)
 		{
 			appendNode(a);
-			return;
+			return a;
 		}
 		if (a == first)
 		{
 			prependNode(b);
-			return;
+			return b;
 		}
 		if (b == first)
 		{
 			prependNode(a);
-			return;
+			return a;
 		}
+
+		return -1;
 	}
 
 	public void appendNode(short a)
@@ -99,14 +101,16 @@ public class UnfinishedTour
 	{
 		if (end < tour.length)
 		{
-			return tour[end++];
+			short r = tour[end];
+			tour[end] = 0;
+			end++;
+			return r;
 		}
 
 		short r = tour[0];
-		for (int i = start - 1; i >= 0; i--)
+		for (int i = 0; i < start; i++)
 			tour[i] = tour[i + 1];
-		tour[start] = -1;
-		start--;
+		tour[start--] = 0;
 		return r;
 	}
 
@@ -117,11 +121,12 @@ public class UnfinishedTour
 			short r = tour[tour.length - 1];
 			for (int i = tour.length - 1; i >= end; i--)
 				tour[i] = tour[i - 1];
-			end++;
+			tour[end++] = 0;
 			return r;
 		}
-
-		return tour[start--];
+		short r = tour[start];
+		tour[start--] = 0;
+		return r;
 	}
 
 	public Tourable getTour()

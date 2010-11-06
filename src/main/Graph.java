@@ -9,20 +9,41 @@ import solvers.ClarkeWrightApproximation.Saving;
  * The Graph class is a data structure for storing complete symmetric weighted
  * graphs.
  * 
- * 
- * TODO: Vaska riktade kanter? (Vi behöver inte hålla koll på riktningen
- * egentligen, det ger bara en massa extra arbete)
- * 
  * @author Martin Nycander
  * @since
  */
 public class Graph
 {
-	private double[][] nodes;
-	private int[][] edges;
+	private final double[][] nodes;
+	private final int[][] edges;
 
-	private int nodeCount;
-	private int edgeCount;
+	private final int nodeCount;
+	private final int edgeCount;
+
+	public Graph(Kattio io)
+	{
+		nodeCount = io.getInt();
+		nodes = new double[nodeCount][2];
+
+		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
+		edges = new int[nodeCount][nodeCount];
+
+		// Read and store nodes
+		for (short a = 0; a < nodeCount; a++)
+		{
+			nodes[a][0] = io.getDouble();
+			nodes[a][1] = io.getDouble();
+
+			// Precalculate edges
+			edges[a][a] = 0;
+			for (short b = 0; b < a; b++)
+			{
+				final int dist = calculateDistance(a, b);
+				edges[a][b] = dist;
+				edges[b][a] = dist;
+			}
+		}
+	}
 
 	/**
 	 * Constructs a graph object given a set of coordinates.
@@ -53,45 +74,18 @@ public class Graph
 		}
 	}
 
-	public Graph(Kattio io)
-	{
-		nodeCount = io.getInt();
-		nodes = new double[nodeCount][2];
-
-		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
-		edges = new int[nodeCount][nodeCount];
-
-		// Read and store nodes
-		for (short a = 0; a < nodeCount; a++)
-		{
-			nodes[a][0] = io.getDouble();
-			nodes[a][1] = io.getDouble();
-
-			// Precalculate edges
-			edges[a][a] = 0;
-			for (short b = 0; b < a; b++)
-			{
-				int dist = calculateDistance(a, b);
-				edges[a][b] = dist;
-				edges[b][a] = dist;
-			}
-		}
-	}
-
-
 	/**
 	 * @return the number of nodes in the graph.
 	 */
-	public int countNodes()
+	public final int countNodes()
 	{
 		return nodeCount;
 	}
 
-	public int countEdges()
+	public final int countEdges()
 	{
 		return edgeCount;
 	}
-
 
 	/**
 	 * The distance between two points is computed as the Euclidean distance
@@ -105,15 +99,15 @@ public class Graph
 	 *            the second node.
 	 * @return the euclidean distance between two nodes.
 	 */
-	private int calculateDistance(int nodeA, int nodeB)
+	private final int calculateDistance(int nodeA, int nodeB)
 	{
 		double xDiff = nodes[nodeA][0] - nodes[nodeB][0];
 		double yDiff = nodes[nodeA][1] - nodes[nodeB][1];
 
-		return (int) Math.round(Math.sqrt(xDiff * xDiff + yDiff * yDiff));
+		return (int) Math.sqrt((xDiff * xDiff + yDiff * yDiff));
 	}
 
-	public int distance(int nodeA, int nodeB)
+	public final int distance(int nodeA, int nodeB)
 	{
 		return edges[nodeA][nodeB];
 	}
@@ -137,7 +131,6 @@ public class Graph
 			length += edges[previous][first];
 		return length;
 	}
-
 
 	/**
 	 * @param a
@@ -166,7 +159,7 @@ public class Graph
 	 */
 	public Saving[] calculateSavings(ClarkeWrightApproximation cw, short hubNode)
 	{
-		int nodes = nodeCount - 1;
+		final int nodes = nodeCount - 1;
 		Saving[] savings = new Saving[nodes * (nodes - 1) / 2];
 		int ep = 0;
 		for (short a = 0; a < nodeCount; a++)
@@ -174,7 +167,7 @@ public class Graph
 			if (a == hubNode)
 				continue;
 
-			int hubNodeToA = edges[hubNode][a];
+			final int hubNodeToA = edges[hubNode][a];
 
 			for (short b = (short) (a + 1); b < nodeCount; b++)
 			{

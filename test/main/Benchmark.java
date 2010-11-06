@@ -1,4 +1,5 @@
 package main;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import solvers.StartApproxer;
  * // TODO: Benchmark is a ...
  * 
  * @author Martin Nycander
- * @since 
+ * @since
  */
 public class Benchmark
 {
@@ -127,6 +128,7 @@ public class Benchmark
 					}
 
 					score += Math.pow(0.02, x);
+					System.out.print('.');
 				}
 				sum += score / runs;
 				totalGraphTime += graphTime / runs;
@@ -141,6 +143,7 @@ public class Benchmark
 				}
 
 				problemSet++;
+
 			}
 			catch (IllegalArgumentException e)
 			{

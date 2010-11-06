@@ -103,6 +103,26 @@ public class Main
 		io.flush();
 		outputTime = timeDiff(time(), time);
 
+		// Check the tour for errors
+		String[] tourString = tour.toString().split("\\s+");
+		if (tourString.length != graph.countNodes())
+		{
+			new GraphVisualizer(graph).setTour(tour);
+			throw new RuntimeException("The number of nodes in the tour is not correct. " + tourString.length + " != " + graph.countNodes());
+		}
+		
+		boolean[] visited = new boolean[graph.countNodes()];
+		for (int i = 0; i < tourString.length; i++)
+		{
+			int node = Integer.parseInt(tourString[i].trim());
+			if (visited[node])
+			{
+				new GraphVisualizer(graph).setTour(tour);
+				throw new RuntimeException("The node " + node + " has already been visited by the tour. Tour=" + tour);
+			}
+			visited[node] = true;
+		}
+		
 		return tour;
 	}
 
@@ -129,21 +149,6 @@ public class Main
 	}
 
 	/**
-	 * @return
-	 */
-	protected double[][] readInput()
-	{
-		int size = io.getInt();
-		double[][] g = new double[size][2];
-		for (int i = 0; i < size; i++)
-		{
-			g[i][0] = io.getDouble();
-			g[i][1] = io.getDouble();
-		}
-		return g;
-	}
-
-	/**
 	 * @param graph
 	 * @return
 	 */
@@ -162,7 +167,7 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		/*Improver imp = new TwoOpt();
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			imp.improve(g, t);
 		}*/
