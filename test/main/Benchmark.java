@@ -17,10 +17,11 @@ import solvers.NaiveSolver;
 import solvers.StartApproxer;
 
 /**
- * // TODO: Benchmark is a ...
+ * Benchmark is a class for benchmarking the TSP solver against a set of test
+ * cases.
  * 
  * @author Martin Nycander
- * @since
+ * @since 2010-10-29
  */
 public class Benchmark
 {

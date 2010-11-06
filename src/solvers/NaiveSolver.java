@@ -4,12 +4,12 @@ import main.Graph;
 import main.ShortTour;
 import main.Tourable;
 
-
 /**
- * // TODO: NaiveSolver is a ...
+ * NaiveSolver is the greedy algorithm kattis runs to get a base case solution.
+ * Anything better than this will yield points.
  * 
  * @author Martin Nycander
- * @since 
+ * @since 2010-10-29
  */
 public class NaiveSolver implements StartApproxer
 {
@@ -19,7 +19,6 @@ public class NaiveSolver implements StartApproxer
 	 */
 	public NaiveSolver()
 	{
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

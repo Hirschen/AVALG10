@@ -15,9 +15,7 @@ import main.Tourable;
  * every other node to the "hub node". After that it can create a sub-optimal
  * tour by using the triangle inequality.
  * 
- * TODO: Implement TourConstruction-object for all the merging and such.
- * 
- * TODO: Document the methods.
+ * TODO: Document all methods in Clarke-Wright.
  * 
  * @author Martin Nycander
  * @since 2010-11-03

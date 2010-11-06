@@ -3,18 +3,12 @@ package main;
 import java.io.IOException;
 import java.io.InputStream;
 
-import solvers.BruteForceOptimalTourFor8nodes;
+import solvers.BruteForceOptimalTourFor15nodes;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
 import solvers.TwoOpt;
 
-/**
- * // TODO: Main is a ...
- * 
- * @author Martin Nycander
- * @since
- */
 public class Main
 {
 	public static final boolean verbose = false;
@@ -66,9 +60,9 @@ public class Main
 	{
 		Graph graph = new Graph(io);
 		
-		if (graph.countNodes() <= 8)
+		if (graph.countNodes() <= 15)
 		{
-			StartApproxer solver = new BruteForceOptimalTourFor8nodes();
+			StartApproxer solver = new BruteForceOptimalTourFor15nodes();
 			Tourable tour = solver.getTour(graph);
 			tour.printTo(io);
 			io.flush();
@@ -100,9 +94,9 @@ public class Main
 		graphTime = timeDiff(time(), time);
 		time = time();
 
-		if (graph.countNodes() <= 8)
+		if (graph.countNodes() <= 9)
 		{
-			StartApproxer solver = new BruteForceOptimalTourFor8nodes();
+			StartApproxer solver = new BruteForceOptimalTourFor15nodes();
 			Tourable tour = solver.getTour(graph);
 			approxTime = timeDiff(time(), time);
 			time = time();

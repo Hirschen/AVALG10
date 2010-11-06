@@ -5,12 +5,15 @@ import main.ShortTour;
 import main.Tourable;
 
 /**
- * // TODO: BruteForceOptimal is a ...
+ * BruteForceOptimal solves the TSP for n <= 8. This constraint exists since it
+ * stores the tour as a long, and each node is stored as 4 bits (64 / 4 = 16).
+ * 
+ * 
  * 
  * @author Martin Nycander
  * @since
  */
-public class BruteForceOptimalTourFor8nodes implements StartApproxer
+public class BruteForceOptimalTourFor15nodes implements StartApproxer
 {
 	private Graph graph;
 	private long bestTour;
@@ -32,7 +35,10 @@ public class BruteForceOptimalTourFor8nodes implements StartApproxer
 		Tourable t = new ShortTour(g.countNodes());
 		for (int i = 0; i < g.countNodes(); i++)
 		{
-			t.setNode(i, (short) ((bestTour & (0xf << (i * 4))) >> (i * 4)));
+			long mask = 0xf;
+			long bits = (long) (i * 4);
+			long masked = (bestTour & (long) (mask << bits));
+			t.setNode(i, (short) (masked >> bits));
 		}
 
 		return t;
@@ -45,7 +51,10 @@ public class BruteForceOptimalTourFor8nodes implements StartApproxer
 			int[] t = new int[(int) length];
 			for (long i = 0; i < t.length; i++)
 			{
-				t[(int) i] = (short) ((tour & (0xf << (i * 4))) >> (i * 4));
+				long mask = 0xf;
+				long bits = (long) (i * 4);
+				long masked = (tour & (long) (mask << bits));
+				t[(int) i] = (short) (masked >> bits);
 			}
 			int d = graph.calculateLength(t);
 			if (d < dist)
@@ -61,7 +70,10 @@ public class BruteForceOptimalTourFor8nodes implements StartApproxer
 			if (((visited & (1 << a)) >> a) == 1)
 				continue;
 
-			bruteForce(tour | (long) ((a & 0xf) << (length * 4)), (visited | (1 << a)), length + 1);
+			long mask = 0xf;
+			long bits = (long) (length * 4);
+			long masked = ((a & mask) << bits);
+			bruteForce(tour | masked, (visited | (1 << a)), length + 1);
 		}
 	}
 }
