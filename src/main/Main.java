@@ -3,7 +3,7 @@ package main;
 import java.io.IOException;
 import java.io.InputStream;
 
-import solvers.BruteForceOptimalTourFor15nodes;
+import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
@@ -62,7 +62,7 @@ public class Main
 		
 		if (graph.countNodes() <= 15)
 		{
-			StartApproxer solver = new BruteForceOptimalTourFor15nodes();
+			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
 			tour.printTo(io);
 			io.flush();
@@ -96,7 +96,7 @@ public class Main
 
 		if (graph.countNodes() <= 9)
 		{
-			StartApproxer solver = new BruteForceOptimalTourFor15nodes();
+			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
 			approxTime = timeDiff(time(), time);
 			time = time();

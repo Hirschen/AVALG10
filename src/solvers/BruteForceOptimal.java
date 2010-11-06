@@ -13,7 +13,7 @@ import main.Tourable;
  * @author Martin Nycander
  * @since
  */
-public class BruteForceOptimalTourFor15nodes implements StartApproxer
+public class BruteForceOptimal implements StartApproxer
 {
 	private Graph graph;
 	private long bestTour;
