@@ -8,29 +8,36 @@ public class TwoOpt implements Improver {
 
 	private short searchSize = -1;
 	private int minGain = 0;
+	private boolean random = false;
 	
 	public TwoOpt(){
 	}
-	public TwoOpt(short tourSize){
+	public TwoOpt(int tourSize){
 		searchSize = setSearchSize(tourSize);
-	}
-	public TwoOpt(int minimumGain){
-		minGain = minimumGain;
 	}
 	public TwoOpt(int tourSize, int minimumGain){
 		searchSize = (short) setSearchSize(tourSize);
 		minGain = minimumGain;
+	}
+	public void setRandom(boolean b){
+		random = b;
 	}
 	private short setSearchSize(int s){
 		short res = 4;
 		if(s > 10){
 			res = 6;
 		}
+		if(s > 30){
+			res = 12;
+		}
 		if(s > 100){
-			res = 10;
+			res = 20;
 		}
 		if(s > 500){
-			res = 20;
+			res = 50;
+		}
+		if(s > 800){
+			res = 70;
 		}
 		return res;
 	}
@@ -40,8 +47,32 @@ public class TwoOpt implements Improver {
 	 */
 	public void improve(Graph g, Tourable t)
 	{
+		if(t.countNodes() <=1){
+			return;
+		}
 		short a1 = fetchFirstEdge(t), b1 = (short) (a1+1 % (t.countNodes()-1));
 		short a2, b2;
+		if(random){
+			if(searchSize == -1){
+				searchSize = setSearchSize(t.countNodes());
+			}
+			a2 = (short) (fetchFirstEdge(t) % (t.countNodes()-1));
+			for(int i=0; i < searchSize; i++, a2 = (short) (fetchFirstEdge(t) % (t.countNodes()-1)) ){
+				if(a2 < 0){
+					a2 = (short) (t.countNodes()-1+a2);
+				}
+				if(a2 > t.countNodes()-2){
+					a2 = 0;
+				}
+				b2=(short) (a2+1);
+				if(t.getNode(a1) != t.getNode(a2) && 
+						gotGain(g, t, a1, b1, a2, b2) 
+						&& checkFeasbility(a1,b1,a2,b2,t)){
+						t.switch2EdgesOpted(a1, b1, a2, b2);
+						return;
+				}
+			}
+		}
 		
 		
 		
@@ -105,7 +136,7 @@ public class TwoOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6} };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15} };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
