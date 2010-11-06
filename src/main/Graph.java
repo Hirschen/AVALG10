@@ -129,6 +129,23 @@ public class Graph
 		return length;
 	}
 
+	public int calculateLength(int[] tour)
+	{
+		int length = 0;
+		int first = tour[0];
+		int previous = first;
+		for (short i = 1; i < tour.length; i++)
+		{
+			int current = tour[i];
+			length += edges[previous][current];
+			previous = current;
+		}
+		if (previous != first)
+			length += edges[previous][first];
+		return length;
+
+	}
+
 	/**
 	 * @param a
 	 * @return

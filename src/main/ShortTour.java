@@ -31,6 +31,21 @@ public class ShortTour implements Tourable
 		nodes = new short[tour.length];
 		for (int i = 0; i < tour.length; i++)
 			nodes[i] = (short) tour[i];
+		addPointer = tour.length;
+	}
+
+	/**
+	 * @param t
+	 */
+	public ShortTour(int size, Tourable t)
+	{
+		nodes = new short[size];
+		int i = 0;
+		for (; i < t.countNodes(); i++)
+			nodes[i] = (short) t.getNode(i);
+		addPointer = i;
+		for (; i < size; i++)
+			nodes[i] = -1;
 	}
 
 	/* (non-Javadoc)
@@ -151,6 +166,17 @@ public class ShortTour implements Tourable
 			nodes[addPointer++] = e.nodeB;
 		else
 			throw new RuntimeException("Tried to add the edge " + e + " which could not fit in tour " + this + ".");
+	}
+
+	/* (non-Javadoc)
+	 * @see main.Tourable#contains(int)
+	 */
+	public boolean contains(int a)
+	{
+		for (int i = 0; i < addPointer; i++)
+			if (nodes[i] == a)
+				return true;
+		return false;
 	}
 
 	/* (non-Javadoc)

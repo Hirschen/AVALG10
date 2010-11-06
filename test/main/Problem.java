@@ -120,6 +120,8 @@ public class Problem
 	{
 		String name = (args.length == 1 ? args[0] : "pcb442");
 		Problem p = new Problem(new File("testdata/" + name + ".tsp"), new File("testdata/" + name + ".opt.tour"));
+		Graph g = new Graph(p.coordinates);
+		System.out.println("Tour length: " + g.calculateLength(p.optimalRoute));
 		System.out.println(p);
 	}
 

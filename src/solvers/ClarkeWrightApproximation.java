@@ -1,5 +1,7 @@
 package solvers;
 
+import java.util.Random;
+
 import main.Graph;
 import main.GraphVisualizer;
 import main.Main;
@@ -104,9 +106,9 @@ public class ClarkeWrightApproximation implements StartApproxer
 	 */
 	private short getHubNode()
 	{
-		/*if (graph.countNodes() > 500)
+		if (graph.countNodes() > 1000)
 			return (short) new Random().nextInt(graph.countNodes());
-		*/
+
 		// Find the node with the longest distance to everyone
 		short hub = 0;
 		long dist = graph.sumEdges(hub);

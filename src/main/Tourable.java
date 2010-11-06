@@ -34,6 +34,12 @@ public interface Tourable extends Iterable<Short>
 	short getNode(int position);
 
 	/**
+	 * @param a
+	 * @return
+	 */
+	boolean contains(int a);
+
+	/**
 	 * Outputs the tour to a given output.
 	 * 
 	 * @param out
@@ -50,4 +56,5 @@ public interface Tourable extends Iterable<Short>
 	void addEdge(Edge e);
 
 	void switch2EdgesOpted(short a1, short a2, short b1, short b2);
+
 }

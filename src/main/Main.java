@@ -3,6 +3,7 @@ package main;
 import java.io.IOException;
 import java.io.InputStream;
 
+import solvers.BruteForceOptimalTourFor8nodes;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
@@ -64,6 +65,16 @@ public class Main
 	public Tourable runFast()
 	{
 		Graph graph = new Graph(io);
+		
+		if (graph.countNodes() <= 8)
+		{
+			StartApproxer solver = new BruteForceOptimalTourFor8nodes();
+			Tourable tour = solver.getTour(graph);
+			tour.printTo(io);
+			io.flush();
+			return tour;
+		}
+
 		Tourable tour = approximateTour(graph);
 		tour = improveTour(graph, tour);
 		// Output tour
@@ -85,10 +96,21 @@ public class Main
 		double time = time();
 
 		Graph graph = new Graph(io);
-		// new GraphVisualizer(graph);
 
 		graphTime = timeDiff(time(), time);
 		time = time();
+
+		if (graph.countNodes() <= 8)
+		{
+			StartApproxer solver = new BruteForceOptimalTourFor8nodes();
+			Tourable tour = solver.getTour(graph);
+			approxTime = timeDiff(time(), time);
+			time = time();
+			tour.printTo(io);
+			io.flush();
+			outputTime = timeDiff(time(), time);
+			return tour;
+		}
 
 		Tourable tour = approximateTour(graph);
 
