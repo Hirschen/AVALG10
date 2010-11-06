@@ -5,7 +5,7 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private int minGain = 20; //Algoritmen fungerar när vi har lite högre gain krav :D
+	private int minGain = 10; //Algoritmen fungerar när vi har lite högre gain krav :D
 
 	public ThreeOpt(){}
 	
@@ -75,7 +75,7 @@ public class ThreeOpt implements Improver {
 	private boolean checkFeasibility(Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
 		int tmp = Math.abs(a1-a2), tmp2 = Math.abs(a2-a3), tmp3 = Math.abs(a1-a3);
 		
-		if(tmp <= 1 || tmp2 <= 1 || tmp3 <= 1 || t.countNodes() -3 == tmp || t.countNodes() -3 == tmp2 || t.countNodes() -3 == tmp3){
+		if(tmp <= 0 || tmp2 <= 0 || tmp3 <= 0 || t.countNodes() -2 == tmp || t.countNodes() -2 == tmp2 || t.countNodes() -2 == tmp3){
 			return false;
 		}
 		return true;
