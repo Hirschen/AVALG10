@@ -100,7 +100,7 @@ public class TwoOpt implements Improver
 			for (a2 = 0; a2 < t.countNodes() - 1; a2++)
 			{
 				b2 = (short) (a2 + 1);
-				if (b2 == t.countNodes() - 1)
+				if (b2 == t.countNodes())
 				{
 					b2 = 0;
 				}
@@ -147,10 +147,6 @@ public class TwoOpt implements Improver
 		{
 			return false;
 		}
-		/*if((a1 == 0 && a2 == t.countNodes()-2) || (a1 == 1 && a2 == t.countNodes()-2)
-				|| (a2 == 0 && a1 == t.countNodes()-3) || (a2 == 1 && a2 == t.countNodes()-2)){
-			return false;
-		}*/
 		return true;
 	}
 
@@ -173,9 +169,7 @@ public class TwoOpt implements Improver
 		for (int i = 0; i < 1000; i++)
 		{
 			Thread.sleep(1);
-			// System.out.println(g.calculateLength(t));
 			imp.improve(g, t);
-			// System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println("Length of tour: " + g.calculateLength(t));
