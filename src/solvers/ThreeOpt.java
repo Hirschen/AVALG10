@@ -26,7 +26,8 @@ public class ThreeOpt implements Improver {
 			if(b2 == t.countNodes()-1){
 				b2 = 0;
 			}
-			for(j=0; j < (t.countNodes()-1)/2; j++){
+			for (j = 0; j < (t.countNodes() - 1) / 4; j++)
+			{
 				while(a3 == a1 || a3 == a2 || a3 == b1 || a3 == b2){
 					a3 = fetchEdge(t);
 				}

@@ -7,6 +7,8 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
+import solvers.ThreeOpt;
+import solvers.TwoOpt;
 
 public class Main
 {
@@ -59,7 +61,7 @@ public class Main
 	{
 		Graph graph = new Graph(io);
 		
-		if (graph.countNodes() <= 9)
+		if (graph.countNodes() <= 15)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -97,7 +99,7 @@ public class Main
 		graphTime = timeDiff(time(), time);
 		time = time();
 
-		if (graph.countNodes() <= 9)
+		if (graph.countNodes() <= 15)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -191,40 +193,28 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		Improver imp;
-		/*Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 100; i++)
-		{
-			imp3.improve(g, t);
-		}
-		/** /
+		/**/
 		//# of laps
 		int random = 2500000 / t.countNodes();
 		int traverseNeighbours = random*2;
 		
-		Improver imp2 = new TwoOpt(t.countNodes());
-		((TwoOpt) imp2).setRandom(true);
+		imp = new TwoOpt(t.countNodes());
+		((TwoOpt) imp).setRandom(true);
 		for (int i = 0; i < random; i++)
 		{
-			imp2.improve(g, t);
+			imp.improve(g, t);
 		}
-		((TwoOpt) imp2).setRandom(false);
+		Improver imp3 = new ThreeOpt();
+		for (int i = 0; i < 2; i++)
+		{
+			imp3.improve(g, t);
+		}
+		((TwoOpt) imp).setRandom(false);
 		for (int i = 0; i < traverseNeighbours; i++)
 		{
-			imp2.improve(g, t);
+			imp.improve(g, t);
 		}
-		/* * /
-
-		imp = new TwoOpt(t.countNodes());
-		for (int i = 0; i < 5; i++)
-		{
-			if (!imp.improve(g, t))
-			{
-				if (Main.verbose)
-					System.out.println("2-opt converged after " + i + " iterations.");
-				break;
-			}
-		}
-
+		/* */
 		/* * /
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 1; i++)
@@ -233,17 +223,6 @@ public class Main
 			{
 				if (Main.verbose)
 					System.out.println("2.5-opt converged after " + i + " iterations.");
-				break;
-			}
-		}
-		/* * /
-		imp = new TwoOpt(t.countNodes());
-		for (int i = 0; i < 5; i++)
-		{
-			if (!imp.improve(g, t))
-			{
-				if (Main.verbose)
-					System.out.println("2-opt converged after " + i + " iterations.");
 				break;
 			}
 		}
