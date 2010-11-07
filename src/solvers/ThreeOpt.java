@@ -47,6 +47,22 @@ public class ThreeOpt implements Improver {
 						threeOptbyTwoOpt(2,t,a1,b1,a2,b2,a3,b3);
 						return true;
 					}
+					if(gain == 3){
+						threeOptbyTwoOpt(3,t,a1,b1,a2,b2,a3,b3);
+						return true;
+					}
+					if(gain == 4){
+						threeOptbyTwoOpt(4,t,a1,b1,a2,b2,a3,b3);
+						return true;
+					}
+					if(gain == 5){
+						threeOptbyTwoOpt(5,t,a1,b1,a2,b2,a3,b3);
+						return true;
+					}
+					if(gain == 6){
+						threeOptbyTwoOpt(6,t,a1,b1,a2,b2,a3,b3);
+						return true;
+					}
 				}
 			}			
 		}
@@ -57,6 +73,12 @@ public class ThreeOpt implements Improver {
 		if(inBetween((short) (b1-1), a2, a3)){
 			return true;
 		}
+		if(toTheLeft((short) (b1-1), a2, a3)){
+			return true;
+		}
+		if(toTheRight((short) (b1-1), a2, a3)){
+			return true;
+		}
 		return false;
 	}
 	private boolean inBetween(short a1, short a2, short a3){
@@ -65,26 +87,80 @@ public class ThreeOpt implements Improver {
 		}
 		return false;
 	}
+	private boolean toTheLeft(short a1, short a2, short a3){
+		if(a3 < a1 && a3 < a2){
+			return true;
+		}
+		return false;
+	}
+	private boolean toTheRight(short a1, short a2, short a3){
+		if(a3 > a1 && a3 > a2){
+			return true;
+		}
+		return false;
+	}
 		
 	private int gotGain(Graph g, Tourable t, short a1, short b1, short a2,
 			short b2, short a3, short b3) {
-		if(b1 > a2 && (
-				(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
-				-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
-				+
-				gotGainCalc(g,t,a1,a2)+gotGainCalc(g,t,a3,b3)
-				-gotGainCalc(g,t,a1,a3)-gotGainCalc(g,t,a2,b3)
-				)> minGain)){
-			return 1; //switch with a1
+		if(inBetween(a1, a2, a3)){
+			if(b1 > a2 && (
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,a1,a2)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,a1,a3)-gotGainCalc(g,t,a2,b3)
+					)> minGain)){
+				return 1; //switch with a1
+			}
+			if(b1 < a2 && (
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,a2,a1)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,a2,a3)-gotGainCalc(g,t,a1,b3)
+					)> minGain)){
+				return 2; //switch with a2
+			}
 		}
-		if(b1 < a2 && (
-				(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
-				-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
-				+
-				gotGainCalc(g,t,a2,a1)+gotGainCalc(g,t,a3,b3)
-				-gotGainCalc(g,t,a2,a3)-gotGainCalc(g,t,a1,b3)
-				)> minGain)){
-			return 2; //switch with a2
+		if(toTheLeft(a1, a2, a3)){
+			if(b1 > a2 && ( //b2, a1
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,a2,a1)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,a2,a3)-gotGainCalc(g,t,a1,b3)
+					)> minGain)){
+				return 3; //switch with a1
+			}
+			if(b1 < a2 && (//b1, a2
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,a1,a2)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,a1,a3)-gotGainCalc(g,t,a2,b3)
+					)> minGain)){
+				return 4; //switch with a2
+			}
+		}
+		if(toTheRight(a1, a2, a3)){
+			if(b1 > a2 && ( //b2, a1
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,b2,b1)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,b2,a3)-gotGainCalc(g,t,b1,b3)
+					)> minGain)){
+				return 5; //switch with a1
+			}
+			if(b1 < a2 && (//b1, a2
+					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
+					-gotGainCalc(g,t,a1,a2)-gotGainCalc(g,t,b1,b2)
+					+
+					gotGainCalc(g,t,b1,b2)+gotGainCalc(g,t,a3,b3)
+					-gotGainCalc(g,t,b1,a3)-gotGainCalc(g,t,b2,b3)
+					)> minGain)){
+				return 6; //switch with a2
+			}
 		}
 		return 0;
 	}
@@ -111,6 +187,22 @@ public class ThreeOpt implements Improver {
 			t.switchEdgesNonOptedWithLeap(a1, b1, a2, b2);
 			t.switchEdgesNonOpted(a2, b2, a3, b3);
 		}
+		if(version == 3){
+			t.switchEdgesNonOpted(a1, b1, a2, b2);
+			t.switchEdgesNonOpted(a2, b2, a3, b3);
+		}
+		if(version == 4){
+			t.switchEdgesNonOpted(a1, b1, a2, b2);
+			t.switchEdgesNonOpted(a1, b1, a3, b3);
+		}
+		if(version == 5){
+			t.switchEdgesNonOpted(a1, b1, a2, b2);
+			t.switchEdgesNonOpted(a1, b1, a3, b3);
+		}
+		if(version == 6){
+			t.switchEdgesNonOpted(a1, b1, a2, b2);
+			t.switchEdgesNonOpted(a2, b2, a3, b3);
+		}
 	}
 	private short fetchFirstEdge(Tourable t){
 		return (short) (Math.random()*(t.countNodes()/2));
@@ -134,6 +226,7 @@ public class ThreeOpt implements Improver {
 		for(int i = 0; i < 1000; i++){
 			Thread.sleep(1);
 			imp.improve(g, t);
+			System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println("Length of tour: "+g.calculateLength(t));
