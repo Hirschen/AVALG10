@@ -78,15 +78,10 @@ public class TwoOpt implements Improver
 			a2 = (short) (fetchFirstEdge(t) % (t.countNodes() - 1));
 			for (int i = 0; i < searchSize; i++, a2 = (short) (fetchFirstEdge(t) % (t.countNodes() - 1)))
 			{
-				if (a2 < 0)
-				{
-					a2 = (short) (t.countNodes() - 1 + a2);
-				}
-				if (a2 > t.countNodes() - 2)
-				{
-					a2 = 0;
-				}
 				b2 = (short) (a2 + 1);
+				if(b2 == t.countNodes()){
+					b2 = 0;
+				}
 				if (t.getNode(a1) != t.getNode(a2) && gotGain(g, t, a1, b1, a2, b2) && checkFeasbility(a1, b1, a2, b2, t))
 				{
 					t.switch2EdgesOpted(a1, b1, a2, b2);
@@ -158,7 +153,7 @@ public class TwoOpt implements Improver
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, { 12, 23 }, { 8, 6 }, { 1, 1 }, { 10, 5 }, { 25, 1 }, { 16, 11 }, { 15, 15 } };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15}, {25,25}, {20,20}, {23,23} };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
@@ -166,10 +161,13 @@ public class TwoOpt implements Improver
 		Tourable t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
+		((TwoOpt) imp).setRandom(true);
+		System.out.println(g.calculateLength(t));
 		for (int i = 0; i < 1000; i++)
 		{
 			Thread.sleep(1);
 			imp.improve(g, t);
+			System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println("Length of tour: " + g.calculateLength(t));
