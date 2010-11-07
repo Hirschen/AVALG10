@@ -5,13 +5,9 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private int minGain = 0;
+	private short minGain = 0;
 
 	public ThreeOpt(){}
-	
-	public ThreeOpt(int minimumGain){
-		minGain = minimumGain;
-	}
 	
 	public boolean improve(Graph g, Tourable t)
 	{
@@ -169,27 +165,27 @@ public class ThreeOpt implements Improver {
 	private void threeOptbyTwoOpt(int version, Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
 		if(version == 1){
 			t.switchEdgesNonOptedWithLeap(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a1, b1, a3, b3);
+			t.switch2EdgesOpted(a1, b1, a3, b3);
 		}
 		if(version == 2){
 			t.switchEdgesNonOptedWithLeap(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a2, b2, a3, b3);
+			t.switch2EdgesOpted(a2, b2, a3, b3);
 		}
 		if(version == 3){
 			t.switchEdgesNonOpted(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a2, b2, a3, b3);
+			t.switch2EdgesOpted(a2, b2, a3, b3);
 		}
 		if(version == 4){
 			t.switchEdgesNonOpted(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a1, b1, a3, b3);
+			t.switch2EdgesOpted(a1, b1, a3, b3);
 		}
 		if(version == 5){
 			t.switchEdgesNonOpted(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a1, b1, a3, b3);
+			t.switch2EdgesOpted(a1, b1, a3, b3);
 		}
 		if(version == 6){
 			t.switchEdgesNonOpted(a1, b1, a2, b2);
-			t.switchEdgesNonOpted(a2, b2, a3, b3);
+			t.switch2EdgesOpted(a2, b2, a3, b3);
 		}
 	}
 	private short fetchEdge(Tourable t)
