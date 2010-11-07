@@ -161,7 +161,7 @@ public class TwoOpt implements Improver
 		Tourable t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
-		((TwoOpt) imp).setRandom(true);
+		//((TwoOpt) imp).setRandom(true);
 		System.out.println(g.calculateLength(t));
 		for (int i = 0; i < 1000; i++)
 		{

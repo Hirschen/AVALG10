@@ -15,7 +15,7 @@ public class ThreeOpt implements Improver {
 	
 	public boolean improve(Graph g, Tourable t)
 	{
-		short a1 = fetchFirstEdge(t), b1 = (short) ((a1+1) % t.countNodes());
+		short a1 = fetchEdge(t), b1 = (short) ((a1+1) % t.countNodes());
 		short a2 = fetchEdge(t), b2,a3 = fetchEdge(t),b3,i,j;
 		
 		for( i=0; i < (t.countNodes()-1)/2; i++, a2 = fetchEdge(t)){
@@ -34,7 +34,7 @@ public class ThreeOpt implements Improver {
 				if(b3 == t.countNodes()){
 					b3 = 0;
 				}
-				if(doable(b1,a2,b2,a3) && checkFeasibility(t, a1,b1,a2,b2,a3,b3)){
+				if(checkFeasibility(t, a1,b1,a2,b2,a3,b3)){
 					int gain = gotGain(g,t, a1,b1,a2,b2,a3,b3);
 					if(gain == 0){
 						continue;
@@ -68,19 +68,7 @@ public class ThreeOpt implements Improver {
 		}
 		return false;
 	}
-	
-	private boolean doable(short b1, short a2, short b2, short a3){
-		if(inBetween((short) (b1-1), a2, a3)){
-			return true;
-		}
-		if(toTheLeft((short) (b1-1), a2, a3)){
-			return true;
-		}
-		if(toTheRight((short) (b1-1), a2, a3)){
-			return true;
-		}
-		return false;
-	}
+
 	private boolean inBetween(short a1, short a2, short a3){
 		if((a1 < a3 && a2 > a3) || (a1 > a3 && a2 < a3)){
 			return true;
@@ -110,7 +98,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,a1,a2)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,a1,a3)-gotGainCalc(g,t,a2,b3)
 					)> minGain)){
-				return 1; //switch with a1
+				return 1;
 			}
 			if(b1 < a2 && (
 					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
@@ -119,7 +107,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,a2,a1)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,a2,a3)-gotGainCalc(g,t,a1,b3)
 					)> minGain)){
-				return 2; //switch with a2
+				return 2;
 			}
 		}
 		if(toTheLeft(a1, a2, a3)){
@@ -130,7 +118,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,a2,a1)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,a2,a3)-gotGainCalc(g,t,a1,b3)
 					)> minGain)){
-				return 3; //switch with a1
+				return 3;
 			}
 			if(b1 < a2 && (//b1, a2
 					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
@@ -139,7 +127,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,a1,a2)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,a1,a3)-gotGainCalc(g,t,a2,b3)
 					)> minGain)){
-				return 4; //switch with a2
+				return 4;
 			}
 		}
 		if(toTheRight(a1, a2, a3)){
@@ -150,7 +138,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,b2,b1)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,b2,a3)-gotGainCalc(g,t,b1,b3)
 					)> minGain)){
-				return 5; //switch with a1
+				return 5;
 			}
 			if(b1 < a2 && (//b1, a2
 					(gotGainCalc(g,t,a1,b1)+gotGainCalc(g,t,a2,b2)
@@ -159,7 +147,7 @@ public class ThreeOpt implements Improver {
 					gotGainCalc(g,t,b1,b2)+gotGainCalc(g,t,a3,b3)
 					-gotGainCalc(g,t,b1,a3)-gotGainCalc(g,t,b2,b3)
 					)> minGain)){
-				return 6; //switch with a2
+				return 6;
 			}
 		}
 		return 0;
@@ -204,10 +192,6 @@ public class ThreeOpt implements Improver {
 			t.switchEdgesNonOpted(a2, b2, a3, b3);
 		}
 	}
-	private short fetchFirstEdge(Tourable t){
-		return (short) (Math.random()*(t.countNodes()/2));
-	}
-	
 	private short fetchEdge(Tourable t)
 	{
 		return (short) (Math.random()*(t.countNodes()-1));
