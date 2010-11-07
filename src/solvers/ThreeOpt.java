@@ -15,7 +15,7 @@ public class ThreeOpt implements Improver {
 	
 	public boolean improve(Graph g, Tourable t)
 	{
-		short a1 = fetchEdge(t), b1 = (short) ((a1+1) % t.countNodes());
+		short a1 = fetchFirstEdge(t), b1 = (short) ((a1+1) % t.countNodes());
 		short a2 = fetchEdge(t), b2,a3 = fetchEdge(t),b3,i,j;
 		
 		for( i=0; i < (t.countNodes()-1)/2; i++, a2 = fetchEdge(t)){
@@ -26,7 +26,7 @@ public class ThreeOpt implements Improver {
 			if(b2 == t.countNodes()){
 				b2 = 0;
 			}
-			for(j=0; j < (t.countNodes()-1)/2; j++, a3 = fetchEdge(t)){
+			for(j=0; j < (t.countNodes()-1)/4; j++, a3 = fetchEdge(t)){
 				if(a3 == a1 || a3 == a2 || a3 == b1 || a3 == b2){
 					break;
 				}
@@ -111,6 +111,9 @@ public class ThreeOpt implements Improver {
 			t.switchEdgesNonOptedWithLeap(a1, b1, a2, b2);
 			t.switchEdgesNonOpted(a2, b2, a3, b3);
 		}
+	}
+	private short fetchFirstEdge(Tourable t){
+		return (short) (Math.random()*(t.countNodes()/2));
 	}
 	
 	private short fetchEdge(Tourable t)

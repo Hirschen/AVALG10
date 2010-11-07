@@ -7,6 +7,9 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
+import solvers.ThreeOpt;
+import solvers.TwoDotFiveOpt;
+import solvers.TwoOpt;
 
 public class Main
 {
@@ -191,12 +194,7 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		Improver imp;
-		/*Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 100; i++)
-		{
-			imp3.improve(g, t);
-		}
-		/** /
+		/*
 		//# of laps
 		int random = 2500000 / t.countNodes();
 		int traverseNeighbours = random*2;
@@ -212,7 +210,7 @@ public class Main
 		{
 			imp2.improve(g, t);
 		}
-		/* * /
+		*/
 
 		imp = new TwoOpt(t.countNodes());
 		for (int i = 0; i < 5; i++)
@@ -225,7 +223,7 @@ public class Main
 			}
 		}
 
-		/* * /
+		/*
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 1; i++)
 		{
@@ -235,8 +233,14 @@ public class Main
 					System.out.println("2.5-opt converged after " + i + " iterations.");
 				break;
 			}
+		}*/
+		
+		Improver imp3 = new ThreeOpt();
+		for (int i = 0; i < 10; i++)
+		{
+			imp3.improve(g, t);
 		}
-		/* * /
+		
 		imp = new TwoOpt(t.countNodes());
 		for (int i = 0; i < 5; i++)
 		{
@@ -247,7 +251,7 @@ public class Main
 				break;
 			}
 		}
-		/* */
+		
 		return t;
 	}
 }
