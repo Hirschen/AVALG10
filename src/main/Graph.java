@@ -13,9 +13,12 @@ public class Graph
 {
 	private final double[][] nodes;
 	private final int[][] edges;
+	private int[][] neighbours;
 
 	private final int nodeCount;
 	private final int edgeCount;
+
+	private int maxCoordinate = 0;
 
 	public Graph(Kattio io)
 	{
@@ -25,11 +28,18 @@ public class Graph
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new int[nodeCount][nodeCount];
 
+		int max = 0;
+
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
 			nodes[a][0] = io.getDouble();
 			nodes[a][1] = io.getDouble();
+
+			if (nodes[a][0] > maxCoordinate)
+				max = (int) nodes[a][0];
+			if (nodes[a][1] > maxCoordinate)
+				max = (int) nodes[a][1];
 
 			// Precalculate edges
 			edges[a][a] = 0;
@@ -40,6 +50,7 @@ public class Graph
 				edges[b][a] = dist;
 			}
 		}
+		maxCoordinate = max;
 	}
 
 	/**
@@ -213,39 +224,82 @@ public class Graph
 	}
 
 	/**
-	 * @param width
-	 * @param height
-	 * @return / public Edge[][] calculateApproximateNeighbours(double width,
-	 *         double height) { if (nodeCount == 1) { return new Edge[][] { new
-	 *         Edge[] { edges[0][0] } }; } int size = (int) Math.max(width,
-	 *         height) / 2; int neighBourThreshold = size + 1;
-	 * 
-	 *         int neighbourCount = nodeCount - 1; if (nodeCount > 100)
-	 *         neighbourCount = 25; else if (nodeCount > 500) neighbourCount =
-	 *         50; else if (nodeCount > 750) neighbourCount = 100;
-	 * 
-	 *         Edge[][] neighbours = new Edge[nodeCount][neighbourCount];
-	 *         System.out.println("Searching for " + neighbours[0].length +
-	 *         " neighbours with distance threshold " + neighBourThreshold);
-	 * 
-	 *         for (short a = 0; a < nodeCount; a++) { int b = (a + 1) %
-	 *         nodeCount; int startB = b; for (int neighbour = 0; neighbour <
-	 *         neighbours[a].length; neighbour++) { // Find a worthy neighbour
-	 *         while (edges[a][b].length > neighBourThreshold || a == b) { b =
-	 *         (b + 1 == nodeCount ? 0 : b + 1);
-	 * 
-	 *         // If we have looked at all nodes, increase the threshold if (b
-	 *         == a) { neighBourThreshold *= 2; if (Main.verbose)
-	 *         System.out.println("Increasing threshold to " +
-	 *         neighBourThreshold + "..."); b = startB; } }
-	 * 
-	 *         // Add this as a neighbour neighbours[a][neighbour] =
-	 *         edges[a][b]; b = (b == nodeCount - 1 ? 0 : b + 1);
-	 * 
-	 *         // If we have looked at all nodes, increase the threshold if (b
-	 *         == a) { neighBourThreshold *= 2; if (Main.verbose)
-	 *         System.out.println("Increasing threshold to " +
-	 *         neighBourThreshold + "..."); b = startB; } } } return neighbours;
-	 *         }
+	 * @param max
+	 * @return
 	 */
+	public int[][] calculateApproximateNeighbours(int max)
+	{
+		if (nodeCount == 1)
+		{
+			return new int[][] { new int[] { edges[0][0] } };
+		}
+
+		int neighBourThreshold = max / 4;
+		int neighbourCount = Math.min(nodeCount, 14);
+
+		int[][] neighbours = new int[nodeCount][neighbourCount];
+		if (Main.verbose)
+			System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
+
+		for (short a = 0; a < nodeCount; a++)
+		{
+			int b = (a + 1) % nodeCount;
+			int startB = b;
+			for (int neighbour = 0; neighbour < neighbours[a].length; neighbour++)
+			{
+				// Find a worthy neighbour
+				while (edges[a][b] > neighBourThreshold || a == b)
+				{
+					b = (b + 1 == nodeCount ? 0 : b + 1);
+
+					// If we have looked at all nodes, increase the threshold
+					if (b == a)
+					{
+						neighBourThreshold *= 2;
+						if (Main.verbose)
+							System.out.println("Increasing threshold to " + neighBourThreshold + "...");
+						b = startB;
+					}
+				}
+
+				// Add this as a neighbour
+				neighbours[a][neighbour] = b;
+				b = (b == nodeCount - 1 ? 0 : b + 1);
+
+				// If we have looked at all nodes, increase the threshold
+				if (b == a)
+				{
+					neighBourThreshold *= 2;
+					if (Main.verbose)
+						System.out.println("Increasing threshold to " + neighBourThreshold + "... .. ");
+					b = startB;
+				}
+			}
+		}
+		return neighbours;
+	}
+
+	/**
+	 * @return the neighbours
+	 */
+	public int[][] getNeighbours()
+	{
+		if (neighbours == null)
+		{
+			neighbours = calculateApproximateNeighbours(maxCoordinate);
+		}
+		return neighbours;
+	}
+
+	/**
+	 * @return the neighbours
+	 */
+	public int[] getNeighbours(int node)
+	{
+		if (neighbours == null)
+		{
+			neighbours = calculateApproximateNeighbours(maxCoordinate);
+		}
+		return neighbours[node];
+	}
 }

@@ -28,9 +28,10 @@ public class TwoDotFiveOpt implements Improver
 	/* (non-Javadoc)
 	 * @see solvers.Improver#improve(main.Graph, main.Tourable)
 	 */
-	@Override
 	public boolean improve(Graph g, Tourable t)
 	{
+		boolean improvement = false;
+
 		// Search through the tour for a 2.5-optimization
 		for (short a = 0; a < t.countNodes(); a++)
 		{
@@ -38,9 +39,11 @@ public class TwoDotFiveOpt implements Improver
 			short t2 = t.getNextNode(a);
 			short t3 = t.getNextNode(a, 2);
 			
+			int[] neighbours = g.getNeighbours(t1);
 			// Find a good edge of t1 to relocate t2 to
-			for (short e1 = 0; e1 < g.countNodes(); e1++)
+			for (short i = 0; i < neighbours.length; i++)
 			{
+				short e1 = (short) neighbours[i];
 				// It shouldn't be any of our selected nodes
 				if (e1 == t1 || e1 == t2 || e1 == t3)
 					continue;
@@ -59,13 +62,15 @@ public class TwoDotFiveOpt implements Improver
 				{
 					if (Main.verbose)
 					{
-						System.out.println("2.5-opt: [" + t1 + "->" + t2 + "->" + t3 + "]+[" + e1 + "->" + e2 + "], len=" + length + " => [" + t1 + "->" + t3 + "]+[" + e1 + "->" + t2 + "->" + e2 + "], len=" + opt);
+						System.out.println("2.5-opt: Wins " + (length - opt));
+						System.out.println("\t[" + t1 + "->" + t2 + "->" + t3 + "]+[" + e1 + "->" + e2 + "], len=" + length + "=> [" + t1 + "->" + t3 + "]+[" + e1 + "->" + t2 + "->" + e2 + "], len=" + opt);
 					}
 					t.moveNode(t2, t.indexOf(e2));
+					improvement = true;
 					return true;
 				}
 			}
 		}
-		return false;
+		return improvement;
 	}
 }

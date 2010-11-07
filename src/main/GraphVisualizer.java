@@ -64,8 +64,6 @@ public class GraphVisualizer extends JPanel
 		*/
 		new Thread(new Runnable()
 		{
-
-			@Override
 			public void run()
 			{
 				while (true)
@@ -109,8 +107,8 @@ public class GraphVisualizer extends JPanel
 
 		this.scale = Math.min((double) (frame.getHeight() - 100) / (double) graphHeight, (double) (frame.getWidth() - 50) / (double) graphWidth);
 		offset = new Point((int) (minX * this.scale), (int) (minY * this.scale));
-		System.out.print("Scale: " + this.scale + " ");
-		System.out.println("Offset: " + offset + " ");
+		// System.out.print("Scale: " + this.scale + " ");
+		// System.out.println("Offset: " + offset + " ");
 	}
 
 	public void setTour(Tourable t)
@@ -170,6 +168,16 @@ public class GraphVisualizer extends JPanel
 				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
 			}
 		}*/
+		int[][] neighbours = graph.getNeighbours();
+		g.setColor(new Color(200, 200, 200));
+		for(int a = 0; a < neighbours.length; a++)
+		{
+			for (int i = 0; i < neighbours[a].length; i++)
+			{
+				int b = neighbours[a][i];
+				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
+			}
+		}
 		// Draw nodes
 		for (int a = 0; a < graph.countNodes(); a++)
 		{

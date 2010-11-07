@@ -275,7 +275,6 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#getNextNode(short)
 	 */
-	@Override
 	public short getNextNode(short a)
 	{
 		int index = a + 1;
@@ -287,7 +286,6 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#getNextNode(short, int)
 	 */
-	@Override
 	public short getNextNode(short a, int i)
 	{
 		int index = (a + i) % addPointer;
@@ -297,7 +295,6 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#indexOf(short)
 	 */
-	@Override
 	public short indexOf(short node)
 	{
 		for (short i = 0; i < addPointer; i++)
@@ -309,15 +306,10 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#moveNode(int, short)
 	 */
-	@Override
 	public void moveNode(short node, short targetIndex)
 	{
 		short currentIndex = indexOf(node);
 
-		if (Main.verbose)
-		{
-			System.out.println("Before moving node " + node + " to position " + targetIndex + ": " + this);
-		}
 
 		if (currentIndex == targetIndex)
 		{
@@ -340,7 +332,5 @@ public class ShortTour implements Tourable
 			nodes[targetIndex] = node;
 		}
 
-		if (Main.verbose)
-			System.out.println("After: " + this);
 	}
 }

@@ -7,7 +7,6 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
-import solvers.TwoOpt;
 
 public class Main
 {
@@ -60,7 +59,7 @@ public class Main
 	{
 		Graph graph = new Graph(io);
 		
-		if (graph.countNodes() <= 15)
+		if (graph.countNodes() <= 9)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -91,6 +90,10 @@ public class Main
 
 		Graph graph = new Graph(io);
 
+		GraphVisualizer gv;
+		if (Main.verbose)
+			gv = new GraphVisualizer(graph);
+
 		graphTime = timeDiff(time(), time);
 		time = time();
 
@@ -107,6 +110,9 @@ public class Main
 		}
 
 		Tourable tour = approximateTour(graph);
+
+		if (Main.verbose)
+			gv.setTour(tour);
 
 		approxTime = timeDiff(time(), time);
 		time = time();
@@ -184,12 +190,13 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
+		Improver imp;
 		/*Improver imp3 = new ThreeOpt();
 		for (int i = 0; i < 100; i++)
 		{
 			imp3.improve(g, t);
 		}
-		/**/
+		/** /
 		//# of laps
 		int random = 2500000 / t.countNodes();
 		int traverseNeighbours = random*2;
@@ -205,10 +212,22 @@ public class Main
 		{
 			imp2.improve(g, t);
 		}
-		/* */
+		/* * /
 
-		/*TwoDotFiveOpt imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 25; i++)
+		imp = new TwoOpt(t.countNodes());
+		for (int i = 0; i < 5; i++)
+		{
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2-opt converged after " + i + " iterations.");
+				break;
+			}
+		}
+
+		/* * /
+		imp = new TwoDotFiveOpt();
+		for (int i = 0; i < 1; i++)
 		{
 			if (!imp.improve(g, t))
 			{
@@ -216,7 +235,19 @@ public class Main
 					System.out.println("2.5-opt converged after " + i + " iterations.");
 				break;
 			}
-		}*/
+		}
+		/* * /
+		imp = new TwoOpt(t.countNodes());
+		for (int i = 0; i < 5; i++)
+		{
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2-opt converged after " + i + " iterations.");
+				break;
+			}
+		}
+		/* */
 		return t;
 	}
 }
