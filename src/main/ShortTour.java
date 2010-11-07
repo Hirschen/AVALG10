@@ -178,6 +178,51 @@ public class ShortTour implements Tourable
 				return true;
 		return false;
 	}
+	/*
+	 * b1 and a2 changes
+	 * (non-Javadoc)
+	 * @see main.Tourable#switchEdgesNonOpted(short, short, short, short)
+	 */
+	public void switchEdgesNonOpted(short a1, short b1, short a2, short b2)
+	{
+		if (b1 < a2)
+		{
+			short tmp = nodes[a2];
+			nodes[a2] = nodes[b1];
+			nodes[b1] = tmp;
+
+			reverseBetweenEdges(b1, a2);
+		}
+		else
+		{
+			short tmp = nodes[a1];
+			nodes[a1] = nodes[b2];
+			nodes[b2] = tmp;
+			reverseBetweenEdges(b2, a1);
+		}
+	}
+	/*
+	 * b1 and a2 changes!
+	 * (non-Javadoc)
+	 * @see main.Tourable#switchEdgesNonOptedWithLeap(short, short, short, short)
+	 */
+	public void switchEdgesNonOptedWithLeap(short a1, short b1, short a2, short b2){
+		if (b1 > a2)
+		{
+			short tmp = nodes[a2];
+			nodes[a2] = nodes[b1];
+			nodes[b1] = tmp;
+
+			reverseBetweenEdgesWithLeap(b1, a2);
+		}
+		else
+		{
+			short tmp = nodes[a1];
+			nodes[a1] = nodes[b2];
+			nodes[b2] = tmp;
+			reverseBetweenEdgesWithLeap(b2, a1);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see main.Tourable#switchEdges(main.Graph, int, int, main.Edge, main.Edge)
@@ -225,11 +270,6 @@ public class ShortTour implements Tourable
 	private void reverseBetweenEdges(short p1, short p2)
 	{
 		short distance = (short) (p2 - p1 - 1), i, j;
-		if (distance < 0)
-		{
-			reverseBetweenEdgesWithLeap(p1, p2);
-			return;
-		}
 		short[] tmp = new short[distance];
 		for (i = (short) (p2 - 1), j = 0; j < distance; i--, j++)
 		{
@@ -245,11 +285,6 @@ public class ShortTour implements Tourable
 	{
 		short distance, i, j;
 		distance = (short) (addPointer - p1 + p2 - 1);
-		if (distance < 0)
-		{
-			reverseBetweenEdges(p1, p2);
-			return;
-		}
 		short[] tmp = new short[distance];
 		// p2 -> 0
 		for (i = (short) (p2 - 1), j = 0; i >= 0; i--, j++)
@@ -261,7 +296,7 @@ public class ShortTour implements Tourable
 		{
 			tmp[j] = nodes[i];
 		}
-		// 
+
 		for (i = (short) (p1 + 1), j = 0; i <= addPointer - 1; i++, j++)
 		{
 			nodes[i] = tmp[j];
