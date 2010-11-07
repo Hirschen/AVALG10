@@ -206,6 +206,17 @@ public class Main
 			imp2.improve(g, t);
 		}
 		/* */
+
+		/*TwoDotFiveOpt imp = new TwoDotFiveOpt();
+		for (int i = 0; i < 25; i++)
+		{
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2.5-opt converged after " + i + " iterations.");
+				break;
+			}
+		}*/
 		return t;
 	}
 }

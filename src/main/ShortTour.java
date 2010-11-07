@@ -271,4 +271,76 @@ public class ShortTour implements Tourable
 			nodes[i] = tmp[j];
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see main.Tourable#getNextNode(short)
+	 */
+	@Override
+	public short getNextNode(short a)
+	{
+		int index = a + 1;
+		if (index == addPointer)
+			index = 0;
+		return nodes[index];
+	}
+
+	/* (non-Javadoc)
+	 * @see main.Tourable#getNextNode(short, int)
+	 */
+	@Override
+	public short getNextNode(short a, int i)
+	{
+		int index = (a + i) % addPointer;
+		return nodes[index];
+	}
+
+	/* (non-Javadoc)
+	 * @see main.Tourable#indexOf(short)
+	 */
+	@Override
+	public short indexOf(short node)
+	{
+		for (short i = 0; i < addPointer; i++)
+			if (nodes[i] == node)
+				return i;
+		return -1;
+	}
+
+	/* (non-Javadoc)
+	 * @see main.Tourable#moveNode(int, short)
+	 */
+	@Override
+	public void moveNode(short node, short targetIndex)
+	{
+		short currentIndex = indexOf(node);
+
+		if (Main.verbose)
+		{
+			System.out.println("Before moving node " + node + " to position " + targetIndex + ": " + this);
+		}
+
+		if (currentIndex == targetIndex)
+		{
+			return;
+		}
+		else if (currentIndex > targetIndex)
+		{
+			for (short i = currentIndex; i > targetIndex; i--)
+			{
+				nodes[i] = nodes[i - 1];
+			}
+			nodes[targetIndex] = node;
+		}
+		else
+		{
+			for (short i = currentIndex; i < targetIndex; i++)
+			{
+				nodes[i] = nodes[i + 1];
+			}
+			nodes[targetIndex] = node;
+		}
+
+		if (Main.verbose)
+			System.out.println("After: " + this);
+	}
 }

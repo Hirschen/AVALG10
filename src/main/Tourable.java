@@ -57,4 +57,29 @@ public interface Tourable extends Iterable<Short>
 
 	void switch2EdgesOpted(short a1, short a2, short b1, short b2);
 
+	/**
+	 * @param a
+	 * @return
+	 */
+	short getNextNode(short a);
+
+	/**
+	 * @param a
+	 * @param i
+	 * @return
+	 */
+	short getNextNode(short a, int i);
+
+	/**
+	 * @param e1
+	 * @return
+	 */
+	short indexOf(short e1);
+
+	/**
+	 * @param node
+	 * @param targetIndex
+	 */
+	void moveNode(short node, short targetIndex);
+
 }

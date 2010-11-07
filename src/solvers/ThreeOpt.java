@@ -13,7 +13,8 @@ public class ThreeOpt implements Improver {
 		minGain = minimumGain;
 	}
 	
-	public void improve(Graph g, Tourable t) {
+	public boolean improve(Graph g, Tourable t)
+	{
 		short a1 = fetchEdge(t), b1 = (short) (a1+1);
 		short a2 = fetchEdge(t), b2,a3 = fetchEdge(t),b3,i,j;
 		
@@ -40,15 +41,16 @@ public class ThreeOpt implements Improver {
 					}
 					if(gain == 1){
 						threeOptbyTwoOpt(1,t,a1,b1,a2,b2,a3,b3);
-						return;
+						return true;
 					}
 					if(gain == 2){
 						threeOptbyTwoOpt(2,t,a1,b1,a2,b2,a3,b3);
-						return;
+						return true;
 					}
 				}
 			}			
 		}
+		return false;
 	}
 		
 	private int gotGain(Graph g, Tourable t, short a1, short b1, short a2,
