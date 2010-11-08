@@ -18,8 +18,6 @@ public class Graph
 	private final int nodeCount;
 	private final int edgeCount;
 
-	private int maxCoordinate = 0;
-
 	public Graph(Kattio io)
 	{
 		nodeCount = io.getInt();
@@ -28,18 +26,11 @@ public class Graph
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new int[nodeCount][nodeCount];
 
-		int max = 0;
-
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
 			nodes[a][0] = io.getDouble();
 			nodes[a][1] = io.getDouble();
-
-			if (nodes[a][0] > maxCoordinate)
-				max = (int) nodes[a][0];
-			if (nodes[a][1] > maxCoordinate)
-				max = (int) nodes[a][1];
 
 			// Precalculate edges
 			edges[a][a] = 0;
@@ -50,7 +41,6 @@ public class Graph
 				edges[b][a] = dist;
 			}
 		}
-		maxCoordinate = max;
 
 		neighbours = calculateNeighbours();
 	}

@@ -5,13 +5,12 @@ import java.io.InputStream;
 
 import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
-import solvers.Improver;
 import solvers.StartApproxer;
-import solvers.ThreeOpt;
 
 public class Main
 {
 	public static final boolean verbose = false;
+	public static final int bruteForceThreshold = (verbose ? 9 : 9);
 	private Kattio io;
 
 	protected double graphTime;
@@ -60,7 +59,7 @@ public class Main
 	{
 		Graph graph = new Graph(io);
 		
-		if (graph.countNodes() <= 15)
+		if (graph.countNodes() <= bruteForceThreshold)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -98,7 +97,7 @@ public class Main
 		graphTime = timeDiff(time(), time);
 		time = time();
 
-		if (graph.countNodes() <= 9)
+		if (graph.countNodes() <= bruteForceThreshold)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -191,8 +190,8 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		Improver imp;
 		/* * /
+		Improver imp;
 		/*  * /
 		imp = new TwoOpt();
 		for (int i = 0; i < 1; i++)
@@ -200,7 +199,7 @@ public class Main
 			imp.improve(g, t);
 		}
 		
-		/* */
+		/* * /
 		Improver imp3 = new ThreeOpt();
 		for (int i = 0; i < 1000; i++)
 		{
