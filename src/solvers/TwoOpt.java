@@ -67,6 +67,7 @@ public class TwoOpt implements Improver
 		{
 			return false;
 		}
+		boolean ret = false;
 		short a1 = fetchFirstEdge(t), b1 = (short) (a1 + 1 % (t.countNodes() - 1));
 		short a2, b2;
 		if (random)
@@ -92,17 +93,24 @@ public class TwoOpt implements Improver
 
 		if (searchSize == -1)
 		{
-			for (a2 = 0; a2 < t.countNodes() - 1; a2++)
-			{
-				b2 = (short) (a2 + 1);
-				if (b2 == t.countNodes())
+			for(a1 = 0; a1 < t.countNodes(); a1++){
+				b1 = (short) (a1+1);
+				if (b1 == t.countNodes())
 				{
-					b2 = 0;
+					b1 = 0;
 				}
-				if (t.getNode(a1) != t.getNode(a2) && gotGain(g, t, a1, b1, a2, b2) && checkFeasbility(a1, b1, a2, b2, t))
+				for (a2 = 0; a2 < t.countNodes(); a2++)
 				{
-					t.switch2EdgesOpted(a1, b1, a2, b2);
-					return true;
+					b2 = (short) (a2 + 1);
+					if (b2 == t.countNodes())
+					{
+						b2 = 0;
+					}
+					if (checkFeasbility(a1, b1, a2, b2, t) && gotGain(g, t, a1, b1, a2, b2) )
+					{
+						t.switch2EdgesOpted(a1, b1, a2, b2);
+						ret = true;
+					}
 				}
 			}
 		}
@@ -120,14 +128,14 @@ public class TwoOpt implements Improver
 					a2 = 0;
 				}
 				b2 = (short) (a2 + 1);
-				if (t.getNode(a1) != t.getNode(a2) && gotGain(g, t, a1, b1, a2, b2) && checkFeasbility(a1, b1, a2, b2, t))
+				if (gotGain(g, t, a1, b1, a2, b2) && checkFeasbility(a1, b1, a2, b2, t))
 				{
 					t.switch2EdgesOpted(a1, b1, a2, b2);
 					return true;
 				}
 			}
 		}
-		return false;
+		return ret;
 	}
 
 	private boolean gotGain(Graph g, Tourable t, short a1, short b1, short a2, short b2)
@@ -138,7 +146,7 @@ public class TwoOpt implements Improver
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
 		int tmp = Math.abs(b1 - a2);
-		if (tmp == 0)
+		if (tmp <= 1)
 		{
 			return false;
 		}
@@ -165,9 +173,9 @@ public class TwoOpt implements Improver
 		System.out.println(g.calculateLength(t));
 		for (int i = 0; i < 1000; i++)
 		{
+			System.out.println(g.calculateLength(t));
 			Thread.sleep(1);
 			imp.improve(g, t);
-			System.out.println(g.calculateLength(t));
 			vis.updateUI();
 		}
 		System.out.println("Length of tour: " + g.calculateLength(t));
