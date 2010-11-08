@@ -13,7 +13,7 @@ public class ShortTour implements Tourable
 	/**
 	 * Contains the nodes of the tour. The order is important!
 	 */
-	private short[] nodes;
+	public short[] nodes;
 	private int addPointer = 0;
 
 	/**
@@ -269,6 +269,9 @@ public class ShortTour implements Tourable
 
 	private void reverseBetweenEdges(short p1, short p2)
 	{
+		if(p1 == p2){
+			return;
+		}
 		short distance = (short) (p2 - p1 - 1), i, j;
 		short[] tmp = new short[distance];
 		for (i = (short) (p2 - 1), j = 0; j < distance; i--, j++)
@@ -341,10 +344,9 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#moveNode(int, short)
 	 */
-	public void moveNode(short node, short targetIndex)
+	public void moveNode(short currentIndex, short targetIndex)
 	{
-		short currentIndex = indexOf(node);
-
+		short node = getNode(currentIndex);
 
 		if (currentIndex == targetIndex)
 		{

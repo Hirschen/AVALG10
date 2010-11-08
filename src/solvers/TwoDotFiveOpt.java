@@ -31,13 +31,13 @@ public class TwoDotFiveOpt implements Improver
 	public boolean improve(Graph g, Tourable t)
 	{
 		boolean improvement = false;
+		int length, opt;
 
 		// Search through the tour for a 2.5-optimization
-		for (short a = 0; a < t.countNodes(); a++)
+		for (short t1 = 0; t1 < t.countNodes(); t1++)
 		{
-			short t1 = t.getNode(a);
-			short t2 = t.getNextNode(a);
-			short t3 = t.getNextNode(a, 2);
+			short t2 = (short) ((t1+1)% t.countNodes());
+			short t3 = (short) ((t2+1)% t.countNodes());
 			
 			// Find a good edge of t1 to relocate t2 to
 			for (short e1 = 0; e1 < t.countNodes(); e1++)
@@ -46,14 +46,14 @@ public class TwoDotFiveOpt implements Improver
 				if (e1 == t1 || e1 == t2 || e1 == t3)
 					continue;
 				
-				short e2 = t.getNextNode(t.indexOf(e1));
+				short e2 = (short) ((e1+1) % t.countNodes());
 
 				// Again, not the selected nodes.
 				if (e2 == t1 || e2 == t2 || e2 == t3)
 					continue;
 
-				int length = g.distance(t1, t2) + g.distance(t2, t3) + g.distance(e1, e2);
-				int opt = g.distance(e2, t2) + g.distance(t2, e1) + g.distance(t1, t3);
+				length = g.distance(t.getNode(t1),t.getNode(t2)) + g.distance(t.getNode(t2), t.getNode(t3)) + g.distance(t.getNode(e1), t.getNode(e2));
+				opt = g.distance(t.getNode(e2), t.getNode(t2)) + g.distance(t.getNode(t2), t.getNode(e1)) + g.distance(t.getNode(t1), t.getNode(t3));
 
 				// Is the relocation good?
 				if (opt < length)
@@ -63,8 +63,9 @@ public class TwoDotFiveOpt implements Improver
 						System.out.println("2.5-opt: Wins " + (length - opt));
 						System.out.println("\t[" + t1 + "->" + t2 + "->" + t3 + "]+[" + e1 + "->" + e2 + "], len=" + length + "=> [" + t1 + "->" + t3 + "]+[" + e1 + "->" + t2 + "->" + e2 + "], len=" + opt);
 					}
-					t.moveNode(t2, t.indexOf(e2));
+					t.moveNode(t2, e2);
 					improvement = true;
+					break;
 				}
 			}
 		}
