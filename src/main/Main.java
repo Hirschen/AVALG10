@@ -6,9 +6,10 @@ import java.io.InputStream;
 import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
-import solvers.NaiveSolver;
 import solvers.StartApproxer;
+import solvers.ThreeOpt;
 import solvers.TwoDotFiveOpt;
+import solvers.TwoOpt;
 
 public class Main
 {
