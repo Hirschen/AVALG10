@@ -131,7 +131,7 @@ public class Benchmark
 					score += Math.pow(0.02, x);
 					System.out.print('.');
 				}
-				sum += score / runs;
+				sum += (score / runs);
 				totalGraphTime += graphTime / runs;
 				totalApproxTime += approxTime / runs;
 				totalImproveTime += improveTime / runs;

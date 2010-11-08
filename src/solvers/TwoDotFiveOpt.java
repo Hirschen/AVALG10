@@ -39,11 +39,9 @@ public class TwoDotFiveOpt implements Improver
 			short t2 = t.getNextNode(a);
 			short t3 = t.getNextNode(a, 2);
 			
-			int[] neighbours = g.getNeighbours(t1);
 			// Find a good edge of t1 to relocate t2 to
-			for (short i = 0; i < neighbours.length; i++)
+			for (short e1 = 0; e1 < t.countNodes(); e1++)
 			{
-				short e1 = (short) neighbours[i];
 				// It shouldn't be any of our selected nodes
 				if (e1 == t1 || e1 == t2 || e1 == t3)
 					continue;
@@ -67,7 +65,6 @@ public class TwoDotFiveOpt implements Improver
 					}
 					t.moveNode(t2, t.indexOf(e2));
 					improvement = true;
-					return true;
 				}
 			}
 		}

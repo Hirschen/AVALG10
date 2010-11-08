@@ -7,8 +7,7 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
-import solvers.ThreeOpt;
-import solvers.TwoOpt;
+import solvers.TwoDotFiveOpt;
 
 public class Main
 {
@@ -99,7 +98,7 @@ public class Main
 		graphTime = timeDiff(time(), time);
 		time = time();
 
-		if (graph.countNodes() <= 15)
+		if (graph.countNodes() <= 9)
 		{
 			StartApproxer solver = new BruteForceOptimal();
 			Tourable tour = solver.getTour(graph);
@@ -193,6 +192,7 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		Improver imp;
+		/* * /
 		//# of laps
 		int runs = (int) (4 * (100000 / t.countNodes()));
 		imp = new TwoOpt(t.countNodes());
@@ -212,7 +212,7 @@ public class Main
 		{
 			imp.improve(g, t);
 		}
-		/*  * /
+		/*  */
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 1; i++)
 		{
