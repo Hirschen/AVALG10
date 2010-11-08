@@ -13,7 +13,7 @@ public class Graph
 {
 	private final double[][] nodes;
 	private final int[][] edges;
-	private int[][] neighbours;
+	private short[][] neighbours;
 
 	private final int nodeCount;
 	private final int edgeCount;
@@ -226,15 +226,15 @@ public class Graph
 		return sum;
 	}
 
-	protected int[][] calculateNeighbours()
+	protected short[][] calculateNeighbours()
 	{
 		final int neighbourCount = 14;
-		int[][] neighbours = new int[nodeCount][neighbourCount];
+		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
 		{
 			boolean[] visited = new boolean[nodeCount];
-			neighbours[a] = new int[nodeCount];
+			neighbours[a] = new short[neighbourCount];
 			for (short i = 0; i < neighbourCount; i++)
 			{
 				// Find the closest neighbour linearly
@@ -322,11 +322,11 @@ public class Graph
 	/**
 	 * @return the neighbours
 	 */
-	public int[][] getNeighbours()
+	public short[][] getNeighbours()
 	{
 		if (neighbours == null)
 		{
-			neighbours = calculateApproximateNeighbours(maxCoordinate);
+			neighbours = calculateNeighbours();
 		}
 		return neighbours;
 	}
@@ -334,11 +334,11 @@ public class Graph
 	/**
 	 * @return the neighbours
 	 */
-	public int[] getNeighbours(int node)
+	public short[] getNeighbours(int node)
 	{
 		if (neighbours == null)
 		{
-			neighbours = calculateApproximateNeighbours(maxCoordinate);
+			neighbours = calculateNeighbours();
 		}
 		return neighbours[node];
 	}
