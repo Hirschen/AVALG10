@@ -51,6 +51,8 @@ public class Graph
 			}
 		}
 		maxCoordinate = max;
+
+		neighbours = calculateNeighbours();
 	}
 
 	/**
@@ -80,6 +82,7 @@ public class Graph
 				edges[b][a] = dist;
 			}
 		}
+		neighbours = calculateNeighbours();
 	}
 
 	/**
@@ -223,6 +226,42 @@ public class Graph
 		return sum;
 	}
 
+	protected int[][] calculateNeighbours()
+	{
+		final int neighbourCount = 14;
+		int[][] neighbours = new int[nodeCount][neighbourCount];
+
+		for (short a = 0; a < nodeCount; a++)
+		{
+			boolean[] visited = new boolean[nodeCount];
+			neighbours[a] = new int[nodeCount];
+			for (short i = 0; i < neighbourCount; i++)
+			{
+				// Find the closest neighbour linearly
+				short minNode = 0;
+				int minDist = 0;
+				for (short b = 1; b < nodeCount; b++)
+				{
+					if (visited[b])
+						continue;
+
+					int d = distance(minNode, b);
+					if (d < minDist)
+					{
+						minDist = d;
+						minNode = b;
+					}
+				}
+				
+				visited[minNode] = true;
+				neighbours[a][i] = minNode;
+			}
+			Arrays.sort(neighbours[a]);
+		}
+
+		return neighbours;
+	}
+
 	/**
 	 * @param max
 	 * @return
@@ -251,6 +290,7 @@ public class Graph
 				while (edges[a][b] > neighBourThreshold || a == b)
 				{
 					b = (b + 1 == nodeCount ? 0 : b + 1);
+
 
 					// If we have looked at all nodes, increase the threshold
 					if (b == a)

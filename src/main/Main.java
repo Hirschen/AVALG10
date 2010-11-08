@@ -8,8 +8,6 @@ import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
 import solvers.ThreeOpt;
-import solvers.TwoDotFiveOpt;
-import solvers.TwoOpt;
 
 public class Main
 {
@@ -195,7 +193,7 @@ public class Main
 	{
 		Improver imp;
 		/* * /
-		/*  */
+		/*  * /
 		imp = new TwoOpt();
 		for (int i = 0; i < 1; i++)
 		{
@@ -236,7 +234,7 @@ public class Main
 		{
 			imp.improve(g, t);
 		}
-		/*  */
+		/*  * /
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 1; i++)
 		{

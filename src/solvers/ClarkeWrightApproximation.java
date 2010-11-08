@@ -3,6 +3,7 @@ package solvers;
 import java.util.Random;
 
 import main.Graph;
+import main.GraphVisualizer;
 import main.Main;
 import main.ShortTour;
 import main.Tourable;
@@ -53,7 +54,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		if (Main.verbose)
 		{
-			// new GraphVisualizer(graph).setTourConstruction(tour);
+			new GraphVisualizer(graph).setTourConstruction(tour);
 			System.out.println("Hub node: " + hubNode);
 		}
 
