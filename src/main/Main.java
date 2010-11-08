@@ -6,6 +6,7 @@ import java.io.InputStream;
 import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
+import solvers.NaiveSolver;
 import solvers.StartApproxer;
 import solvers.TwoDotFiveOpt;
 
@@ -193,20 +194,42 @@ public class Main
 	{
 		Improver imp;
 		/* * /
+		/*  */
+		imp = new TwoOpt();
+		for (int i = 0; i < 1; i++)
+		{
+			imp.improve(g, t);
+		}
+		
+		/* */
+		Improver imp3 = new ThreeOpt();
+		for (int i = 0; i < 1000; i++)
+		{
+			imp3.improve(g, t);
+		}
+		/* * /
+		imp = new TwoOpt(t.countNodes());
+		((TwoOpt) imp).setRandom(true);
+		for (int i = 0; i < 500; i++)
+		{
+			imp.improve(g, t);
+		}
+		
+		/*  * /
 		//# of laps
-		int runs = (int) (4 * (100000 / t.countNodes()));
+		int runs = (int) (2000000 / t.countNodes());
 		imp = new TwoOpt(t.countNodes());
 		((TwoOpt) imp).setRandom(true);
 		for (int i = 0; i < runs; i++)
 		{
 			imp.improve(g, t);
 		}
+		
 		Improver imp3 = new ThreeOpt();
 		for (int i = 0; i < 400; i++)
 		{
 			imp3.improve(g, t);
 		}
-
 		imp = new TwoOpt(t.countNodes());
 		for (int i = 0; i < runs / 32; i++)
 		{
