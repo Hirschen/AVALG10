@@ -205,7 +205,7 @@ public class Main
 			imp.improve(g, t);
 		}
 		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			imp3.improve(g, t);
 		}
