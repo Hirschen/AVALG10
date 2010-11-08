@@ -168,7 +168,7 @@ public class GraphVisualizer extends JPanel
 				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
 			}
 		}*/
-		int[][] neighbours = graph.getNeighbours();
+		/*int[][] neighbours = graph.getNeighbours();
 		g.setColor(new Color(200, 200, 200));
 		for(int a = 0; a < neighbours.length; a++)
 		{
@@ -177,7 +177,7 @@ public class GraphVisualizer extends JPanel
 				int b = neighbours[a][i];
 				g.drawLine((int) (graph.getX(a) * scale), (int) (graph.getY(a) * scale), (int) (graph.getX(b) * scale), (int) (graph.getY(b) * scale));
 			}
-		}
+		}*/
 		// Draw nodes
 		for (int a = 0; a < graph.countNodes(); a++)
 		{

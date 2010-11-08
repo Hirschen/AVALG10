@@ -193,29 +193,26 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		Improver imp;
-		/**/
 		//# of laps
-		int random = 2500000 / t.countNodes();
-		int traverseNeighbours = random*2;
-		
+		int runs = (int) (4 * (100000 / t.countNodes()));
 		imp = new TwoOpt(t.countNodes());
 		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < random; i++)
+		for (int i = 0; i < runs; i++)
 		{
 			imp.improve(g, t);
 		}
 		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 400; i++)
 		{
 			imp3.improve(g, t);
 		}
-		((TwoOpt) imp).setRandom(false);
-		for (int i = 0; i < traverseNeighbours; i++)
+
+		imp = new TwoOpt(t.countNodes());
+		for (int i = 0; i < runs / 32; i++)
 		{
 			imp.improve(g, t);
 		}
-		/* */
-		/* * /
+		/*  * /
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 1; i++)
 		{
@@ -227,6 +224,7 @@ public class Main
 			}
 		}
 		/* */
+		
 		return t;
 	}
 }
