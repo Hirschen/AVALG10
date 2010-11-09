@@ -2,6 +2,7 @@ package solvers;
 
 import main.Graph;
 import main.GraphVisualizer;
+import main.Main;
 import main.Tourable;
 
 public class TwoOpt implements Improver
@@ -110,6 +111,8 @@ public class TwoOpt implements Improver
 					if (checkFeasbility(a1, b1, a2, b2, t) && gotGain(g, t, a1, b1, a2, b2) )
 					{
 						t.switch2EdgesOpted(a1, b1, a2, b2);
+						if (Main.verbose)
+							System.out.println("Switch " + a1 + " " + b1+ " " + a2 + " " + b2);
 						ret = true;
 					}
 				}
@@ -147,7 +150,7 @@ public class TwoOpt implements Improver
 	private boolean checkFeasbility(short a1, short b1, short a2, short b2, Tourable t)
 	{
 		int tmp = Math.abs(b1 - a2);
-		if (tmp <= 1)
+		if (tmp <= 1 || a1 == a2)
 		{
 			return false;
 		}

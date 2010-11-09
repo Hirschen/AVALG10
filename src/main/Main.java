@@ -197,7 +197,7 @@ public class Main
 	{
 		/* */
 		Improver imp = new TwoOpt(), imp2 = new TwoDotFiveOpt(), imp3 = new ThreeOpt();
-		/* */
+		/* * /
 		for(int k = 0; k < 20;k++){
 			
 			imp.improve(g, t);
@@ -207,10 +207,10 @@ public class Main
 			imp3.improve(g, t);
 		}
 			
-		/* * /
+		/* */
 		imp = new TwoOpt();
 		for (int i = 0; i < 10; i++)
-		Improver imp;
+		//Improver imp;
 
 		imp = new TwoOpt();
 		for (int i = 0; true; i++)
@@ -220,6 +220,12 @@ public class Main
 				if (Main.verbose)
 					System.out.println("2-opt converged after " + i + " iterations.");
 				break;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -234,10 +240,15 @@ public class Main
 			}
 		}
 		
-		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 10; i++)
+		imp3 = new ThreeOpt();
+		for (int i = 0;true; i++)
 		{
-			imp3.improve(g, t);
+			if (!imp3.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("3-opt converged after " + i + " iterations.");
+				break;
+			}
 		}
 		
 		/*  * /
