@@ -87,4 +87,6 @@ public interface Tourable extends Iterable<Short>
 
 	void switchEdgesNonOpted(short a1, short b1, short a3, short b3);
 
+	short[] getNodes();
+
 }
