@@ -152,6 +152,11 @@ public class Main
 			visited[node] = true;
 		}
 		
+		if (Main.verbose)
+		{
+			System.out.println("Tour length: " + graph.calculateLength(tour));
+		}
+
 		return tour;
 	}
 
@@ -195,7 +200,7 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		for (int j = 0; j < 2; j++)
+		for (int iterations = 0; iterations < 20; iterations++)
 		{
 			Improver imp = new TwoOpt();
 			for (int i = 0; true; i++)
@@ -228,43 +233,6 @@ public class Main
 				}
 			}
 		}
-		
-		/*  * /
-		//# of laps
-		int runs = (int) (2000000 / t.countNodes());
-		imp = new TwoOpt(t.countNodes());
-		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < runs; i++)
-		{
-			imp.improve(g, t);
-		}
-		
-		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 400; i++)
-		{
-			imp3.improve(g, t);
-		}
-		imp = new TwoOpt(t.countNodes());
-		for (int i = 0; i < runs / 32; i++)
-		{
-			imp.improve(g, t);
-		}
-		/*  * /
-		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 10; i++)
-		
-		imp = new ThreeOpt();
-		for (int i = 0; true; i++)
-		{
-			if (!imp.improve(g, t))
-			{
-				if (Main.verbose)
-					System.out.println("3-opt converged after " + i + " iterations.");
-				break;
-			}
-		}
-		
-		/* */
 		
 		return t;
 	}
