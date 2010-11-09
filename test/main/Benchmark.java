@@ -51,7 +51,7 @@ public class Benchmark
 		{
 			try
 			{
-				int runs = 10;
+				int runs = 1;
 				double score = 0;
 				double graphTime = 0;
 				double approxTime = 0;

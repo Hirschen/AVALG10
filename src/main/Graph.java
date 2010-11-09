@@ -18,8 +18,6 @@ public class Graph
 	private final int nodeCount;
 	private final int edgeCount;
 
-	private int maxCoordinate = 0;
-
 	public Graph(Kattio io)
 	{
 		nodeCount = io.getInt();
@@ -28,18 +26,11 @@ public class Graph
 		edgeCount = (nodeCount * (nodeCount - 1)) / 2;
 		edges = new int[nodeCount][nodeCount];
 
-		int max = 0;
-
 		// Read and store nodes
 		for (short a = 0; a < nodeCount; a++)
 		{
 			nodes[a][0] = io.getDouble();
 			nodes[a][1] = io.getDouble();
-
-			if (nodes[a][0] > maxCoordinate)
-				max = (int) nodes[a][0];
-			if (nodes[a][1] > maxCoordinate)
-				max = (int) nodes[a][1];
 
 			// Precalculate edges
 			edges[a][a] = 0;
@@ -50,7 +41,6 @@ public class Graph
 				edges[b][a] = dist;
 			}
 		}
-		maxCoordinate = max;
 
 		neighbours = calculateNeighbours();
 	}
@@ -228,7 +218,7 @@ public class Graph
 
 	protected short[][] calculateNeighbours()
 	{
-		final int neighbourCount = 14;
+		final int neighbourCount = 20;
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
@@ -238,14 +228,16 @@ public class Graph
 			for (short i = 0; i < neighbourCount; i++)
 			{
 				// Find the closest neighbour linearly
-				short minNode = 0;
-				int minDist = 0;
-				for (short b = 1; b < nodeCount; b++)
+				short minNode = -1;
+				int minDist = Integer.MAX_VALUE;
+				for (short b = 0; b < nodeCount; b++)
 				{
 					if (visited[b])
 						continue;
+					if (a == b)
+						continue;
 
-					int d = distance(minNode, b);
+					int d = distance(a, b);
 					if (d < minDist)
 					{
 						minDist = d;
@@ -253,10 +245,14 @@ public class Graph
 					}
 				}
 				
+				if (minNode == -1)
+					throw new RuntimeException("Elände!");
+
 				visited[minNode] = true;
 				neighbours[a][i] = minNode;
 			}
-			Arrays.sort(neighbours[a]);
+
+			// TODO: Sort!
 		}
 
 		return neighbours;
