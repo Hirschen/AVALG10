@@ -99,8 +99,10 @@ public class TwoOpt implements Improver
 				{
 					b1 = 0;
 				}
-				for (a2 = 0; a2 < t.countNodes(); a2++)
+				short[] neigh = g.getNeighbours(t.getNode(a1));
+				for (int i = 0;i < neigh.length; i++)
 				{
+					a2 = t.indexOf(neigh[i]);
 					b2 = (short) (a2 + 1);
 					if (b2 == t.countNodes())
 					{
@@ -161,11 +163,11 @@ public class TwoOpt implements Improver
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15}, {25,25}, {20,20}, {23,23} };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15}, {25,25}, {20,20}, {23,23},  { 24, 1 }, {4,23},{5,6},{12,12},{1,30}, {25,4},{15,11},{17,15}, {20,25}, {19,21}, {25,23}  };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
-		StartApproxer sa = new NaiveSolver();
+		StartApproxer sa = new ClarkeWrightApproximation();
 		Tourable t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt();

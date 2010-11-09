@@ -5,7 +5,7 @@ import main.GraphVisualizer;
 import main.Tourable;
 
 public class ThreeOpt implements Improver {
-	private short minGain = 0;
+	private short minGain = 1;
 
 	public ThreeOpt(){}
 	
@@ -156,7 +156,7 @@ public class ThreeOpt implements Improver {
 	private boolean checkFeasibility(Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
 		int tmp = Math.abs(a1-a2), tmp2 = Math.abs(a2-a3), tmp3 = Math.abs(a1-a3);
 		
-		if(tmp <= 1 || tmp2 <= 1 || tmp3 <= 1){
+		if(tmp <= 0 || tmp2 <= 0 || tmp3 <= 0){
 			return false;
 		}
 		return true;
@@ -195,7 +195,7 @@ public class ThreeOpt implements Improver {
 	public static void main(String[] args) throws InterruptedException
 	{
 		/* Simple graph */
-		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15}, {25,25}, {20,20}, {23,23} };
+		double[][] coords = new double[][] { { 0, 3 }, { 3, 0 }, { 4, 3 }, { 3, 10 }, { 10, 3 }, { 25, 4 }, { 10, 10 }, { 25, 11 }, {12,23},{8,6},{1,1},{10,5}, {25,1},{16,11},{15,15}, {25,25}, {20,20}, {23,23},  { 24, 1 }, {4,23},{5,6},{12,12},{1,30}, {25,4},{15,11},{17,15}, {20,25}, {19,21}, {25,23}  };
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 		StartApproxer sa = new NaiveSolver();
@@ -205,8 +205,9 @@ public class ThreeOpt implements Improver {
 		System.out.println(g.calculateLength(t));
 		for(int i = 0; i < 1000; i++){
 			Thread.sleep(1);
-			imp.improve(g, t);
-			System.out.println(g.calculateLength(t));
+			if(imp.improve(g, t)){
+				System.out.println(g.calculateLength(t));
+			}
 			vis.updateUI();
 		}
 		System.out.println("Length of tour: "+g.calculateLength(t));

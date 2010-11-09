@@ -14,6 +14,7 @@ public class ShortTour implements Tourable
 	 * Contains the nodes of the tour. The order is important!
 	 */
 	private short[] nodes;
+	private short[] reverse;
 	private int addPointer = 0;
 
 	/**
@@ -24,19 +25,27 @@ public class ShortTour implements Tourable
 		nodes = new short[size];
 		for (int i = 0; i < nodes.length; i++)
 			nodes[i] = -1;
+		
+		reverse = new short[size];
+		for (int i = 0; i < reverse.length; i++)
+			reverse[i] = -1;
 	}
 
 	public ShortTour(int[] tour)
 	{
 		nodes = new short[tour.length];
-		for (int i = 0; i < tour.length; i++)
+		reverse = new short[tour.length+1];
+		for (short i = 0; i < tour.length; i++){
 			nodes[i] = (short) tour[i];
+			reverse[tour[i]] = i;
+		}
 		addPointer = tour.length;
 	}
 
 	/**
-	 * @param t
+	 * @param t //TODO - not garantued working
 	 */
+	@Deprecated
 	public ShortTour(int size, Tourable t)
 	{
 		nodes = new short[size];
@@ -61,6 +70,7 @@ public class ShortTour implements Tourable
 	 */
 	public void addNode(short node)
 	{
+		reverse[node] = (short) addPointer;
 		nodes[addPointer++] = node;
 	}
 
@@ -70,6 +80,7 @@ public class ShortTour implements Tourable
 	public void setNode(int position, short node)
 	{
 		nodes[position] = node;
+		reverse[node] = (short) position;
 
 		if (position >= addPointer)
 			addPointer = position + 1;
@@ -114,9 +125,11 @@ public class ShortTour implements Tourable
 
 		public void remove()
 		{
-			for (int i = pointer + 1; i < nodes.length; i++)
+			for (short i = (short) (pointer + 1); i < nodes.length; i++){
 				nodes[i - 1] = nodes[i];
-
+				reverse[i-1] = reverse[i];
+			}
+			reverse[nodes.length-1] = -1;
 			nodes[nodes.length - 1] = -1;
 		}
 	}
@@ -157,13 +170,15 @@ public class ShortTour implements Tourable
 	/* (non-Javadoc)
 	 * @see main.Tourable#addEdge(main.Edge)
 	 */
+	@Deprecated
 	public void addEdge(Edge e)
 	{
-		if (nodes[addPointer - 1] != e.nodeA)
+		if (nodes[addPointer - 1] != e.nodeA){
 			nodes[addPointer++] = e.nodeA;
-
-		if (nodes[addPointer - 1] != e.nodeB)
+		}
+		if (nodes[addPointer - 1] != e.nodeB){
 			nodes[addPointer++] = e.nodeB;
+		}
 		else
 			throw new RuntimeException("Tried to add the edge " + e + " which could not fit in tour " + this + ".");
 	}
@@ -187,7 +202,11 @@ public class ShortTour implements Tourable
 	{
 		if (b1 < a2)
 		{
-			short tmp = nodes[a2];
+			short tmp = reverse[nodes[a2]];
+			reverse[nodes[a2]] = reverse[nodes[b1]];
+			reverse[nodes[b1]] = tmp;
+			
+			tmp = nodes[a2];
 			nodes[a2] = nodes[b1];
 			nodes[b1] = tmp;
 
@@ -195,7 +214,11 @@ public class ShortTour implements Tourable
 		}
 		else
 		{
-			short tmp = nodes[a1];
+			short tmp = reverse[nodes[a1]];
+			reverse[nodes[a1]] = reverse[nodes[b2]];
+			reverse[nodes[b2]] = tmp;
+			
+			tmp = nodes[a1];
 			nodes[a1] = nodes[b2];
 			nodes[b2] = tmp;
 			reverseBetweenEdges(b2, a1);
@@ -209,7 +232,11 @@ public class ShortTour implements Tourable
 	public void switchEdgesNonOptedWithLeap(short a1, short b1, short a2, short b2){
 		if (b1 > a2)
 		{
-			short tmp = nodes[a2];
+			short tmp = reverse[nodes[a2]];
+			reverse[nodes[a2]] = reverse[nodes[b1]];
+			reverse[nodes[b1]] = tmp;
+			
+			tmp = nodes[a2];
 			nodes[a2] = nodes[b1];
 			nodes[b1] = tmp;
 
@@ -217,7 +244,11 @@ public class ShortTour implements Tourable
 		}
 		else
 		{
-			short tmp = nodes[a1];
+			short tmp = reverse[nodes[a1]];
+			reverse[nodes[a1]] = reverse[nodes[b2]];
+			reverse[nodes[b2]] = tmp;
+			
+			tmp = nodes[a1];
 			nodes[a1] = nodes[b2];
 			nodes[b2] = tmp;
 			reverseBetweenEdgesWithLeap(b2, a1);
@@ -233,7 +264,11 @@ public class ShortTour implements Tourable
 		{
 			if (b1 < a2)
 			{
-				short tmp = nodes[a2];
+				short tmp = reverse[nodes[a2]];
+				reverse[nodes[a2]] = reverse[nodes[b1]];
+				reverse[nodes[b1]] = tmp;
+				
+				tmp = nodes[a2];
 				nodes[a2] = nodes[b1];
 				nodes[b1] = tmp;
 
@@ -241,7 +276,11 @@ public class ShortTour implements Tourable
 			}
 			else
 			{
-				short tmp = nodes[a1];
+				short tmp = reverse[nodes[a1]];
+				reverse[nodes[a1]] = reverse[nodes[b2]];
+				reverse[nodes[b2]] = tmp;
+				
+				tmp = nodes[a1];
 				nodes[a1] = nodes[b2];
 				nodes[b2] = tmp;
 				reverseBetweenEdges(b2, a1);
@@ -251,7 +290,11 @@ public class ShortTour implements Tourable
 		{
 			if (b1 > a2)
 			{
-				short tmp = nodes[a2];
+				short tmp = reverse[nodes[a2]];
+				reverse[nodes[a2]] = reverse[nodes[b1]];
+				reverse[nodes[b1]] = tmp;
+				
+				tmp = nodes[a2];
 				nodes[a2] = nodes[b1];
 				nodes[b1] = tmp;
 
@@ -259,7 +302,11 @@ public class ShortTour implements Tourable
 			}
 			else
 			{
-				short tmp = nodes[a1];
+				short tmp = reverse[nodes[a1]];
+				reverse[nodes[a1]] = reverse[nodes[b2]];
+				reverse[nodes[b2]] = tmp;
+				
+				tmp = nodes[a1];
 				nodes[a1] = nodes[b2];
 				nodes[b2] = tmp;
 				reverseBetweenEdgesWithLeap(b2, a1);
@@ -269,15 +316,22 @@ public class ShortTour implements Tourable
 
 	private void reverseBetweenEdges(short p1, short p2)
 	{
+		if(p1 == p2){
+			return;
+		}
 		short distance = (short) (p2 - p1 - 1), i, j;
 		short[] tmp = new short[distance];
+		short[] tmp2 = new short[distance];
 		for (i = (short) (p2 - 1), j = 0; j < distance; i--, j++)
 		{
 			tmp[j] = nodes[i];
+			tmp2[j] = reverse[nodes[i]];
 		}
 		for (j = 0; j < distance; i++, j++)
 		{
+			reverse[nodes[i+1]] = tmp2[j];
 			nodes[i + 1] = tmp[j];
+			
 		}
 	}
 
@@ -286,24 +340,29 @@ public class ShortTour implements Tourable
 		short distance, i, j;
 		distance = (short) (addPointer - p1 + p2 - 1);
 		short[] tmp = new short[distance];
+		short[] tmp2 = new short[distance];
 		// p2 -> 0
 		for (i = (short) (p2 - 1), j = 0; i >= 0; i--, j++)
 		{
 			tmp[j] = nodes[i];
+			tmp2[j] = reverse[nodes[i]];
 		}
 		// size -> p1
 		for (i = (short) (addPointer - 1); j < distance; i--, j++)
 		{
 			tmp[j] = nodes[i];
+			tmp2[j] = reverse[nodes[i]];
 		}
 
 		for (i = (short) (p1 + 1), j = 0; i <= addPointer - 1; i++, j++)
 		{
 			nodes[i] = tmp[j];
+			reverse[nodes[i]] = tmp2[j];
 		}
 		for (i = 0; j < distance; i++, j++)
 		{
 			nodes[i] = tmp[j];
+			reverse[nodes[i]] = tmp2[j];
 		}
 	}
 
@@ -332,19 +391,15 @@ public class ShortTour implements Tourable
 	 */
 	public short indexOf(short node)
 	{
-		for (short i = 0; i < addPointer; i++)
-			if (nodes[i] == node)
-				return i;
-		return -1;
+		return reverse[node];
 	}
 
 	/* (non-Javadoc)
 	 * @see main.Tourable#moveNode(int, short)
 	 */
-	public void moveNode(short node, short targetIndex)
+	public void moveNode(short currentIndex, short targetIndex)
 	{
-		short currentIndex = indexOf(node);
-
+		short node = getNode(currentIndex);
 
 		if (currentIndex == targetIndex)
 		{
@@ -355,7 +410,9 @@ public class ShortTour implements Tourable
 			for (short i = currentIndex; i > targetIndex; i--)
 			{
 				nodes[i] = nodes[i - 1];
+				reverse[nodes[i]] = reverse[nodes[i-1]];
 			}
+			reverse[node] = targetIndex;
 			nodes[targetIndex] = node;
 		}
 		else
@@ -363,9 +420,10 @@ public class ShortTour implements Tourable
 			for (short i = currentIndex; i < targetIndex; i++)
 			{
 				nodes[i] = nodes[i + 1];
+				reverse[nodes[i]] = reverse[i+1];
 			}
+			reverse[node] = targetIndex;
 			nodes[targetIndex] = node;
 		}
-
 	}
 }

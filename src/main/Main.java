@@ -5,7 +5,10 @@ import java.io.InputStream;
 
 import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
+import solvers.Improver;
 import solvers.StartApproxer;
+import solvers.TwoDotFiveOpt;
+import solvers.TwoOpt;
 
 public class Main
 {
@@ -192,25 +195,36 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		/* * /
+		/* */
 		Improver imp;
-		/*  * /
+		/* */
 		imp = new TwoOpt();
 		for (int i = 0; i < 1; i++)
 		{
 			imp.improve(g, t);
 		}
 		
+		imp = new TwoDotFiveOpt();
+		for (int i = 0; i < 2; i++)
+		{
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2.5-opt converged after " + i + " iterations.");
+				break;
+			}
+		}
+		
 		/* * /
 		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			imp3.improve(g, t);
 		}
 		/* * /
-		imp = new TwoOpt(t.countNodes());
+		imp = new TwoOpt();
 		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < 500; i++)
+		for (int i = 0; i < 300; i++)
 		{
 			imp.improve(g, t);
 		}
@@ -235,9 +249,9 @@ public class Main
 		{
 			imp.improve(g, t);
 		}
-		/*  * /
+		/*  */
 		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			if (!imp.improve(g, t))
 			{
@@ -246,6 +260,7 @@ public class Main
 				break;
 			}
 		}
+		
 		/* */
 		
 		return t;

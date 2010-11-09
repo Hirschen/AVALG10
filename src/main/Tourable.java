@@ -52,7 +52,8 @@ public interface Tourable extends Iterable<Short>
 	 * @see java.lang.Object#toString()
 	 */
 	String toString();
-
+	
+	@Deprecated
 	void addEdge(Edge e);
 
 	void switch2EdgesOpted(short a1, short a2, short b1, short b2);

@@ -54,7 +54,7 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		if (Main.verbose)
 		{
-			new GraphVisualizer(graph).setTourConstruction(tour);
+			//new GraphVisualizer(graph).setTourConstruction(tour);
 			System.out.println("Hub node: " + hubNode);
 		}
 
