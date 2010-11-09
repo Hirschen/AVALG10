@@ -221,12 +221,6 @@ public class Main
 					System.out.println("2-opt converged after " + i + " iterations.");
 				break;
 			}
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		imp = new TwoDotFiveOpt();
