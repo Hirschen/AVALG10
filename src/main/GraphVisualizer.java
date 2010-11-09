@@ -26,6 +26,23 @@ public class GraphVisualizer extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 
+	private static GraphVisualizer instance;
+
+	public static GraphVisualizer getGraphVisualizer(Graph g, Tourable t)
+	{
+		if (instance == null)
+		{
+			instance = new GraphVisualizer(g);
+		}
+		else
+		{
+			instance.setGraph(g);
+		}
+
+		instance.setTour(t);
+		return instance;
+	}
+
 	private JFrame frame;
 
 	private Graph graph;
@@ -36,32 +53,16 @@ public class GraphVisualizer extends JPanel
 
 	private Point offset = new Point(0, 0);
 
-	public GraphVisualizer(Graph g)
-	{
-		this(g, 10);
-	}
-
 	/**
 	 * 
 	 */
-	public GraphVisualizer(Graph g, double scale)
+	private GraphVisualizer(Graph g)
 	{
 		graph = g;
-		this.scale = scale;
 		createFrame();
 
 		resize();
 
-		/*
-				int fw = frame.getWidth();
-				int fh = frame.getHeight() + 100;
-				if (maxX + 40 > fw || maxY + 40 > fh)
-				{
-					this.setMinimumSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-					this.setPreferredSize(new Dimension(Math.max(fw, maxX + 40), Math.max(fh, maxY + 40)));
-					frame.pack();
-				}
-		*/
 		new Thread(new Runnable()
 		{
 			public void run()
@@ -71,7 +72,7 @@ public class GraphVisualizer extends JPanel
 					repaint();
 					try
 					{
-						Thread.sleep(500);
+						Thread.sleep(30);
 					}
 					catch (InterruptedException e)
 					{
@@ -114,6 +115,10 @@ public class GraphVisualizer extends JPanel
 	public void setTour(Tourable t)
 	{
 		tour = t;
+	}
+	private void setGraph(Graph g)
+	{
+		graph = g;
 	}
 
 	public void setTourConstruction(TourConstruction tour2)

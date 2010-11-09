@@ -13,7 +13,7 @@ import solvers.TwoOpt;
 
 public class Main
 {
-	public static final boolean verbose = false;
+	public static final boolean verbose = true;
 	public static final int bruteForceThreshold = (verbose ? 9 : 9); // TODO:
 																		// Change
 																		// to 10
@@ -96,9 +96,8 @@ public class Main
 
 		Graph graph = new Graph(io);
 
-		GraphVisualizer gv;
 		if (Main.verbose)
-			gv = new GraphVisualizer(graph);
+			GraphVisualizer.getGraphVisualizer(graph, null);
 
 		graphTime = timeDiff(time(), time);
 		time = time();
@@ -118,7 +117,7 @@ public class Main
 		Tourable tour = approximateTour(graph);
 
 		if (Main.verbose)
-			gv.setTour(tour);
+			GraphVisualizer.getGraphVisualizer(graph, tour);
 
 		approxTime = timeDiff(time(), time);
 		time = time();
@@ -137,7 +136,7 @@ public class Main
 		String[] tourString = tour.toString().split("\\s+");
 		if (tourString.length != graph.countNodes())
 		{
-			new GraphVisualizer(graph).setTour(tour);
+			GraphVisualizer.getGraphVisualizer(graph, tour);
 			throw new RuntimeException("The number of nodes in the tour is not correct. " + tourString.length + " != " + graph.countNodes());
 		}
 		
@@ -147,7 +146,7 @@ public class Main
 			int node = Integer.parseInt(tourString[i].trim());
 			if (visited[node])
 			{
-				new GraphVisualizer(graph).setTour(tour);
+				GraphVisualizer.getGraphVisualizer(graph, tour);
 				throw new RuntimeException("The node " + node + " has already been visited by the tour. Tour=" + tour);
 			}
 			visited[node] = true;
@@ -211,12 +210,21 @@ public class Main
 		/* * /
 		imp = new TwoOpt();
 		for (int i = 0; i < 10; i++)
+		Improver imp;
+
+		imp = new TwoOpt();
+		for (int i = 0; true; i++)
 		{
-			imp.improve(g, t);
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2-opt converged after " + i + " iterations.");
+				break;
+			}
 		}
 		
 		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; true; i++)
 		{
 			if (!imp.improve(g, t))
 			{
@@ -255,11 +263,14 @@ public class Main
 		/*  * /
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 10; i++)
+		
+		imp = new ThreeOpt();
+		for (int i = 0; true; i++)
 		{
 			if (!imp.improve(g, t))
 			{
 				if (Main.verbose)
-					System.out.println("2.5-opt converged after " + i + " iterations.");
+					System.out.println("3-opt converged after " + i + " iterations.");
 				break;
 			}
 		}
