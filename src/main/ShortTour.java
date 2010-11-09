@@ -126,8 +126,8 @@ public class ShortTour implements Tourable
 		public void remove()
 		{
 			for (short i = (short) (pointer + 1); i < nodes.length; i++){
-				nodes[i - 1] = nodes[i];
 				reverse[i-1] = reverse[i];
+				nodes[i - 1] = nodes[i];
 			}
 			reverse[nodes.length-1] = -1;
 			nodes[nodes.length - 1] = -1;
@@ -344,25 +344,25 @@ public class ShortTour implements Tourable
 		// p2 -> 0
 		for (i = (short) (p2 - 1), j = 0; i >= 0; i--, j++)
 		{
-			tmp[j] = nodes[i];
 			tmp2[j] = reverse[nodes[i]];
+			tmp[j] = nodes[i];
 		}
 		// size -> p1
 		for (i = (short) (addPointer - 1); j < distance; i--, j++)
 		{
-			tmp[j] = nodes[i];
 			tmp2[j] = reverse[nodes[i]];
+			tmp[j] = nodes[i];
 		}
 
 		for (i = (short) (p1 + 1), j = 0; i <= addPointer - 1; i++, j++)
 		{
-			nodes[i] = tmp[j];
 			reverse[nodes[i]] = tmp2[j];
+			nodes[i] = tmp[j];
 		}
 		for (i = 0; j < distance; i++, j++)
 		{
-			nodes[i] = tmp[j];
 			reverse[nodes[i]] = tmp2[j];
+			nodes[i] = tmp[j];
 		}
 	}
 
@@ -409,8 +409,9 @@ public class ShortTour implements Tourable
 		{
 			for (short i = currentIndex; i > targetIndex; i--)
 			{
-				nodes[i] = nodes[i - 1];
 				reverse[nodes[i]] = reverse[nodes[i-1]];
+				nodes[i] = nodes[i - 1];
+				
 			}
 			reverse[node] = targetIndex;
 			nodes[targetIndex] = node;
@@ -419,8 +420,9 @@ public class ShortTour implements Tourable
 		{
 			for (short i = currentIndex; i < targetIndex; i++)
 			{
-				nodes[i] = nodes[i + 1];
 				reverse[nodes[i]] = reverse[i+1];
+				nodes[i] = nodes[i + 1];
+				
 			}
 			reverse[node] = targetIndex;
 			nodes[targetIndex] = node;
