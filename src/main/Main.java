@@ -216,7 +216,7 @@ public class Main
 			boolean twoDotFiveOpt = imp25.improve(g, t);
 			boolean threeOpt = imp3.improve(g, t);
 
-			for (int r = 0; r < 150; r++)
+			for (int r = 0; r < 100; r++)
 			{
 				imp2rand.improve(g, t);
 			}
