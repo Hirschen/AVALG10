@@ -13,10 +13,10 @@ import solvers.TwoOpt;
 
 public class Main
 {
-	public static final boolean verbose = true;
-	public static final int bruteForceThreshold = (verbose ? 9 : 9); // TODO:
-																		// Change
-																		// to 10
+	public static final boolean verbose = false;
+	public static final int bruteForceThreshold = (verbose ? 9 : 15); // TODO:
+	// Change
+	// to 10
 	private Kattio io;
 
 	protected double graphTime;
@@ -139,7 +139,7 @@ public class Main
 			GraphVisualizer.getGraphVisualizer(graph, tour);
 			throw new RuntimeException("The number of nodes in the tour is not correct. " + tourString.length + " != " + graph.countNodes());
 		}
-		
+
 		boolean[] visited = new boolean[graph.countNodes()];
 		for (int i = 0; i < tourString.length; i++)
 		{
@@ -151,7 +151,7 @@ public class Main
 			}
 			visited[node] = true;
 		}
-		
+
 		if (Main.verbose)
 		{
 			System.out.println("Tour length: " + graph.calculateLength(tour));
@@ -200,40 +200,32 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		for (int iterations = 0; iterations < 20; iterations++)
+		Improver imp2 = new TwoOpt();
+		Improver imp25 = new TwoDotFiveOpt();
+		Improver imp3 = new ThreeOpt();
+
+		TwoOpt imp2rand = new TwoOpt();
+		imp2rand.setRandom(true);
+
+		for (int i = 0; i < 6; i++)
 		{
-			Improver imp = new TwoOpt();
-			for (int i = 0; true; i++)
+			boolean twoOpt = imp2.improve(g, t);
+			boolean twoDotFiveOpt = imp25.improve(g, t);
+			boolean threeOpt = imp3.improve(g, t);
+
+			for (int r = 0; r < 100; r++)
 			{
-				if (!imp.improve(g, t))
-				{
-					if (Main.verbose)
-						System.out.println("2-opt converged after " + i + " iterations.");
-					break;
-				}
+				imp2rand.improve(g, t);
 			}
-			imp = new TwoDotFiveOpt();
-			for (int i = 0; true; i++)
+
+			if (!(twoOpt || twoDotFiveOpt || threeOpt))
 			{
-				if (!imp.improve(g, t))
-				{
-					if (Main.verbose)
-						System.out.println("2.5-opt converged after " + i + " iterations.");
-					break;
-				}
-			}
-			imp = new ThreeOpt();
-			for (int i = 0; true; i++)
-			{
-				if (!imp.improve(g, t))
-				{
-					if (Main.verbose)
-						System.out.println("3-opt converged after " + i + " iterations.");
-					break;
-				}
+				if (Main.verbose)
+					System.out.println("Converged after " + i + " iterations.");
+				break;
 			}
 		}
-		
+
 		return t;
 	}
 }

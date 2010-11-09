@@ -218,7 +218,7 @@ public class Graph
 
 	protected short[][] calculateNeighbours()
 	{
-		final int neighbourCount = Math.min(14, nodeCount - 1);
+		final int neighbourCount = Math.min(16, nodeCount - 1);
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
@@ -270,7 +270,7 @@ public class Graph
 		}
 
 		int neighBourThreshold = max / 4;
-		int neighbourCount = Math.min(nodeCount, 14);
+		int neighbourCount = Math.min(nodeCount, 15);
 
 		int[][] neighbours = new int[nodeCount][neighbourCount];
 		if (Main.verbose)
