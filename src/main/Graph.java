@@ -42,7 +42,8 @@ public class Graph
 			}
 		}
 
-		neighbours = calculateNeighbours();
+		if (!Main.calculateSavingsAndNeighboursTogether)
+			neighbours = calculateNeighbours();
 	}
 
 	/**
@@ -72,7 +73,8 @@ public class Graph
 				edges[b][a] = dist;
 			}
 		}
-		neighbours = calculateNeighbours();
+		if (!Main.calculateSavingsAndNeighboursTogether)
+			neighbours = calculateNeighbours();
 	}
 
 	/**
@@ -169,6 +171,18 @@ public class Graph
 	}
 
 	/**
+	 * @param hub
+	 * @return
+	 */
+	public long sumEdges(int hub)
+	{
+		long sum = 0;
+		for (int a = 0; a < nodeCount; a++)
+			sum += edges[hub][a];
+		return sum;
+	}
+
+	/**
 	 * Calculates how much distance is saved for every pair of non-hub nodes.
 	 * Used by the clarke-wright heuristics.
 	 * 
@@ -204,21 +218,64 @@ public class Graph
 		return savings;
 	}
 
-	/**
-	 * @param hub
-	 * @return
-	 */
-	public long sumEdges(int hub)
+	public long[] calculateSavingsAndNeighbours(short hubNode)
 	{
-		long sum = 0;
-		for (int a = 0; a < nodeCount; a++)
-			sum += edges[hub][a];
-		return sum;
+		final int self = 1;
+		final int neighbourCount = Math.min(16, nodeCount - self);
+
+		neighbours = new short[nodeCount][neighbourCount];
+		final int nonHubNodes = nodeCount - 1;
+		final long[] savings = new long[nonHubNodes * (nonHubNodes - 1) / 2];
+		int sp = 0;
+		for (short a = 0; a < nodeCount; a++)
+		{
+			final int hubNodeToA = edges[hubNode][a];
+			final boolean[] visited = new boolean[nodeCount];
+			neighbours[a] = new short[neighbourCount];
+			for (short n = 0; n < neighbourCount; n++)
+			{
+				// Find the closest neighbour linearly
+				short minNode = -1;
+				int minDist = Integer.MAX_VALUE;
+				for (short b = 0; b < nodeCount; b++)
+				{
+					if (n == 0 && b > a && b != hubNode && a != hubNode)
+					{
+						// Calculate savings
+						int save = hubNodeToA + edges[hubNode][b] - edges[a][b];
+						long v = ((long) save << 20) + ((int) a << 10) + b;
+						savings[sp++] = -v;
+					}
+
+					if (visited[b])
+						continue;
+					if (a == b)
+						continue;
+
+					int d = edges[a][b];
+					if (d < minDist)
+					{
+						minDist = d;
+						minNode = b;
+					}
+				}
+
+				if (minNode == -1)
+					throw new RuntimeException("Elände!");
+
+				visited[minNode] = true;
+				neighbours[a][n] = minNode;
+			}
+
+		}
+		Arrays.sort(savings);
+		return savings;
 	}
 
 	protected short[][] calculateNeighbours()
 	{
-		final int neighbourCount = Math.min(16, nodeCount - 1);
+		final int self = 1;
+		final int neighbourCount = Math.min(16, nodeCount - self);
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
@@ -237,14 +294,14 @@ public class Graph
 					if (a == b)
 						continue;
 
-					int d = distance(a, b);
+					int d = edges[a][b];
 					if (d < minDist)
 					{
 						minDist = d;
 						minNode = b;
 					}
 				}
-				
+
 				if (minNode == -1)
 					throw new RuntimeException("Elände!");
 
@@ -255,63 +312,6 @@ public class Graph
 			// TODO: Sort!
 		}
 
-		return neighbours;
-	}
-
-	/**
-	 * @param max
-	 * @return
-	 */
-	public int[][] calculateApproximateNeighbours(int max)
-	{
-		if (nodeCount == 1)
-		{
-			return new int[][] { new int[] { edges[0][0] } };
-		}
-
-		int neighBourThreshold = max / 4;
-		int neighbourCount = Math.min(nodeCount, 15);
-
-		int[][] neighbours = new int[nodeCount][neighbourCount];
-		if (Main.verbose)
-			System.out.println("Searching for " + neighbours[0].length + " neighbours with distance threshold " + neighBourThreshold);
-
-		for (short a = 0; a < nodeCount; a++)
-		{
-			int b = (a + 1) % nodeCount;
-			int startB = b;
-			for (int neighbour = 0; neighbour < neighbours[a].length; neighbour++)
-			{
-				// Find a worthy neighbour
-				while (edges[a][b] > neighBourThreshold || a == b)
-				{
-					b = (b + 1 == nodeCount ? 0 : b + 1);
-
-
-					// If we have looked at all nodes, increase the threshold
-					if (b == a)
-					{
-						neighBourThreshold *= 2;
-						if (Main.verbose)
-							System.out.println("Increasing threshold to " + neighBourThreshold + "...");
-						b = startB;
-					}
-				}
-
-				// Add this as a neighbour
-				neighbours[a][neighbour] = b;
-				b = (b == nodeCount - 1 ? 0 : b + 1);
-
-				// If we have looked at all nodes, increase the threshold
-				if (b == a)
-				{
-					neighBourThreshold *= 2;
-					if (Main.verbose)
-						System.out.println("Increasing threshold to " + neighBourThreshold + "... .. ");
-					b = startB;
-				}
-			}
-		}
 		return neighbours;
 	}
 

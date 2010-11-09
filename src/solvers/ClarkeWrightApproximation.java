@@ -3,7 +3,6 @@ package solvers;
 import java.util.Random;
 
 import main.Graph;
-import main.GraphVisualizer;
 import main.Main;
 import main.ShortTour;
 import main.Tourable;
@@ -60,7 +59,11 @@ public class ClarkeWrightApproximation implements StartApproxer
 
 		// Calculate savings for each non-hub node
 		// savings: Save -> nodeA -> nodeB, order descending
-		long[] savings = graph.calculateSavings(hubNode);
+		long[] savings;
+		if (Main.calculateSavingsAndNeighboursTogether)
+			savings = graph.calculateSavingsAndNeighbours(hubNode);
+		else
+			savings = graph.calculateSavings(hubNode);
 		final int savingsLength = savings.length;
 		int sp = 0;
 

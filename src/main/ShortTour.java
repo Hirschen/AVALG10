@@ -188,10 +188,7 @@ public class ShortTour implements Tourable
 	 */
 	public boolean contains(int a)
 	{
-		for (int i = 0; i < addPointer; i++)
-			if (nodes[i] == a)
-				return true;
-		return false;
+		return reverse[a] != -1;
 	}
 	/*
 	 * b1 and a2 changes

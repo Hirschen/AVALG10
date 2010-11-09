@@ -102,14 +102,12 @@ public class UnfinishedTour
 		if (end < tour.length)
 		{
 			short r = tour[end];
-			tour[end] = 0;
-			end++;
+			tour[end++] = 0;
 			return r;
 		}
 
 		short r = tour[0];
-		for (int i = 0; i < start; i++)
-			tour[i] = tour[i + 1];
+		System.arraycopy(tour, 1, tour, 0, start);
 		tour[start--] = 0;
 		return r;
 	}
@@ -119,8 +117,7 @@ public class UnfinishedTour
 		if (start < 0)
 		{
 			short r = tour[tour.length - 1];
-			for (int i = tour.length - 1; i >= end; i--)
-				tour[i] = tour[i - 1];
+			System.arraycopy(tour, end, tour, end + 1, tour.length - 1 - end);
 			tour[end++] = 0;
 			return r;
 		}
