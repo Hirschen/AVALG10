@@ -197,8 +197,18 @@ public class Main
 	private Tourable improveTour(Graph g, Tourable t)
 	{
 		/* */
-		Improver imp;
+		Improver imp = new TwoOpt(), imp2 = new TwoDotFiveOpt(), imp3 = new ThreeOpt();
 		/* */
+		for(int k = 0; k < 20;k++){
+			
+			imp.improve(g, t);
+
+			imp2.improve(g, t);
+			
+			imp3.improve(g, t);
+		}
+			
+		/* * /
 		imp = new TwoOpt();
 		for (int i = 0; i < 10; i++)
 		{
@@ -216,18 +226,10 @@ public class Main
 			}
 		}
 		
-		/* */
 		Improver imp3 = new ThreeOpt();
 		for (int i = 0; i < 10; i++)
 		{
 			imp3.improve(g, t);
-		}
-		/* * /
-		imp = new TwoOpt();
-		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < 300; i++)
-		{
-			imp.improve(g, t);
 		}
 		
 		/*  * /
