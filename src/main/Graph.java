@@ -218,7 +218,7 @@ public class Graph
 
 	protected short[][] calculateNeighbours()
 	{
-		final int neighbourCount = 14;
+		final int neighbourCount = 20;
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
@@ -228,14 +228,16 @@ public class Graph
 			for (short i = 0; i < neighbourCount; i++)
 			{
 				// Find the closest neighbour linearly
-				short minNode = 0;
-				int minDist = 0;
-				for (short b = 1; b < nodeCount; b++)
+				short minNode = -1;
+				int minDist = Integer.MAX_VALUE;
+				for (short b = 0; b < nodeCount; b++)
 				{
 					if (visited[b])
 						continue;
+					if (a == b)
+						continue;
 
-					int d = distance(minNode, b);
+					int d = distance(a, b);
 					if (d < minDist)
 					{
 						minDist = d;
@@ -243,10 +245,14 @@ public class Graph
 					}
 				}
 				
+				if (minNode == -1)
+					throw new RuntimeException("Elände!");
+
 				visited[minNode] = true;
 				neighbours[a][i] = minNode;
 			}
-			Arrays.sort(neighbours[a]);
+
+			// TODO: Sort!
 		}
 
 		return neighbours;

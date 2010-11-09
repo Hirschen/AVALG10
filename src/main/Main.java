@@ -10,7 +10,9 @@ import solvers.StartApproxer;
 public class Main
 {
 	public static final boolean verbose = false;
-	public static final int bruteForceThreshold = (verbose ? 9 : 9);
+	public static final int bruteForceThreshold = (verbose ? 9 : 9); // TODO:
+																		// Change
+																		// to 10
 	private Kattio io;
 
 	protected double graphTime;
@@ -58,7 +60,7 @@ public class Main
 	public Tourable runFast()
 	{
 		Graph graph = new Graph(io);
-		
+
 		if (graph.countNodes() <= bruteForceThreshold)
 		{
 			StartApproxer solver = new BruteForceOptimal();
