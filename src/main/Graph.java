@@ -221,7 +221,19 @@ public class Graph
 	public long[] calculateSavingsAndNeighbours(short hubNode)
 	{
 		final int self = 1;
-		final int neighbourCount = Math.min(Main.neighbours, nodeCount - self);
+
+		int neighbourCount = nodeCount - self;
+		if (nodeCount > 900)
+			neighbourCount = 16;
+		else if (nodeCount > 750)
+			neighbourCount = 22;
+		else if (nodeCount > 650)
+			neighbourCount = 23;
+		else if (nodeCount > 500)
+			neighbourCount = 35;
+		else if (nodeCount > 200)
+			neighbourCount = 65;
+
 
 		neighbours = new short[nodeCount][neighbourCount];
 		final int nonHubNodes = nodeCount - 1;
@@ -275,7 +287,17 @@ public class Graph
 	protected short[][] calculateNeighbours()
 	{
 		final int self = 1;
-		final int neighbourCount = Math.min(Main.neighbours, nodeCount - self);
+		int neighbourCount = nodeCount - self;
+		if (nodeCount > 900)
+			neighbourCount = 16;
+		else if (nodeCount > 750)
+			neighbourCount = 22;
+		else if (nodeCount > 650)
+			neighbourCount = 25;
+		else if (nodeCount > 500)
+			neighbourCount = 35;
+		else if (nodeCount > 200)
+			neighbourCount = 65;
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)

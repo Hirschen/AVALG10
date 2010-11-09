@@ -14,15 +14,12 @@ import solvers.TwoOpt;
 public class Main
 {
 	public static final boolean verbose = false;
-	public static int bruteForceThreshold; // TODO:
 
 	public static final boolean calculateSavingsAndNeighboursTogether = true;
-	public static final int neighbours = 20;
-	public static final int iterationsOfOpts = 5;
-	public static final int iterationsOfRand = 100;
+	// public static final int neighbours = 20;
+	public static final int iterationsOfOpts = 10;
+	public static final int iterationsOfRand = 165;
 
-	// Change
-	// to 10
 	private Kattio io;
 
 	protected double graphTime;
@@ -226,8 +223,8 @@ public class Main
 
 			if (!(twoOpt || twoDotFiveOpt || threeOpt))
 			{
-				if (Main.verbose)
-					System.out.println("Converged after " + i + " iterations.");
+				// if (Main.verbose)
+				System.err.println("Converged after " + i + " iterations.");
 				break;
 			}
 		}
