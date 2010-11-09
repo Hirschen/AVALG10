@@ -7,6 +7,7 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
+import solvers.ThreeOpt;
 import solvers.TwoDotFiveOpt;
 import solvers.TwoOpt;
 
@@ -199,13 +200,13 @@ public class Main
 		Improver imp;
 		/* */
 		imp = new TwoOpt();
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			imp.improve(g, t);
 		}
 		
 		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			if (!imp.improve(g, t))
 			{
@@ -215,9 +216,9 @@ public class Main
 			}
 		}
 		
-		/* * /
+		/* */
 		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			imp3.improve(g, t);
 		}
@@ -249,7 +250,7 @@ public class Main
 		{
 			imp.improve(g, t);
 		}
-		/*  */
+		/*  * /
 		imp = new TwoDotFiveOpt();
 		for (int i = 0; i < 10; i++)
 		{

@@ -218,7 +218,7 @@ public class Graph
 
 	protected short[][] calculateNeighbours()
 	{
-		final int neighbourCount = 20;
+		final int neighbourCount = Math.min(14, nodeCount-1);
 		short[][] neighbours = new short[nodeCount][neighbourCount];
 
 		for (short a = 0; a < nodeCount; a++)
