@@ -195,7 +195,22 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		Improver imp;
+		/* */
+		Improver imp = new TwoOpt(), imp2 = new TwoDotFiveOpt(), imp3 = new ThreeOpt();
+		/* * /
+		for(int k = 0; k < 20;k++){
+			
+			imp.improve(g, t);
+
+			imp2.improve(g, t);
+			
+			imp3.improve(g, t);
+		}
+			
+		/* */
+		imp = new TwoOpt();
+		for (int i = 0; i < 10; i++)
+		//Improver imp;
 
 		imp = new TwoOpt();
 		for (int i = 0; true; i++)
@@ -205,6 +220,12 @@ public class Main
 				if (Main.verbose)
 					System.out.println("2-opt converged after " + i + " iterations.");
 				break;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -218,6 +239,41 @@ public class Main
 				break;
 			}
 		}
+		
+		imp3 = new ThreeOpt();
+		for (int i = 0;true; i++)
+		{
+			if (!imp3.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("3-opt converged after " + i + " iterations.");
+				break;
+			}
+		}
+		
+		/*  * /
+		//# of laps
+		int runs = (int) (2000000 / t.countNodes());
+		imp = new TwoOpt(t.countNodes());
+		((TwoOpt) imp).setRandom(true);
+		for (int i = 0; i < runs; i++)
+		{
+			imp.improve(g, t);
+		}
+		
+		Improver imp3 = new ThreeOpt();
+		for (int i = 0; i < 400; i++)
+		{
+			imp3.improve(g, t);
+		}
+		imp = new TwoOpt(t.countNodes());
+		for (int i = 0; i < runs / 32; i++)
+		{
+			imp.improve(g, t);
+		}
+		/*  * /
+		imp = new TwoDotFiveOpt();
+		for (int i = 0; i < 10; i++)
 		
 		imp = new ThreeOpt();
 		for (int i = 0; true; i++)
