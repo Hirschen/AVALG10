@@ -13,7 +13,7 @@ import solvers.TwoOpt;
 
 public class Main
 {
-	public static final boolean verbose = false;
+	public static final boolean verbose = true;
 	public static final int bruteForceThreshold = (verbose ? 9 : 9); // TODO:
 																		// Change
 																		// to 10
@@ -195,36 +195,37 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		Improver imp = new TwoOpt();
-		for (int i = 0; true; i++)
+		for (int j = 0; j < 2; j++)
 		{
-			if (!imp.improve(g, t))
+			Improver imp = new TwoOpt();
+			for (int i = 0; true; i++)
 			{
-				if (Main.verbose)
-					System.out.println("2-opt converged after " + i + " iterations.");
-				break;
+				if (!imp.improve(g, t))
+				{
+					if (Main.verbose)
+						System.out.println("2-opt converged after " + i + " iterations.");
+					break;
+				}
 			}
-		}
-		
-		imp = new TwoDotFiveOpt();
-		for (int i = 0; true; i++)
-		{
-			if (!imp.improve(g, t))
+			imp = new TwoDotFiveOpt();
+			for (int i = 0; true; i++)
 			{
-				if (Main.verbose)
-					System.out.println("2.5-opt converged after " + i + " iterations.");
-				break;
+				if (!imp.improve(g, t))
+				{
+					if (Main.verbose)
+						System.out.println("2.5-opt converged after " + i + " iterations.");
+					break;
+				}
 			}
-		}
-		
-		imp = new ThreeOpt();
-		for (int i = 0;true; i++)
-		{
-			if (!imp.improve(g, t))
+			imp = new ThreeOpt();
+			for (int i = 0; true; i++)
 			{
-				if (Main.verbose)
-					System.out.println("3-opt converged after " + i + " iterations.");
-				break;
+				if (!imp.improve(g, t))
+				{
+					if (Main.verbose)
+						System.out.println("3-opt converged after " + i + " iterations.");
+					break;
+				}
 			}
 		}
 		
