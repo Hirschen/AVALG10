@@ -6,11 +6,17 @@ import main.Tourable;
 
 public class ThreeOpt implements Improver {
 	private short minGain = 1;
+	private short[] nodes;
+	private Graph g;
+	private Tourable t;
 
 	public ThreeOpt(){}
 	
-	public boolean improve(Graph g, Tourable t)
+	public boolean improve(Graph gr, Tourable tr)
 	{
+		nodes = tr.getNodes();
+		g = gr;
+		t = tr;
 		short a1,b1,a2, b2,a3,b3,i,j;
 		boolean res = false;
 		
@@ -41,32 +47,32 @@ public class ThreeOpt implements Improver {
 						b3 = 0;
 					}
 					if(checkFeasibility(t, a1,b1,a2,b2,a3,b3)){
-						int gain = gotGain(g,t, a1,b1,a2,b2,a3,b3);
+						int gain = gotGain(a1,b1,a2,b2,a3,b3);
 						if(gain == 0){
 							continue;
 						}
 						if(gain == 1){
-							threeOptbyTwoOpt(1,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(1,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 						if(gain == 2){
-							threeOptbyTwoOpt(2,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(2,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 						if(gain == 3){
-							threeOptbyTwoOpt(3,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(3,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 						if(gain == 4){
-							threeOptbyTwoOpt(4,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(4,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 						if(gain == 5){
-							threeOptbyTwoOpt(5,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(5,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 						if(gain == 6){
-							threeOptbyTwoOpt(6,t,a1,b1,a2,b2,a3,b3);
+							threeOptbyTwoOpt(6,a1,b1,a2,b2,a3,b3);
 							res = true;
 						}
 					}
@@ -95,7 +101,7 @@ public class ThreeOpt implements Improver {
 		return false;
 	}
 		
-	private int gotGain(Graph g, Tourable t, short a1, short b1, short a2,
+	private int gotGain(short a1, short b1, short a2,
 			short b2, short a3, short b3) {
 		if(inBetween(a1, a2, a3)){
 			if(b1 > a2 && (
@@ -161,7 +167,7 @@ public class ThreeOpt implements Improver {
 	}
 
 	private int gotGainCalc(Graph g, Tourable t, short n1, short n2) {
-		return g.distance(t.getNode(n1), t.getNode(n2));
+		return g.distance(nodes[n1], nodes[n2]);
 	}
 	
 	private boolean checkFeasibility(Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
@@ -173,7 +179,7 @@ public class ThreeOpt implements Improver {
 		return true;
 	}
 	
-	private void threeOptbyTwoOpt(int version, Tourable t, short a1, short b1, short a2, short b2, short a3, short b3){
+	private void threeOptbyTwoOpt(int version, short a1, short b1, short a2, short b2, short a3, short b3){
 		if(version == 1){
 			t.switchEdgesNonOptedWithLeap(a1, b1, a2, b2);
 			t.switch2EdgesOpted(a1, b1, a3, b3);

@@ -17,6 +17,7 @@ public class Main
 	public static int bruteForceThreshold; // TODO:
 
 	public static final boolean calculateSavingsAndNeighboursTogether = true;
+	public static final int neighbours = 20;
 
 	// Change
 	// to 10
@@ -210,7 +211,7 @@ public class Main
 		TwoOpt imp2rand = new TwoOpt();
 		imp2rand.setRandom(true);
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			boolean twoOpt = imp2.improve(g, t);
 			boolean twoDotFiveOpt = imp25.improve(g, t);

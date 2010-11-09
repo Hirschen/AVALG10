@@ -64,6 +64,11 @@ public class ShortTour implements Tourable
 	{
 		return nodes[position];
 	}
+	
+	public short[] getNodes(){
+		
+		return nodes;
+	}
 
 	/* (non-Javadoc)
 	 * @see main.Tourable#addNode(short)
