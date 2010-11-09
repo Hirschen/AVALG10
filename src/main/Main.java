@@ -18,6 +18,8 @@ public class Main
 
 	public static final boolean calculateSavingsAndNeighboursTogether = true;
 	public static final int neighbours = 20;
+	public static final int iterationsOfOpts = 5;
+	public static final int iterationsOfRand = 100;
 
 	// Change
 	// to 10
@@ -211,13 +213,13 @@ public class Main
 		TwoOpt imp2rand = new TwoOpt();
 		imp2rand.setRandom(true);
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < iterationsOfOpts; i++)
 		{
 			boolean twoOpt = imp2.improve(g, t);
 			boolean twoDotFiveOpt = imp25.improve(g, t);
 			boolean threeOpt = imp3.improve(g, t);
 
-			for (int r = 0; r < 100; r++)
+			for (int r = 0; r < iterationsOfRand; r++)
 			{
 				imp2rand.improve(g, t);
 			}
