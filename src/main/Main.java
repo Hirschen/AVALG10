@@ -7,6 +7,7 @@ import solvers.BruteForceOptimal;
 import solvers.ClarkeWrightApproximation;
 import solvers.Improver;
 import solvers.StartApproxer;
+import solvers.ThreeOpt;
 import solvers.TwoDotFiveOpt;
 import solvers.TwoOpt;
 
@@ -194,17 +195,21 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		/* */
 		Improver imp;
-		/* */
+
 		imp = new TwoOpt();
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; true; i++)
 		{
-			imp.improve(g, t);
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2-opt converged after " + i + " iterations.");
+				break;
+			}
 		}
 		
 		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; true; i++)
 		{
 			if (!imp.improve(g, t))
 			{
@@ -214,48 +219,13 @@ public class Main
 			}
 		}
 		
-		/* * /
-		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 100; i++)
-		{
-			imp3.improve(g, t);
-		}
-		/* * /
-		imp = new TwoOpt();
-		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < 300; i++)
-		{
-			imp.improve(g, t);
-		}
-		
-		/*  * /
-		//# of laps
-		int runs = (int) (2000000 / t.countNodes());
-		imp = new TwoOpt(t.countNodes());
-		((TwoOpt) imp).setRandom(true);
-		for (int i = 0; i < runs; i++)
-		{
-			imp.improve(g, t);
-		}
-		
-		Improver imp3 = new ThreeOpt();
-		for (int i = 0; i < 400; i++)
-		{
-			imp3.improve(g, t);
-		}
-		imp = new TwoOpt(t.countNodes());
-		for (int i = 0; i < runs / 32; i++)
-		{
-			imp.improve(g, t);
-		}
-		/*  */
-		imp = new TwoDotFiveOpt();
-		for (int i = 0; i < 10; i++)
+		imp = new ThreeOpt();
+		for (int i = 0; true; i++)
 		{
 			if (!imp.improve(g, t))
 			{
 				if (Main.verbose)
-					System.out.println("2.5-opt converged after " + i + " iterations.");
+					System.out.println("3-opt converged after " + i + " iterations.");
 				break;
 			}
 		}
