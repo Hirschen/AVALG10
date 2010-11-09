@@ -9,6 +9,8 @@ import solvers.Improver;
 import solvers.NaiveSolver;
 import solvers.StartApproxer;
 import solvers.ThreeOpt;
+import solvers.TwoDotFiveOpt;
+import solvers.TwoOpt;
 
 public class Main
 {
@@ -194,7 +196,7 @@ public class Main
 	{
 		Improver imp;
 		/* */
-		/*  * /
+		/*  */
 		imp = new TwoOpt();
 		for (int i = 0; i < 1; i++)
 		{
@@ -212,7 +214,7 @@ public class Main
 			}
 		}
 		
-		/* * /
+		/* */
 		Improver imp3 = new ThreeOpt();
 		for (int i = 0; i < 100; i++)
 		{
@@ -246,7 +248,17 @@ public class Main
 		{
 			imp.improve(g, t);
 		}
-		/*  * /
+		/*  */
+		imp = new TwoDotFiveOpt();
+		for (int i = 0; i < 10; i++)
+		{
+			if (!imp.improve(g, t))
+			{
+				if (Main.verbose)
+					System.out.println("2.5-opt converged after " + i + " iterations.");
+				break;
+			}
+		}
 		
 		/* */
 		

@@ -38,10 +38,11 @@ public class TwoDotFiveOpt implements Improver
 		{
 			short t2 = (short) ((t1+1)% t.countNodes());
 			short t3 = (short) ((t2+1)% t.countNodes());
-			
+			short[] neighbours = g.getNeighbours(t.indexOf(t2));
 			// Find a good edge of t1 to relocate t2 to
-			for (short e1 = 0; e1 < t.countNodes(); e1++)
+			for (short n = 0; n < neighbours.length; n++)
 			{
+				short e1 = t.indexOf(neighbours[n]);
 				// It shouldn't be any of our selected nodes
 				if (e1 == t1 || e1 == t2 || e1 == t3)
 					continue;

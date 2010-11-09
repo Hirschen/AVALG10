@@ -99,8 +99,10 @@ public class TwoOpt implements Improver
 				{
 					b1 = 0;
 				}
-				for (a2 = 0; a2 < t.countNodes(); a2++)
+				short[] neigh = g.getNeighbours(t.getNode(a1));
+				for (int i = 0;i < neigh.length; i++)
 				{
+					a2 = t.indexOf(neigh[i]);
 					b2 = (short) (a2 + 1);
 					if (b2 == t.countNodes())
 					{
@@ -165,7 +167,7 @@ public class TwoOpt implements Improver
 		Graph g = new Graph(coords);
 		GraphVisualizer vis = new GraphVisualizer(g);
 
-		StartApproxer sa = new NaiveSolver();
+		StartApproxer sa = new ClarkeWrightApproximation();
 		Tourable t = sa.getTour(g);
 		vis.setTour(t);
 		Improver imp = new TwoOpt();
