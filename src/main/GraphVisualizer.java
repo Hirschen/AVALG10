@@ -72,7 +72,7 @@ public class GraphVisualizer extends JPanel
 					repaint();
 					try
 					{
-						Thread.sleep(30);
+						Thread.sleep(100);
 					}
 					catch (InterruptedException e)
 					{
