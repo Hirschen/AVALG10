@@ -208,9 +208,6 @@ public class Main
 		}
 			
 		/* */
-		imp = new TwoOpt();
-		for (int i = 0; i < 10; i++)
-		//Improver imp;
 
 		imp = new TwoOpt();
 		for (int i = 0; true; i++)
