@@ -13,7 +13,7 @@ import solvers.TwoOpt;
 
 public class Main
 {
-	public static final boolean verbose = true;
+	public static final boolean verbose = false;
 	public static final int bruteForceThreshold = (verbose ? 9 : 9); // TODO:
 																		// Change
 																		// to 10
@@ -195,24 +195,7 @@ public class Main
 
 	private Tourable improveTour(Graph g, Tourable t)
 	{
-		/* */
-		Improver imp = new TwoOpt(), imp2 = new TwoDotFiveOpt(), imp3 = new ThreeOpt();
-		/* * /
-		for(int k = 0; k < 20;k++){
-			
-			imp.improve(g, t);
-
-			imp2.improve(g, t);
-			
-			imp3.improve(g, t);
-		}
-			
-		/* */
-		imp = new TwoOpt();
-		for (int i = 0; i < 10; i++)
-		//Improver imp;
-
-		imp = new TwoOpt();
+		Improver imp = new TwoOpt();
 		for (int i = 0; true; i++)
 		{
 			if (!imp.improve(g, t))
@@ -232,12 +215,21 @@ public class Main
 					System.out.println("2.5-opt converged after " + i + " iterations.");
 				break;
 			}
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		imp3 = new ThreeOpt();
+		imp = new ThreeOpt();
 		for (int i = 0;true; i++)
 		{
-			if (!imp3.improve(g, t))
+			if (!imp.improve(g, t))
 			{
 				if (Main.verbose)
 					System.out.println("3-opt converged after " + i + " iterations.");

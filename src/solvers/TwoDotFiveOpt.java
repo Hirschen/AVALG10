@@ -62,7 +62,8 @@ public class TwoDotFiveOpt implements Improver
 					if (Main.verbose)
 					{
 						System.out.println("2.5-opt: Wins " + (length - opt));
-						System.out.println("\t[" + t1 + "->" + t2 + "->" + t3 + "]+[" + e1 + "->" + e2 + "], len=" + length + "=> [" + t1 + "->" + t3 + "]+[" + e1 + "->" + t2 + "->" + e2 + "], len=" + opt);
+						System.out.print("\t[" + t.getNode(t1) + "->" + t.getNode(t2) + "->" + t.getNode(t3) + "]+[" + t.getNode(e1) + "->" + t.getNode(e2) + "], len=" + length);
+						System.out.println(" => [" + t.getNode(t1) + "->" + t.getNode(t3) + "]+[" + t.getNode(e1) + "->" + t.getNode(t2) + "->" + t.getNode(e2) + "], len=" + opt);
 					}
 					t.moveNode(t2, e2);
 					improvement = true;
